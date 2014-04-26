@@ -1,0 +1,8 @@
+{
+  "name": "cupcake-clicker",
+  "version": "0.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "express": "4.1.0"
+  }
+}
