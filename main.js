@@ -1,3 +1,31 @@
+/*
+ * var xhr = new XMLHttpRequest();
+xhr.onload = function() {
+    // get the XML tree of the SVG
+    var svgAsXml = xhr.responseXML;
+    // do some modifications to the XML tree
+    var element = svgAsXml.getElementById('Ribbon');
+    element.style.display = 'none';
+    // convert the XML tree to a string
+    var svgAsString = new XMLSerializer().serializeToString(svgAsXml);
+    // create a new image with the svg string as an ObjectUrl
+    var svgBlob = new Blob([svgAsString], {type: "image/svg+xml;charset=utf-8"});
+    var url = window.URL.createObjectURL(svgBlob);
+    var img = new Image();
+    img.src = url;
+    // copy it to the canvas
+    img.onload = function() {
+        var theCanvas = document.getElementById('canvas');
+        var context = theCanvas.getContext('2d');
+        context.drawImage(img, 0, 0);
+        window.URL.revokeObjectURL(svgBlob);
+    }
+}
+xhr.open("GET", "/images/pink-new.svg");
+xhr.responseType = "document";
+xhr.send();
+ */
+
 // not that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var debug = true
@@ -21,6 +49,7 @@ var main_state = {
     },
 
     create: function() {
+    	
       // This function will be called after the preload function. Here we set up the game, display sprites, add labels, etc.
 
       if (debug)
