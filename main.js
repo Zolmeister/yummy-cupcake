@@ -31,9 +31,9 @@ var main_state = {
         this.stage.disableVisibilityChange = true;
 
       var scoreText = '0 Cupcakes'
-      var scoreTextStyle = { font: '45px Arial', align: 'center' }
+      var scoreTextStyle = { font: '45px sansus', align: 'center' }
       var cpsText = '0 per second'
-      var cpsStyle =  { font: '25px Arial', align: 'center' }
+      var cpsStyle =  { font: '25px sansus', align: 'center' }
 
       game.cupcakeCount = 0
       game.scoreText = game.add.text(game.world.centerX-300, 10, scoreText, scoreTextStyle)
@@ -50,14 +50,15 @@ var main_state = {
       game.cupcake.scale.y = 0.7
 
 
-      game.shopButtom = game.add.button(100, 400, 'button', shop, 2, 1, 0);
-      game.shopButtom.width = 170
-      game.shopButtom.height = 60
-      game.shopButtom.x += 60
-      game.shopButtom.y += 100
+      game.shopButton = game.add.button(100, 400, 'button', shop, 2, 1, 0);
+      game.shopButton.width = 170
+      game.shopButton.height = 60
+      game.shopButton.x += 60
+      game.shopButton.y += 100
 
-      game.shopButtonText = game.add.text(game.shopButtom.x + 50,
-                                          game.shopButtom.y +10, 'Shop', {});
+      var shopButtonStyle = { font: '30px sansus', align: 'center' }
+      game.shopButtonText = game.add.text(game.shopButton.position.x + game.shopButton.width / 2 - 30, // 30 is what i'm guessing 'Shop' width is. not calculating 
+                                          game.shopButton.y + 10, 'Shop', shopButtonStyle);
     },
 
     update: function() {
@@ -87,7 +88,7 @@ function cupcakeClick(button, pointer) {
   // spawn +1 near the mouse
   //pointer.x
 
-  var plusOneStyle =  { font: '25px Arial', align: 'center' }
+  var plusOneStyle =  { font: '25px sansus', align: 'center' }
   var plusOne = game.add.text(pointer.x, pointer.y, '+1', plusOneStyle)
   game.add.tween(plusOne).to({ y: -50 }, Math.random() * 1500 + 2000, Phaser.Easing.Cubic.Out, true);
 
@@ -96,6 +97,11 @@ function cupcakeClick(button, pointer) {
 function loop() {
 
 
+}
+
+function invite() {
+	// TODO: Clay.Social.smartInvite()?
+	Clay.Kik.invite()
 }
 
 // TODO: probably should have some sort of class/obj we can attach things to
@@ -146,7 +152,7 @@ function grabCupcakeSVG(options, callback) {
 // And finally we tell Phaser to add and start our 'main' state
 game.state.add('main', main_state)
 
-grabCupcakeSVG({ width: 326, height: 463, items: ['cherry', 'straw'] }, function(url) {
+grabCupcakeSVG({ width: 326, height: 463, items: ['cherry', 'straw', 'sprinkles'] }, function(url) {
 	main_state.url = url
 	game.state.start('main')
 })
