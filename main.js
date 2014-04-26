@@ -1,74 +1,92 @@
-// not that function calls within update are not optimized,
+// note that function calls within update are not optimized,
 // and should be in-lined during some compile step
-var debug = true
+var config = {
+  debug: true
+}
 
-// We start by initializing Phaser
-// Parameters: width of the game, height of the game, how to render the game, the HTML div that will contain the game
-var game = new Phaser.Game(500, 600, Phaser.AUTO, 'game')
+var game = new Phaser.Game(360, 640, Phaser.AUTO, 'game')
+game.score = 0
 
-// And now we define our first and only state, I'll call it 'main'. A state is a specific scene of a game like a menu, a game over screen, etc.
+function getCupcakesText(n) {
+  return n + ' Cupcakes'
+}
+
+function getCupcakesPerSecondText(n) {
+  return n + ' per second'
+}
+
 var main_state = {
 
     preload: function() {
-      // Everything in this function will be executed at the beginning. That’s where we usually load the game’s assets (images, sounds, etc.)
-
-      // Load a sprite in the game
-      // Parameters: name of the sprite, path to the image
-      game.load.image('cupcake', this.url)
+      game.load.image('cupcake', 'assets/cupcake.png')
       game.load.image('button', 'assets/button.png')
-
       game.stage.backgroundColor = '#71c5cf'
     },
 
     create: function() {
-      
-      // This function will be called after the preload function. Here we set up the game, display sprites, add labels, etc.
+
+      // Auto scaling
       game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+      game.scale.setScreenSize(true)
 
-      game.scale.setScreenSize(true);
+      if (config.debug)
+        game.stage.disableVisibilityChange = true
 
-      if (debug)
-        this.stage.disableVisibilityChange = true;
 
-      var scoreText = '0 Cupcakes'
-      var scoreTextStyle = { font: '45px sansus', align: 'center', fill: '#fff' }
-      var cpsText = '0 per second'
-      var cpsStyle =  { font: '25px sansus', align: 'center', fill: '#fff' }
+      // Add UI elements
 
-      game.cupcakeCount = 0
-      game.scoreText = game.add.text(game.world.centerX-300, 10, scoreText, scoreTextStyle)
-      game.cpsText = game.add.text(game.world.centerX-300, 50, cpsText, cpsStyle);
+      // Main score text
+      game.scoreText = game.add.text(
+        game.world.centerX -
+        100,
+        10,
+        getCupcakesText(0), // 0 Cupcakes
+        { font: '45px sansus', fill: '#fff' })
 
-      game.scoreText.x=game.world.centerX-100
-      game.cpsText.x = game.world.centerX-100
 
-      game.cupcake = game.add.button(100, 400, 'cupcake', cupcakeClick, this, 2, 1, 0);
-      game.cupcake.anchor.setTo(.5,.5)
-      game.cupcake.y = 320
-      game.cupcake.x = 250
+      // Cupcakes-per-second text
+      game.cpsText = game.add.text(
+        game.world.centerX -
+        30,
+        50,
+        getCupcakesPerSecondText(game.score), // 0 per second
+        { font: '25px sansus', fill: '#fff' })
+
+      // The big cupcake
+      game.cupcake = game.add.button(250, 320, 'cupcake', cupcakeClick, this, 2, 1, 0)
+      game.cupcake.anchor.setTo(0.5, 0.5)
       game.cupcake.scale.x = 0.7
       game.cupcake.scale.y = 0.7
 
+      // shop button
+      game.shopButton = game.add.group()
+      var shopButtonButton = game.add.button(0, 0, 'button', shop, 2, 1, 0)
+      shopButtonButton.width = 170
+      shopButtonButton.height = 60
 
-      game.shopButton = game.add.button(100, 400, 'button', shop, 2, 1, 0);
-      game.shopButton.width = 170
-      game.shopButton.height = 60
-      game.shopButton.x += 60
-      game.shopButton.y += 100
+      game.shopButton.add(shopButtonButton)
 
-      var shopButtonStyle = { font: '30px sansus', align: 'center' }
-      game.shopButtonText = game.add.text(game.shopButton.position.x + game.shopButton.width / 2 - 30, // 30 is what i'm guessing 'Shop' width is. not calculating 
-                                          game.shopButton.y + 10, 'Shop', shopButtonStyle);
+      var shopButtonText = game.add.text(
+        30,
+        0,
+        'Shop',
+        { font: '30px sansus'})
+
+      game.shopButton.add(shopButtonText)
+      game.shopButton.x = 160
+      game.shopButton.y = 500
+
     },
 
     update: function() {
       loop()
     }
 }
+
 function shop() {
   console.log('SHOP')
-
 }
+
 function cupcakeClick(button, pointer) {
   game.cupcakeCount++
   game.scoreText.setText(game.cupcakeCount + ' Cupcakes')
@@ -86,7 +104,6 @@ function cupcakeClick(button, pointer) {
   }
 
   // spawn +1 near the mouse
-  //pointer.x
 
   var plusOneStyle =  { font: '25px sansus', align: 'center', fill: '#fff' }
   // add some variance in the +1 position (but still near tap)
@@ -98,7 +115,6 @@ function cupcakeClick(button, pointer) {
 }
 
 function loop() {
-
 
 }
 
@@ -159,7 +175,7 @@ function grabCupcakeSVG(options, callback) {
       // draw svg to canvas
       ctx.drawImage(img, 0, 0, width, height)
       // canvas to png
-      callback(canvas.toDataURL('images/png'))      
+      callback(canvas.toDataURL('images/png'))
     }
   }
   xhr.open('GET', '/assets/pink.svg')
@@ -169,13 +185,18 @@ function grabCupcakeSVG(options, callback) {
 
 // And finally we tell Phaser to add and start our 'main' state
 game.state.add('main', main_state)
-
-grabCupcakeSVG({ width: 326, height: 463, items: ['cherry', 'straw', 'sprinkles'] }, function(url) {
+game.state.start('main')
+/*
+grabCupcakeSVG({
+  width: 326,
+  height: 463,
+  items: ['cherry', 'straw', 'sprinkles']
+}, function(url) {
   main_state.url = url
   game.state.start('main')
-})
+})*/
 
-
+/*
 window.addEventListener( 'load', function() {
   // Load clay API
   window.Clay = window.Clay || {};
@@ -187,13 +208,13 @@ window.addEventListener( 'load', function() {
   };
   ( function() {
     var clay = document.createElement("script"); clay.async = true;
-    //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js"; 
-    //clay.src = "http://cdn.clay.io/api.js"; 
-    clay.src = "http://clay.io/api/src/bundle.js"; 
+    //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
+    //clay.src = "http://cdn.clay.io/api.js";
+    clay.src = "http://clay.io/api/src/bundle.js";
     var tag = document.getElementsByTagName("script")[0]; tag.parentNode.insertBefore(clay, tag);
   } )();
-  
-  
+
+
   // Load GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -202,11 +223,11 @@ window.addEventListener( 'load', function() {
 
   ga('create', 'UA-27992080-1', 'clay.io');
   ga('send', 'pageview');
-  
+
   // high score
   Clay.ready(function() {
     console.log('Clay loaded')
     connect() // prompt them to give us perms and log them in
     Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: function() { console.log('todo') } }] })
   })
-})
+})*/
