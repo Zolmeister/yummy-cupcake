@@ -31,9 +31,9 @@ var main_state = {
         this.stage.disableVisibilityChange = true;
 
       var scoreText = '0 Cupcakes'
-      var scoreTextStyle = { font: '45px sansus', align: 'center' }
+      var scoreTextStyle = { font: '45px sansus', align: 'center', fill: '#fff' }
       var cpsText = '0 per second'
-      var cpsStyle =  { font: '25px sansus', align: 'center' }
+      var cpsStyle =  { font: '25px sansus', align: 'center', fill: '#fff' }
 
       game.cupcakeCount = 0
       game.scoreText = game.add.text(game.world.centerX-300, 10, scoreText, scoreTextStyle)
@@ -88,8 +88,11 @@ function cupcakeClick(button, pointer) {
   // spawn +1 near the mouse
   //pointer.x
 
-  var plusOneStyle =  { font: '25px sansus', align: 'center' }
-  var plusOne = game.add.text(pointer.x, pointer.y, '+1', plusOneStyle)
+  var plusOneStyle =  { font: '25px sansus', align: 'center', fill: '#fff' }
+  // add some variance in the +1 position (but still near tap)
+  var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
+  var y = pointer.y // probably don't need variance in the y
+  var plusOne = game.add.text(x, y, '+1', plusOneStyle)
   game.add.tween(plusOne).to({ y: -50 }, Math.random() * 1500 + 2000, Phaser.Easing.Cubic.Out, true);
 
 }
