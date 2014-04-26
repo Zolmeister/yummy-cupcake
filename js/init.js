@@ -12,18 +12,22 @@ grabCupcakeSVG({
   game.state.start('main')
 })*/
 
-
+/*
 window.addEventListener( 'load', function() {
 
   // Load clay API
-  window.Clay = window.Clay || {};
-  Clay.gameKey = "prism";
-  Clay.readyFunctions = [];
-  Clay.options = { inviteActions: true } // inviteActions means the API checks onload for any invites from other users, and gives them cupcakes accordingly
+  window.Clay = window.Clay || {}
+  Clay.gameKey = "prism"
+  Clay.readyFunctions = []
+
+  // inviteActions means the API checks onload for any invites from other users,
+  // and gives them cupcakes accordingly
+  Clay.options = { inviteActions: true }
   Clay.ready = function( fn ) {
-    Clay.readyFunctions.push( fn );
-  };
-  ( function() {
+    Clay.readyFunctions.push( fn )
+  }
+
+  ;( function() {
     var clay = document.createElement("script"); clay.async = true;
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
     //clay.src = "http://cdn.clay.io/api.js";
@@ -33,7 +37,7 @@ window.addEventListener( 'load', function() {
 
 
   // Load GA
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  ;(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
@@ -48,3 +52,4 @@ window.addEventListener( 'load', function() {
     Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: function() { console.log('todo') } }] })
   })
 })
+*/

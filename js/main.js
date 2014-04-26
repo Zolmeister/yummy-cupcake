@@ -89,13 +89,13 @@ function cupcakeClick(button, pointer) {
   game.scoreText.setText(game.cupcakeCount + ' Cupcakes')
 
   if (!game.cupcakeDown) {
-    game.cupcakeDown =  game.time.events.loop(100, function(){
+    game.cupcakeDown =  game.time.events.loop(100, function() {
       game.cupcake.scale.x = 0.7
       game.cupcake.scale.y = 0.7
 
-      game.time.events.remove(game.cupcakeDown);
+      game.time.events.remove(game.cupcakeDown)
       game.cupcakeDown = null
-    });
+    })
     game.cupcake.scale.x -= 0.05
     game.cupcake.scale.y -= 0.05
   }
@@ -107,7 +107,10 @@ function cupcakeClick(button, pointer) {
   var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
   var y = pointer.y // probably don't need variance in the y
   var plusOne = game.add.text(x, y, '+1', plusOneStyle)
-  game.add.tween(plusOne).to({ y: -50 }, Math.random() * 1500 + 2000, Phaser.Easing.Cubic.Out, true);
+  game.add.tween(plusOne).to(
+    { y: -50 },
+    Math.random() * 1500 + 2000,
+    Phaser.Easing.Cubic.Out, true)
 
 }
 
