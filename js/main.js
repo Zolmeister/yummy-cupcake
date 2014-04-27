@@ -29,8 +29,16 @@ game.state.add('setup', {
       if (config.debug)
         game.stage.disableVisibilityChange = true
 
-      //game.state.start('main')
-      game.state.start('shop')
+						
+			grabCupcakeSVG({
+			  width: 326,
+			  height: 463,
+			  items: ['cherry', 'straw', 'sprinkles']
+			}, function(url) {
+			  game.cupcakeURL = url
+	      //game.state.start('main')
+	      game.state.start('shop')
+			})
     }
 })
 

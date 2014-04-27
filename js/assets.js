@@ -1,5 +1,5 @@
 function loadMainStateAssets(game) {
-    game.load.image('cupcake', 'assets/cupcake.png')
+    game.load.image('cupcake', game.cupcakeURL)
     game.load.image('button', 'assets/button.png')
 }
 

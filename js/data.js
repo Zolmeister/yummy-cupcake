@@ -3,9 +3,9 @@ function saveData() {
 	Clay.Player.saveUserData({ key: 'data', data: data })
 	// separate from the rest for the invite stuff to work properly
 	// (can only update on a per-key basis)
-	Clay.Player.saveUserData({ key: 'cupcakes', data: game.score }))
+	Clay.Player.saveUserData({ key: 'cupcakes', data: game.score })
 }
 
 Clay.ready(function() {
-	setInterval( saveData, 3000 ) // save score/etc every 3 seconds
+	setInterval(saveData, 10000) // save score/etc every 10 seconds
 })

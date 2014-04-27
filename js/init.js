@@ -3,31 +3,19 @@
 game.state.start('setup')
 
 
-/*
-grabCupcakeSVG({
-  width: 326,
-  height: 463,
-  items: ['cherry', 'straw', 'sprinkles']
-}, function(url) {
-  mainState.url = url
-  game.state.start('main')
-})*/
-
-/*
+// Set global vars for Clay API (for Clay.ready())
+window.Clay = window.Clay || {}
+Clay.gameKey = "prism"
+Clay.readyFunctions = []
+// inviteActions means the API checks onload for any invites from other users,
+// and gives them cupcakes accordingly
+Clay.options = { inviteActions: true }
+Clay.ready = function( fn ) {
+  Clay.readyFunctions.push( fn )
+}
+  
 window.addEventListener( 'load', function() {
-
-  // Load clay API
-  window.Clay = window.Clay || {}
-  Clay.gameKey = "prism"
-  Clay.readyFunctions = []
-
-  // inviteActions means the API checks onload for any invites from other users,
-  // and gives them cupcakes accordingly
-  Clay.options = { inviteActions: true }
-  Clay.ready = function( fn ) {
-    Clay.readyFunctions.push( fn )
-  }
-
+	// Load clay API
   ;( function() {
     var clay = document.createElement("script"); clay.async = true;
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
@@ -53,4 +41,3 @@ window.addEventListener( 'load', function() {
     Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: function() { console.log('todo') } }] })
   })
 })
-*/
