@@ -6,6 +6,7 @@ var config = {
 
 var game = new Phaser.Game(360, 640, Phaser.AUTO, 'game')
 game.score = 0
+game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
 
 function getCupcakesText(n) {
@@ -41,7 +42,7 @@ game.state.add('main', {
       game.scoreText = game.add.text(
         0,
         10,
-        getCupcakesText(0), // 0 Cupcakes
+        getCupcakesText(game.score), // 0 Cupcakes
         { font: '45px sansus', fill: '#fff' })
       game.scoreText.anchor.setTo(0.5, 0)
 
@@ -52,7 +53,7 @@ game.state.add('main', {
       game.cpsText = game.add.text(
         0,
         55,
-        getCupcakesPerSecondText(game.score), // 0 per second
+        getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
         { font: '20px sansus', fill: '#fff' })
       game.cpsText.anchor.setTo(0.5, 0)
 
@@ -99,8 +100,46 @@ game.state.add('main', {
     }
 })
 
+game.state.add('shop', {
+  preload: function() {
+    game.load.image('button', 'assets/button.png')
+  },
+  create: function() {
+    // back button
+    game.shopButton = game.add.group()
+
+    var shopButtonWidth = 170
+    var shopButtonHeight = 60
+    var shopButtonButton = game.add.button(
+      -shopButtonWidth/2, -shopButtonHeight/2,
+      'button', function() {
+        game.state.start('main')
+      })
+    shopButtonButton.width = shopButtonWidth
+    shopButtonButton.height = shopButtonHeight
+
+    game.shopButton.add(shopButtonButton)
+
+    var shopButtonText = game.add.text(
+      0,
+      0,
+      'Back',
+      { font: '30px sansus', fill: '#fff' })
+    shopButtonText.x = -shopButtonText.width / 2
+    shopButtonText.y = -shopButtonText.height / 2
+
+    game.shopButton.add(shopButtonText)
+    game.shopButton.y = 550
+    game.shopButton.x = game.world.centerX
+  },
+  update: function() {
+
+  }
+})
+
 function shop() {
   console.log('SHOP')
+  game.state.start('shop')
 }
 
 function cupcakeClick(button, pointer) {

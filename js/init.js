@@ -1,6 +1,6 @@
 // And finally we tell Phaser to add and start our 'main' state
-
 game.state.start('main')
+
 
 /*
 grabCupcakeSVG({
