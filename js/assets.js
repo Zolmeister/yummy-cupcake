@@ -1,7 +1,6 @@
 function loadMainStateAssets(game) {
     game.load.image('cupcake', 'assets/cupcake.png')
     game.load.image('button', 'assets/button.png')
-    game.stage.backgroundColor = '#71c5cf'
 }
 
 // TODO: probably should have some sort of class/obj we can attach things to
