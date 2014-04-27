@@ -6,6 +6,7 @@ var config = {
 
 var game = new Phaser.Game(360, 640, Phaser.AUTO, 'game')
 game.score = 0
+game.cupcakesPerClick = 1
 
 function getCupcakesText(n) {
   return n + ' Cupcakes'
@@ -120,11 +121,15 @@ function cupcakeClick(button, pointer) {
 
   // spawn +1 near the mouse
 
-  var plusOneStyle =  { font: '25px sansus', align: 'center', fill: '#fff' }
   // add some variance in the +1 position (but still near tap)
   var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
   var y = pointer.y // probably don't need variance in the y
-  var plusOne = game.add.text(x, y, '+1', plusOneStyle)
+  var plusOne = game.add.text(
+    x, y, '+' + game.cupcakesPerClick,
+    { font: '25px sansus', align: 'center', fill: '#fff' })
+
+  // slight random rotation
+  plusOne.angle = -Math.random() * 10 + 5
   game.add.tween(plusOne).to(
     { y: -50 },
     Math.random() * 1500 + 2000,
@@ -135,5 +140,4 @@ function cupcakeClick(button, pointer) {
 function loop() {
 
 }
-
 
