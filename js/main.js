@@ -245,14 +245,18 @@ game.state.add('shop', {
   }
 })
 
+function incrementScore() {
+	game.score += game.cupcakesPerClick
+  game.scoreText.setText(game.score + ' Cupcakes')
+}
+
 function shop() {
   console.log('SHOP')
   game.state.start('shop')
 }
 
 function cupcakeClick(button, pointer) {
-  game.score++
-  game.scoreText.setText(game.score + ' Cupcakes')
+  incrementScore()
 
   if (!game.cupcakeDown) {
     game.cupcakeDown =  game.time.events.loop(100, function() {

@@ -17,3 +17,9 @@ function invite() {
   console.log('invite')
   Clay.Kik.invite(options)
 }
+
+/* once cupcakes are customizable enough, we have have sharing, 'gifting' or 'baking' cupcakes
+function shareCupcake() {
+	
+}
+*/
