@@ -4,7 +4,7 @@ var config = {
   debug: true
 }
 
-var game = new Phaser.Game(360, 640, Phaser.AUTO, 'game')
+var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game')
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
@@ -17,6 +17,23 @@ function getCupcakesPerSecondText(n) {
   return n + ' per second'
 }
 
+game.state.add('setup', {
+  create: function() {
+        // In debug mode, set the background color offset to see canvas
+      game.stage.backgroundColor = config.debug ? '#71A9CF' : '#71c5cf'
+
+      // Auto scaling
+      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+      game.scale.setScreenSize(true)
+
+      if (config.debug)
+        game.stage.disableVisibilityChange = true
+
+      //game.state.start('main')
+      game.state.start('shop')
+    }
+})
+
 game.state.add('main', {
 
     preload: function() {
@@ -25,12 +42,6 @@ game.state.add('main', {
 
     create: function() {
 
-      // In debug mode, set the background color offset to see canvas
-      game.stage.backgroundColor = config.debug ? '#71A9CF' : '#71c5cf'
-
-      // Auto scaling
-      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-      game.scale.setScreenSize(true)
 
       if (config.debug)
         game.stage.disableVisibilityChange = true
@@ -105,6 +116,79 @@ game.state.add('shop', {
     game.load.image('button', 'assets/button.png')
   },
   create: function() {
+
+    // shop items
+    var bmd = game.add.bitmapData(200, 50);
+
+    bmd.context.fillStyle = 'rgba(0, 250, 180, 1)'
+    bmd.context.fillRect(0,0,200, 50)
+
+    //	Add the bmd as a texture to an Image object.
+    //	If we don't do this nothing will render on screen.
+    //game.add.sprite(0, 0, bmd);
+
+    game.buttons = []
+    var buttons = game.buttons
+    for (var i=0; i < 12; i++) {
+      buttons.push(game.add.button(
+      90, 80+i*52,
+      bmd, function() {
+        // TODO: disable if button is not actually visible (masked)
+        // buy item
+        if (!game.tracked)
+        console.log('buying', i)
+
+        game.tracked = false
+
+      }))
+    }
+    game.items = game.add.group()
+    var items = game.items
+    buttons.map(function(btn) {
+      btn.anchor.setTo(0.5, 0)
+      btn.x = game.world.centerX
+      btn.input.enableDrag()
+      var origX = btn.x
+      var origY = btn.y
+      btn.events.onDragStart.add(function(btn, pointer){
+        game.tracking = true
+        game.trackingOrigX = pointer.x
+        game.trackingOrigY = pointer.y
+        game.trackingElX = btn.x
+        game.trackingElY = btn.y
+        game.trackingEl = btn
+        game.trackingStart = true
+      })
+      btn.events.onDragStop.add(function(btn, pointer){
+        game.tracking = false
+        game.trackingEl.x = game.trackingElX
+        game.trackingEl.y = game.trackingElY
+      })
+      items.add(btn)
+    })
+
+    // This is a mask so that the buttons are hidden
+    // if they are outside the 'shop' bounding box
+    var graphics = game.add.graphics(0, 0)
+    graphics.moveTo(game.world.centerX - 100, 80)
+    graphics.lineTo(game.world.centerX - 100, 450)
+    graphics.lineTo(game.world.centerX + 100, 450)
+    graphics.lineTo(game.world.centerX + 100, 80)
+
+    items.mask = graphics
+
+
+    // Title text
+    game.scoreText = game.add.text(
+      0,
+      10,
+      'Store',
+      { font: '45px sansus', fill: '#fff' })
+    game.scoreText.anchor.setTo(0.5, 0)
+    game.scoreText.x = game.world.centerX
+
+
+
     // back button
     game.shopButton = game.add.group()
 
@@ -133,7 +217,31 @@ game.state.add('shop', {
     game.shopButton.x = game.world.centerX
   },
   update: function() {
+    if (game.tracking && game.input.activePointer.isDown) {
+      if (game.trackingStart &&
+          (game.input.activePointer.y > game.trackingOrigY + 5 ||
+           game.input.activePointer.y < game.trackingOrigY - 5 )) {
+        game.trackingStart = false
+        game.tracked = true
+      } else if (!game.trackingStart) {
+        var y = game.input.activePointer.y
 
+        var dy = y - game.trackingOrigY
+        game.trackingOrigY = y
+        game.items.y+=dy
+
+        if (game.items.y >  0) {
+          game.items.y = 0
+        }
+        if (game.items.y <  -(game.buttons.length*52 - 370)) {
+          game.items.y = -(game.buttons.length*52 - 370)
+        }
+
+      }
+
+      game.trackingEl.x = game.trackingElX
+      game.trackingEl.y = game.trackingElY
+    }
   }
 })
 
