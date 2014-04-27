@@ -103,8 +103,8 @@ function shop() {
 }
 
 function cupcakeClick(button, pointer) {
-  game.cupcakeCount++
-  game.scoreText.setText(game.cupcakeCount + ' Cupcakes')
+  game.score++
+  game.scoreText.setText(game.score + ' Cupcakes')
 
   if (!game.cupcakeDown) {
     game.cupcakeDown =  game.time.events.loop(100, function() {
