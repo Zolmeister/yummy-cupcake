@@ -1,13 +1,77 @@
 // note that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var config = {
-  debug: false
+  debug: true
 }
 
 var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent = !config.debug)
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
+
+// shop items
+game.shopItemList = [
+  {
+    name: 'icing machine',
+    cost: 15,
+    cps: 0.1,
+    owned: 0
+  },
+  {
+    name: 'icing farm',
+    cost: 100,
+    cps: 0.5,
+    owned: 0
+  },
+  {
+    name: 'icing factory',
+    cost: 500,
+    cps: 4,
+    owned: 0
+  },
+  {
+    name: 'icing mines',
+    cost: 3000,
+    cps: 10,
+    owned: 0
+  },
+  {
+    name: 'icing shipment',
+    cost: 10000,
+    cps: 40,
+    owned: 0
+  },
+  {
+    name: 'icing lab',
+    cost: 40000,
+    cps: 100,
+    owned: 0
+  },
+  {
+    name: 'icing portal',
+    cost: 200000,
+    cps: 400,
+    owned: 0
+  },
+  {
+    name: 'time machine',
+    cost: 1666666,
+    cps: 6666,
+    owned: 0
+  },
+  {
+    name: 'antimatter',
+    cost: 123456789,
+    cps: 98765,
+    owned: 0
+  },
+  {
+    name: 'prism',
+    cost: 3999999999,
+    cps: 999999,
+    owned: 0
+  }
+]
 
 function getCupcakesText(n) {
   return n + ' Cupcakes'
@@ -31,8 +95,8 @@ game.state.add('setup', {
         game.stage.disableVisibilityChange = true
 
 			grabImageAssets( function() {
-	      //game.state.start('main')
-	      game.state.start('shop')
+	      game.state.start('main')
+	      // game.state.start('shop')
 			})
     }
 })
@@ -51,7 +115,7 @@ game.state.add('main', {
 
 
       // Add UI elements
-      
+
       // Main score background bar
       game.topBar = game.add.sprite(0, 0, 'bar')
 
@@ -147,11 +211,10 @@ game.state.add('shop', {
   },
   create: function() {
 
-    // shop items
-    var bmd = game.add.bitmapData(200, 50);
+    var bmd = game.add.bitmapData(250, 50)
 
     bmd.context.fillStyle = 'rgba(0, 250, 180, 1)'
-    bmd.context.fillRect(0,0,200, 50)
+    bmd.context.fillRect(0,0, 250, 50)
 
     //	Add the bmd as a texture to an Image object.
     //	If we don't do this nothing will render on screen.
@@ -159,28 +222,43 @@ game.state.add('shop', {
 
     game.buttons = []
     var buttons = game.buttons
-    for (var i=0; i < 12; i++) {
-      buttons.push(game.add.button(
-      90, 80+i*52,
-      bmd, function() {
-        // TODO: disable if button is not actually visible (masked)
-        // buy item
-        if (!game.tracked)
-        console.log('buying', i)
 
-        game.tracked = false
-
-      }))
-    }
     game.items = game.add.group()
     var items = game.items
-    buttons.map(function(btn) {
-      btn.anchor.setTo(0.5, 0)
+
+    for(var i=0; i< game.shopItemList.length; i++) {
+      var btn = game.add.group()
+      var button = game.add.button(
+      0, 0,
+      bmd, (function(i) {
+        return function() {
+          // TODO: disable if button is not actually visible (masked)
+          // buy item
+          if (!game.tracked) {
+            console.log('buying', game.shopItemList[i])
+          }
+
+          game.tracked = false
+
+        }
+      })(i))
+      var name = game.add.text(
+      0, 0,
+      game.shopItemList[i].name,
+        {font: '20px sansus'})
+      name.anchor.setTo(0, 0)
+      name.x = -115
+      name.y = 12
+      btn.add(button)
+      btn.add(name)
+      button.anchor.setTo(0.5, 0)
       btn.x = game.world.centerX
-      btn.input.enableDrag()
+      btn.y = 80+i*52
+
+      button.input.enableDrag()
       var origX = btn.x
       var origY = btn.y
-      btn.events.onDragStart.add(function(btn, pointer){
+      button.events.onDragStart.add(function(btn, pointer){
         game.tracking = true
         game.trackingOrigX = pointer.x
         game.trackingOrigY = pointer.y
@@ -189,21 +267,24 @@ game.state.add('shop', {
         game.trackingEl = btn
         game.trackingStart = true
       })
-      btn.events.onDragStop.add(function(btn, pointer){
+      button.events.onDragStop.add(function(btn, pointer){
         game.tracking = false
         game.trackingEl.x = game.trackingElX
         game.trackingEl.y = game.trackingElY
       })
       items.add(btn)
-    })
+
+      buttons.push(btn)
+    }
+
 
     // This is a mask so that the buttons are hidden
     // if they are outside the 'shop' bounding box
     var graphics = game.add.graphics(0, 0)
-    graphics.moveTo(game.world.centerX - 100, 80)
-    graphics.lineTo(game.world.centerX - 100, 450)
-    graphics.lineTo(game.world.centerX + 100, 450)
-    graphics.lineTo(game.world.centerX + 100, 80)
+    graphics.moveTo(game.world.centerX - 125, 80)
+    graphics.lineTo(game.world.centerX - 125, 450)
+    graphics.lineTo(game.world.centerX + 125, 450)
+    graphics.lineTo(game.world.centerX + 125, 80)
 
     items.mask = graphics
 
