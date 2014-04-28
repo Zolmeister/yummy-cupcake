@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'sansus';
   font-weight: bold;
-  src: url('/css/fonts/sansus.otf') format('opentype');
+  src: url('fonts/sansus.otf') format('opentype');
 }
 
 body {
@@ -11,8 +11,8 @@ body {
   was thinking I could rotate it, but probably not since it'd have to rotate the entire element
   and the element would have to be width & height of largest of screen width/height
   */
-  background: url(/assets/starburst.svg) no-repeat center center #71c5cf;
-  background-size: 100%;
+  background: url(../assets/starburst.svg) no-repeat center center #71c5cf;
+  background-size: cover; /* this might actually be slow (cover) */
   width: 100%;
   height: 100%;
   display: table;

@@ -82,17 +82,15 @@ game.state.add('main', {
       game.cupcake.anchor.setTo(0.5, 0.5)
       game.cupcake.x = game.world.centerX
       game.cupcake.y = game.world.centerY
-      game.cupcake.scale.x = 1
-      game.cupcake.scale.y = 1
 
       // shop button
       game.shopButton = game.add.group()
 
-      var shopButtonWidth = 170
+      var shopButtonWidth = 360
       var shopButtonHeight = 60
       var shopButtonButton = game.add.button(
         -shopButtonWidth/2, -shopButtonHeight/2,
-        'button', shop)
+        'button-purple', shop)
       shopButtonButton.width = shopButtonWidth
       shopButtonButton.height = shopButtonHeight
 
@@ -101,14 +99,40 @@ game.state.add('main', {
       var shopButtonText = game.add.text(
         0,
         0,
-        'Shop',
+        'Buy Upgrades',
         { font: '30px sansus', fill: '#fff' })
       shopButtonText.x = -shopButtonText.width / 2
       shopButtonText.y = -shopButtonText.height / 2
 
       game.shopButton.add(shopButtonText)
-      game.shopButton.y = 550
+      game.shopButton.y = 640 - 120 - 5
       game.shopButton.x = game.world.centerX
+
+
+      // earn more cupcakes (share) button
+      game.shareButton = game.add.group()
+
+      var shareButtonWidth = 360
+      var shareButtonHeight = 60
+      var shareButtonButton = game.add.button(
+        -shareButtonWidth/2, -shareButtonHeight/2,
+        'button-green', invite)
+      shareButtonButton.width = shareButtonWidth
+      shareButtonButton.height = shareButtonHeight
+
+      game.shareButton.add(shareButtonButton)
+
+      var shareButtonText = game.add.text(
+        0,
+        0,
+        'Earn More Cupcakes',
+        { font: '30px sansus', fill: '#fff' })
+      shareButtonText.x = -shareButtonText.width / 2
+      shareButtonText.y = -shareButtonText.height / 2
+
+      game.shareButton.add(shareButtonText)
+      game.shareButton.y = 640 - 60
+      game.shareButton.x = game.world.centerX
 
     },
 
@@ -119,7 +143,8 @@ game.state.add('main', {
 
 game.state.add('shop', {
   preload: function() {
-    game.load.image('button', 'assets/button.png')
+    game.load.image('button-green', 'assets/button-green.png')
+    game.load.image('button-purple', 'assets/button-purple.png')
   },
   create: function() {
 
@@ -202,7 +227,7 @@ game.state.add('shop', {
     var shopButtonHeight = 60
     var shopButtonButton = game.add.button(
       -shopButtonWidth/2, -shopButtonHeight/2,
-      'button', function() {
+      'button-green', function() {
         game.state.start('main')
       })
     shopButtonButton.width = shopButtonWidth

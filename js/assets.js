@@ -105,7 +105,7 @@ function grabCupcakeSVG(options, callback) {
       callback(canvas.toDataURL('images/png'))
     }
   }
-  xhr.open('GET', '/assets/pink.svg')
+  xhr.open('GET', 'assets/pink.svg')
   xhr.responseType = 'document'
   xhr.send()
 }
