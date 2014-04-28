@@ -144,7 +144,6 @@ game.state.add('main', {
 game.state.add('shop', {
   preload: function() {
     game.load.image('button-green', 'assets/button-green.png')
-    game.load.image('button-purple', 'assets/button-purple.png')
   },
   create: function() {
 

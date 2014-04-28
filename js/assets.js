@@ -1,7 +1,8 @@
 function loadMainStateAssets(game) {
     game.load.image('cupcake', game.svgs.cupcake)
     game.load.image('bar', game.svgs.bar)
-    game.load.image('button', 'assets/button.png')
+    game.load.image('button-green', 'assets/button-green.png')
+    game.load.image('button-purple', 'assets/button-purple.png')
 }
 
 // Load in SVGs as pngs so phaser can use them

@@ -10,8 +10,8 @@ function invite() {
   var options = {
     message: 'test',
     onAction: {
-      join: { incrementData: { key: 'cupcakes', amount: 500 } },
-      play: { incrementData: { key: 'cupcakes', amount: 50 } }
+      join: { incrementData: { key: 'score', amount: 500 } },
+      play: { incrementData: { key: 'score', amount: 50 } }
     }
   }
   console.log('invite')
