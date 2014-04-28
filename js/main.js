@@ -95,8 +95,8 @@ game.state.add('setup', {
         game.stage.disableVisibilityChange = true
 
 			grabImageAssets( function() {
-	      game.state.start('main')
-	      // game.state.start('shop')
+	      // game.state.start('main')
+	      game.state.start('shop')
 			})
     }
 })
@@ -118,11 +118,12 @@ game.state.add('main', {
 
       // Main score background bar
       game.topBar = game.add.sprite(0, 0, 'bar')
+      game.topBar.height = 100
 
       // Main score text
       game.scoreText = game.add.text(
         0,
-        -10,
+        5,
         getCupcakesText(game.score), // 0 Cupcakes
         { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
       game.scoreText.anchor.setTo(0.5, 0)
@@ -133,7 +134,7 @@ game.state.add('main', {
       // Cupcakes-per-second text
       game.cpsText = game.add.text(
         0,
-        38,
+        60,
         getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
         { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
       game.cpsText.anchor.setTo(0.5, 0)
@@ -208,8 +209,13 @@ game.state.add('main', {
 game.state.add('shop', {
   preload: function() {
     game.load.image('button-green', 'assets/button-green.png')
+    game.load.image('bar', game.svgs.bar)
   },
   create: function() {
+
+    // Main score background bar
+    game.topBar = game.add.sprite(0, 0, 'bar')
+    game.topBar.height = 100
 
     var bmd = game.add.bitmapData(250, 50)
 
@@ -242,18 +248,29 @@ game.state.add('shop', {
 
         }
       })(i))
+
+      button.anchor.setTo(0.5, 0)
+
       var name = game.add.text(
-      0, 0,
+      -115, 12,
       game.shopItemList[i].name,
         {font: '20px sansus'})
       name.anchor.setTo(0, 0)
-      name.x = -115
-      name.y = 12
+
+      var count = game.add.text(
+      0, 0,
+      game.shopItemList[i].owned+'',
+        {font: '20px sansus'})
+      count.anchor.setTo(0, 0)
+      count.x = 40
+      count.y = 12
+
       btn.add(button)
       btn.add(name)
-      button.anchor.setTo(0.5, 0)
+      btn.add(count)
+
       btn.x = game.world.centerX
-      btn.y = 80+i*52
+      btn.y = 110+i*52
 
       button.input.enableDrag()
       var origX = btn.x
@@ -281,20 +298,29 @@ game.state.add('shop', {
     // This is a mask so that the buttons are hidden
     // if they are outside the 'shop' bounding box
     var graphics = game.add.graphics(0, 0)
-    graphics.moveTo(game.world.centerX - 125, 80)
-    graphics.lineTo(game.world.centerX - 125, 450)
-    graphics.lineTo(game.world.centerX + 125, 450)
-    graphics.lineTo(game.world.centerX + 125, 80)
+    graphics.moveTo(game.world.centerX - 125, 110)
+    graphics.lineTo(game.world.centerX - 125, 480)
+    graphics.lineTo(game.world.centerX + 125, 480)
+    graphics.lineTo(game.world.centerX + 125, 110)
 
     items.mask = graphics
 
 
+    // Main score text
+    game.scoreText = game.add.text(
+      0,
+      5,
+      getCupcakesText(game.score), // 0 Cupcakes
+      { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
+    game.scoreText.anchor.setTo(0.5, 0)
+    game.scoreText.x = game.world.centerX
+
     // Title text
     game.scoreText = game.add.text(
       0,
-      10,
+      60,
       'Store',
-      { font: '45px sansus', fill: '#fff' })
+      { font: '20px sansus', fill: '#fff', stroke: '#ee508c', strokeThickness: 5 })
     game.scoreText.anchor.setTo(0.5, 0)
     game.scoreText.x = game.world.centerX
 
