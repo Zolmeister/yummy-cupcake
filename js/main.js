@@ -1,10 +1,10 @@
 // note that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var config = {
-  debug: true
+  debug: false
 }
 
-var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game')
+var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent = !config.debug)
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
@@ -19,8 +19,9 @@ function getCupcakesPerSecondText(n) {
 
 game.state.add('setup', {
   create: function() {
-        // In debug mode, set the background color offset to see canvas
-      game.stage.backgroundColor = config.debug ? '#71A9CF' : '#71c5cf'
+      // In debug mode, set the background color offset to see canvas
+     //if(config.debug)
+      	game.stage.backgroundColor = '#71c5cf'
 
       // Auto scaling
       game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
@@ -29,13 +30,7 @@ game.state.add('setup', {
       if (config.debug)
         game.stage.disableVisibilityChange = true
 
-						
-			grabCupcakeSVG({
-			  width: 326,
-			  height: 463,
-			  items: ['cherry', 'straw', 'sprinkles']
-			}, function(url) {
-			  game.cupcakeURL = url
+			grabImageAssets( function() {
 	      //game.state.start('main')
 	      game.state.start('shop')
 			})
@@ -56,13 +51,16 @@ game.state.add('main', {
 
 
       // Add UI elements
+      
+      // Main score background bar
+      game.topBar = game.add.sprite(0, 0, 'bar')
 
       // Main score text
       game.scoreText = game.add.text(
         0,
-        10,
+        -10,
         getCupcakesText(game.score), // 0 Cupcakes
-        { font: '45px sansus', fill: '#fff' })
+        { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
       game.scoreText.anchor.setTo(0.5, 0)
 
       // center text
@@ -71,9 +69,9 @@ game.state.add('main', {
       // Cupcakes-per-second text
       game.cpsText = game.add.text(
         0,
-        55,
+        38,
         getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
-        { font: '20px sansus', fill: '#fff' })
+        { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
       game.cpsText.anchor.setTo(0.5, 0)
 
       // center text
@@ -84,8 +82,8 @@ game.state.add('main', {
       game.cupcake.anchor.setTo(0.5, 0.5)
       game.cupcake.x = game.world.centerX
       game.cupcake.y = game.world.centerY
-      game.cupcake.scale.x = 0.7
-      game.cupcake.scale.y = 0.7
+      game.cupcake.scale.x = 1
+      game.cupcake.scale.y = 1
 
       // shop button
       game.shopButton = game.add.group()
@@ -268,8 +266,8 @@ function cupcakeClick(button, pointer) {
 
   if (!game.cupcakeDown) {
     game.cupcakeDown =  game.time.events.loop(100, function() {
-      game.cupcake.scale.x = 0.7
-      game.cupcake.scale.y = 0.7
+      game.cupcake.scale.x = 1
+      game.cupcake.scale.y = 1
 
       game.time.events.remove(game.cupcakeDown)
       game.cupcakeDown = null
