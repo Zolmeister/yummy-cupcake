@@ -1,6 +1,14 @@
-// And finally we tell Phaser to add and start our 'main' state
-// game.state.start('main')
-game.state.start('setup')
+// Load fonts
+WebFont.load({
+  custom: {
+    families: ['sansus']
+  },
+  active: function() {
+    game.state.start('setup')
+  }
+});
+
+
 
 
 // Set global vars for Clay API (for Clay.ready())
@@ -13,7 +21,7 @@ Clay.options = { inviteActions: true }
 Clay.ready = function( fn ) {
   Clay.readyFunctions.push( fn )
 }
-  
+
 window.addEventListener( 'load', function() {
 	// Load clay API
   ;( function() {
