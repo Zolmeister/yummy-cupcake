@@ -206,10 +206,15 @@ game.state.add('main', {
     }
 })
 
+function getItemCost(item) {
+  return item.cost * Math.pow(1.15, item.owned)
+}
+
 game.state.add('shop', {
   preload: function() {
     game.load.image('button-green', 'assets/button-green.png')
     game.load.image('bar', game.svgs.bar)
+    game.load.image('cupcake', game.svgs.cupcake)
   },
   create: function() {
 
@@ -242,6 +247,9 @@ game.state.add('shop', {
           // buy item
           if (!game.tracked) {
             console.log('buying', game.shopItemList[i])
+            game.shopItemList[i].owned += 1
+            game.shopItemList[i].cost = .15
+            game.cupcakesPerSecond += game.shopItemList[i].cps
           }
 
           game.tracked = false
@@ -252,22 +260,55 @@ game.state.add('shop', {
       button.anchor.setTo(0.5, 0)
 
       var name = game.add.text(
-      -115, 12,
+      -115, 15,
       game.shopItemList[i].name,
         {font: '20px sansus'})
       name.anchor.setTo(0, 0)
 
-      var count = game.add.text(
+      /*var count = game.add.text(
       0, 0,
       game.shopItemList[i].owned+'',
         {font: '20px sansus'})
       count.anchor.setTo(0, 0)
       count.x = 40
-      count.y = 12
+      count.y = 12*/
+
+      var cost = game.add.text(
+      0, 0,
+      getItemCost(game.shopItemList[i])+'',
+        {font: '20px sansus'})
+      cost.anchor.setTo(0, 0)
+      cost.x = 30
+      cost.y = 5
+
+
+
+      var cupcake = game.add.sprite(15, 5, 'cupcake')
+      cupcake.width = 12
+      cupcake.height = 16
+
+      var cps = game.add.text(
+      15, 25,
+      '+'+game.shopItemList[i].cps,
+        {font: '20px sansus'})
+
+
+      if (game.shopItemList[i].cost.toString().length > 9) {
+        cost.setStyle({
+          font: '16px sansus'
+        })
+        cps.setStyle({
+          font: '16px sansus'
+        })
+      }
+
 
       btn.add(button)
       btn.add(name)
-      btn.add(count)
+      //btn.add(count)
+      btn.add(cost)
+      btn.add(cps)
+      btn.add(cupcake)
 
       btn.x = game.world.centerX
       btn.y = 110+i*52
@@ -316,13 +357,15 @@ game.state.add('shop', {
     game.scoreText.x = game.world.centerX
 
     // Title text
-    game.scoreText = game.add.text(
-      0,
-      60,
-      'Store',
-      { font: '20px sansus', fill: '#fff', stroke: '#ee508c', strokeThickness: 5 })
-    game.scoreText.anchor.setTo(0.5, 0)
-    game.scoreText.x = game.world.centerX
+    game.cpsText = game.add.text(
+        0,
+        60,
+        getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
+        { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
+      game.cpsText.anchor.setTo(0.5, 0)
+
+      // center text
+      game.cpsText.x = game.world.centerX
 
 
 
