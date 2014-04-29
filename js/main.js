@@ -1,7 +1,7 @@
 // note that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var config = {
-  debug: true
+  debug: false
 }
 
 var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent = !config.debug)
@@ -15,61 +15,71 @@ game.shopItemList = [
     name: 'icing machine',
     cost: 15,
     cps: 0.1,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing farm',
     cost: 100,
     cps: 0.5,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing factory',
     cost: 500,
     cps: 4,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing mines',
     cost: 3000,
     cps: 10,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing shipment',
     cost: 10000,
     cps: 40,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing lab',
     cost: 40000,
     cps: 100,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'icing portal',
     cost: 200000,
     cps: 400,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'time machine',
     cost: 1666666,
     cps: 6666,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'antimatter',
     cost: 123456789,
     cps: 98765,
-    owned: 0
+    owned: 0,
+    visible: false
   },
   {
     name: 'prism',
     cost: 3999999999,
     cps: 999999,
-    owned: 0
+    owned: 0,
+    visible: false
   }
 ]
 
@@ -78,7 +88,7 @@ function getCupcakesText(n) {
 }
 
 function getCupcakesPerSecondText(n) {
-  return n + ' per second'
+  return n.toFixed(1) + ' per second'
 }
 
 game.state.add('setup', {
@@ -207,7 +217,7 @@ game.state.add('main', {
 })
 
 function getItemCost(item) {
-  return item.cost * Math.pow(1.15, item.owned)
+  return Math.round(item.cost * Math.pow(1.15, item.owned))
 }
 
 game.state.add('shop', {
@@ -224,8 +234,15 @@ game.state.add('shop', {
 
     var bmd = game.add.bitmapData(250, 50)
 
-    bmd.context.fillStyle = 'rgba(0, 250, 180, 1)'
+    bmd.context.fillStyle = 'rgba(255, 232, 247, 1)'
     bmd.context.fillRect(0,0, 250, 50)
+
+    var bg = game.add.bitmapData(280, 410)
+    bg.context.fillStyle = 'rgba(240, 172, 55, 1)'
+    bg.context.fillRect(0,0, 280, 410)
+    var backgroundSprite = game.add.image(40, 105, bg)
+
+
 
     //	Add the bmd as a texture to an Image object.
     //	If we don't do this nothing will render on screen.
@@ -236,113 +253,129 @@ game.state.add('shop', {
 
     game.items = game.add.group()
     var items = game.items
+    var nextHidden = false;
 
-    for(var i=0; i< game.shopItemList.length; i++) {
-      var btn = game.add.group()
-      var button = game.add.button(
-      0, 0,
-      bmd, (function(i) {
-        return function() {
-          // TODO: disable if button is not actually visible (masked)
-          // buy item
-          if (!game.tracked) {
-            console.log('buying', game.shopItemList[i])
-            game.shopItemList[i].owned += 1
-            game.shopItemList[i].cost = .15
-            game.cupcakesPerSecond += game.shopItemList[i].cps
-          }
+    for(var i=0; i < game.shopItemList.length; i++) {
+      if (nextHidden) break
 
-          game.tracked = false
+      ;(function(i){
+        var item = game.shopItemList[i]
+        var btn = game.add.group()
 
+        var button = game.add.button(
+        0, 0,
+        bmd, function() {
+            var item = game.shopItemList[i]
+            // TODO: disable if button is not actually visible (masked)
+            // buy item
+            if (!game.tracked) {
+              console.log('buying', item.name)
+
+              if (game.score >= getItemCost(item)) {
+                item.owned += 1
+                game.cupcakesPerSecond += item.cps
+
+                cost.setText(getItemCost(item))
+                game.cpsText.setText(getCupcakesPerSecondText(game.cupcakesPerSecond))
+                game.dirty = true
+              }
+            }
+
+            game.tracked = false
+          })
+
+        button.anchor.setTo(0.5, 0)
+
+        var name = game.add.text(
+        -115, 15,
+        item.name,
+          {font: '20px sansus'})
+        name.anchor.setTo(0, 0)
+        if (game.score >= getItemCost(item)) {
+          item.visible = true
         }
-      })(i))
+        if (!item.visible && !nextHidden) {
+          name.setText('???')
+          nextHidden = true
+        }
 
-      button.anchor.setTo(0.5, 0)
+        /*var count = game.add.text(
+        0, 0,
+        game.shopItemList[i].owned+'',
+          {font: '20px sansus'})
+        count.anchor.setTo(0, 0)
+        count.x = 40
+        count.y = 12*/
 
-      var name = game.add.text(
-      -115, 15,
-      game.shopItemList[i].name,
-        {font: '20px sansus'})
-      name.anchor.setTo(0, 0)
+        var cost = game.add.text(
+        0, 0,
+        getItemCost(game.shopItemList[i])+'',
+          {font: '20px sansus'})
+        cost.anchor.setTo(0, 0)
+        cost.x = 30
+        cost.y = 5
 
-      /*var count = game.add.text(
-      0, 0,
-      game.shopItemList[i].owned+'',
-        {font: '20px sansus'})
-      count.anchor.setTo(0, 0)
-      count.x = 40
-      count.y = 12*/
+        var cupcake = game.add.sprite(15, 5, 'cupcake')
+        cupcake.width = 12
+        cupcake.height = 16
 
-      var cost = game.add.text(
-      0, 0,
-      getItemCost(game.shopItemList[i])+'',
-        {font: '20px sansus'})
-      cost.anchor.setTo(0, 0)
-      cost.x = 30
-      cost.y = 5
-
-
-
-      var cupcake = game.add.sprite(15, 5, 'cupcake')
-      cupcake.width = 12
-      cupcake.height = 16
-
-      var cps = game.add.text(
-      15, 25,
-      '+'+game.shopItemList[i].cps,
-        {font: '20px sansus'})
+        var cps = game.add.text(
+        15, 25,
+        '+'+game.shopItemList[i].cps,
+          {font: '20px sansus'})
 
 
-      if (game.shopItemList[i].cost.toString().length > 9) {
-        cost.setStyle({
-          font: '16px sansus'
+        if (game.shopItemList[i].cost.toString().length > 9) {
+          cost.setStyle({
+            font: '16px sansus'
+          })
+          cps.setStyle({
+            font: '16px sansus'
+          })
+        }
+
+
+        btn.add(button)
+        btn.add(name)
+        //btn.add(count)
+        btn.add(cost)
+        btn.add(cps)
+        btn.add(cupcake)
+
+        btn.x = game.world.centerX
+        btn.y = 120+i*52
+
+        button.input.enableDrag()
+        var origX = btn.x
+        var origY = btn.y
+        button.events.onDragStart.add(function(btn, pointer){
+          game.tracking = true
+          game.trackingOrigX = pointer.x
+          game.trackingOrigY = pointer.y
+          game.trackingElX = btn.x
+          game.trackingElY = btn.y
+          game.trackingEl = btn
+          game.trackingStart = true
         })
-        cps.setStyle({
-          font: '16px sansus'
+        button.events.onDragStop.add(function(btn, pointer){
+          game.tracking = false
+          game.trackingEl.x = game.trackingElX
+          game.trackingEl.y = game.trackingElY
         })
-      }
+        items.add(btn)
 
-
-      btn.add(button)
-      btn.add(name)
-      //btn.add(count)
-      btn.add(cost)
-      btn.add(cps)
-      btn.add(cupcake)
-
-      btn.x = game.world.centerX
-      btn.y = 110+i*52
-
-      button.input.enableDrag()
-      var origX = btn.x
-      var origY = btn.y
-      button.events.onDragStart.add(function(btn, pointer){
-        game.tracking = true
-        game.trackingOrigX = pointer.x
-        game.trackingOrigY = pointer.y
-        game.trackingElX = btn.x
-        game.trackingElY = btn.y
-        game.trackingEl = btn
-        game.trackingStart = true
-      })
-      button.events.onDragStop.add(function(btn, pointer){
-        game.tracking = false
-        game.trackingEl.x = game.trackingElX
-        game.trackingEl.y = game.trackingElY
-      })
-      items.add(btn)
-
-      buttons.push(btn)
+        buttons.push(btn)
+      })(i)
     }
 
 
     // This is a mask so that the buttons are hidden
     // if they are outside the 'shop' bounding box
     var graphics = game.add.graphics(0, 0)
-    graphics.moveTo(game.world.centerX - 125, 110)
-    graphics.lineTo(game.world.centerX - 125, 480)
-    graphics.lineTo(game.world.centerX + 125, 480)
-    graphics.lineTo(game.world.centerX + 125, 110)
+    graphics.moveTo(game.world.centerX - 125, 120)
+    graphics.lineTo(game.world.centerX - 125, 500)
+    graphics.lineTo(game.world.centerX + 125, 500)
+    graphics.lineTo(game.world.centerX + 125, 120)
 
     items.mask = graphics
 
@@ -372,7 +405,7 @@ game.state.add('shop', {
     // back button
     game.shopButton = game.add.group()
 
-    var shopButtonWidth = 170
+    var shopButtonWidth = game.world.width
     var shopButtonHeight = 60
     var shopButtonButton = game.add.button(
       -shopButtonWidth/2, -shopButtonHeight/2,
@@ -431,7 +464,6 @@ function incrementScore() {
 }
 
 function shop() {
-  console.log('SHOP')
   game.state.start('shop')
 }
 
