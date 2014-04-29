@@ -8,6 +8,17 @@ var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent =
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
+game.scoreTextScore = 0
+
+setInterval(function() {
+  game.score += game.cupcakesPerSecond
+  if(game.scoreText) {
+    if (Math.floor(game.score) !== game.scoreTextScore) {
+      game.scoreTextScore = Math.floor(game.score)
+      game.scoreText.setText(getCupcakesText(game.scoreTextScore))
+    }
+  }
+}, 1000)
 
 // shop items
 game.shopItemList = [
@@ -134,7 +145,7 @@ game.state.add('main', {
       game.scoreText = game.add.text(
         0,
         5,
-        getCupcakesText(game.score), // 0 Cupcakes
+        getCupcakesText(game.scoreTextScore), // 0 Cupcakes
         { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
       game.scoreText.anchor.setTo(0.5, 0)
 
@@ -384,7 +395,7 @@ game.state.add('shop', {
     game.scoreText = game.add.text(
       0,
       5,
-      getCupcakesText(game.score), // 0 Cupcakes
+      getCupcakesText(game.scoreTextScore), // 0 Cupcakes
       { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
     game.scoreText.anchor.setTo(0.5, 0)
     game.scoreText.x = game.world.centerX
