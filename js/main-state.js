@@ -1,7 +1,10 @@
 function MainState() {}
 
 MainState.prototype.preload = function() {
-  loadMainStateAssets(game)
+  game.load.image('cupcake', game.svgs.cupcake)
+  game.load.image('bar', game.svgs.bar)
+  game.load.image('button-green', 'assets/button-green.png')
+  game.load.image('button-purple', 'assets/button-purple.png')
 }
 
 MainState.prototype.create = function() {
@@ -19,7 +22,7 @@ MainState.prototype.create = function() {
   game.scoreText = game.add.text(
     0,
     5,
-    getCupcakesText(game.scoreTextScore), // 0 Cupcakes
+    getCupcakesText(game.score), // 0 Cupcakes
     { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
   game.scoreText.anchor.setTo(0.5, 0)
 
@@ -139,5 +142,5 @@ function shop() {
 
 function incrementScore() {
 	game.score += game.cupcakesPerClick
-  game.scoreText.setText(game.score + ' Cupcakes')
+  updateScoreText(game)
 }

@@ -1,41 +1,20 @@
-function loadMainStateAssets(game) {
-    game.load.image('cupcake', game.svgs.cupcake)
-    game.load.image('bar', game.svgs.bar)
-    game.load.image('button-green', 'assets/button-green.png')
-    game.load.image('button-purple', 'assets/button-purple.png')
-}
-
 // Load in SVGs as pngs so phaser can use them
-function grabImageAssets(callback) {
-	game.svgs = []
-	var svgs = [
+function getSVGImageAssets() {
+	return new Promiz().resolve([
 		{ key: 'bar', src: 'assets/bar.svg', width: 360, height: 73 }
-	]
-	// Nesting... Maybe you can implement a promise here
-	SVGtoPNGs(svgs, function(sources) { 
-		game.svgs = sources // key: src
-		
-		// this one has it's own specfic function because it turns on/off custom elements
-		grabCupcakeSVG({
-		  width: 228,
-		  height: 324,
-		  items: ['cherry', 'straw', 'sprinkles']
-		}, function(url) {
-		  game.svgs.cupcake = url
-		  // everything loaded up
-		  callback()
-		})
-	})
+	])
 }
 
 // convert all of our svgs to png urls
 // @param svgs [ { key: 'someKey', src: 'assets/bar.svg', width: someWidth, height: someHeight } ]
 // @param callback - called when complete with param: { someKey: someSrcURL }
-function SVGtoPNGs(svgs, callback) {
+function SVGstoPNGs(svgs) {
+  var deferred = new Promiz()
+
 	var loaded = 0 // counter so we can call callback when all are loaded
 	var toLoad = svgs.length
 	var returnObj = {}
-	
+
 	for(var i = 0, j = svgs.length; i < j; i++) {
 		// force local scope since img.onload is async
 	  ;(function(svg) {
@@ -57,19 +36,28 @@ function SVGtoPNGs(svgs, callback) {
 		    ctx.drawImage(img, 0, 0, width, height)
 		    // canvas to png
 		    returnObj[ svg.key ] = canvas.toDataURL('images/png')
-		    
+
 		    loaded++
-		    if(loaded == toLoad) // all imgs loaded
-		    	callback(returnObj)
+
+        // all imgs loaded
+		    if(loaded == toLoad) {
+		    	deferred.resolve(returnObj)
+        }
 		  }
+      img.onerror = function(err) {
+        deferred.reject(err)
+      }
 		 })(svgs[i])
 	 }
+
+  return deferred
 }
 
-// all possible items. guessing you're going to re-implement this somewhere
-var items = ['cherry', 'ribbon', 'straw', 'sprinkles']
 // This SVG->png has its own method since it allows for a bit more customization
-function grabCupcakeSVG(options, callback) {
+function getCupcakeSVG(options) {
+  var deferred = new Promiz()
+  var items = ['cherry', 'ribbon', 'straw', 'sprinkles']
+
   var width = options.width
   var height = options.height
   // Necessary to grab the XML of the svg
@@ -103,10 +91,15 @@ function grabCupcakeSVG(options, callback) {
       // draw svg to canvas
       ctx.drawImage(img, 0, 0, width, height)
       // canvas to png
-      callback(canvas.toDataURL('images/png'))
+      deferred.resolve(canvas.toDataURL('images/png'))
+    }
+    img.onerror = function(err) {
+      deferred.reject(err)
     }
   }
   xhr.open('GET', 'assets/pink.svg')
   xhr.responseType = 'document'
   xhr.send()
+
+  return deferred
 }

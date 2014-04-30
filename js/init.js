@@ -10,21 +10,6 @@ game.state.add('main', MainState)
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
-game.scoreTextScore = 0
-
-function updateScoreText(game) {
-  if(game.scoreText) {
-    if (Math.floor(game.score) !== game.scoreTextScore) {
-      game.scoreTextScore = Math.floor(game.score)
-      game.scoreText.setText(getCupcakesText(game.scoreTextScore))
-    }
-  }
-}
-
-setInterval(function() {
-  game.score += game.cupcakesPerSecond
-  updateScoreText(game)
-}, 1000)
 
 // shop items
 game.shopItemList = [
@@ -102,9 +87,8 @@ game.shopItemList = [
 
 game.state.add('setup', {
   create: function() {
-      // In debug mode, set the background color offset to see canvas
-     //if(config.debug)
-      	game.stage.backgroundColor = '#71c5cf'
+
+      game.stage.backgroundColor = '#71c5cf'
 
       // Auto scaling
       game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
@@ -113,10 +97,30 @@ game.state.add('setup', {
       if (config.debug)
         game.stage.disableVisibilityChange = true
 
-			grabImageAssets( function() {
+			getSVGImageAssets()
+      .then(SVGstoPNGs)
+      .then(function(svgs) {
+        game.svgs = svgs
+      }).then(function() {
+        return getCupcakeSVG({
+          width: 228,
+          height: 324,
+          items: ['cherry', 'straw', 'sprinkles']
+        })
+      }).then(function(cupcakeUri) {
+        game.svgs.cupcake = cupcakeUri
 	      game.state.start('main')
-	      // game.state.start('shop')
-			})
+
+        // core loop that gives players more cupcakes every second
+        ;(function cpsCalculation() {
+          game.score += game.cupcakesPerSecond
+          updateScoreText(game)
+          setTimeout(cpsCalculation, 1000)
+        })()
+			}, function(err) {
+        console.erroro(err)
+      })
+
     }
 })
 
@@ -126,6 +130,8 @@ WebFont.load({
     families: ['sansus']
   },
   active: function() {
+
+    // begin the game
     game.state.start('setup')
   }
 })
@@ -144,7 +150,7 @@ Clay.ready = function( fn ) {
   Clay.readyFunctions.push( fn )
 }
 
-window.addEventListener( 'load', function() {
+window.addEventListener('load', function() {
 	// Load clay API
   ;( function() {
     var clay = document.createElement("script"); clay.async = true;

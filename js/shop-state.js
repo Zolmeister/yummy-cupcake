@@ -164,7 +164,7 @@ ShopState.prototype.create = function() {
     game.scoreText = game.add.text(
       0,
       5,
-      getCupcakesText(game.scoreTextScore), // 0 Cupcakes
+      getCupcakesText(game.score), // 0 Cupcakes
       { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
     game.scoreText.anchor.setTo(0.5, 0)
     game.scoreText.x = game.world.centerX

@@ -1,5 +1,5 @@
 function getCupcakesText(n) {
-  return n + ' Cupcakes'
+  return Math.floor(n) + ' Cupcakes'
 }
 
 function getCupcakesPerSecondText(n) {
@@ -8,4 +8,18 @@ function getCupcakesPerSecondText(n) {
 
 function getItemCost(item) {
   return Math.round(item.cost * Math.pow(1.15, item.owned))
+}
+
+function updateScoreText(game) {
+  if(game.scoreText) {
+    game.scoreText.setText(getCupcakesText(game.score))
+    if (Math.floor(game.score).toString().length > 8) {
+      game.scoreText.setStyle({
+        font: '35px sansus',
+        fill: '#fff',
+        stroke: '#ee508c',
+        strokeThickness: 5
+      })
+    }
+  }
 }
