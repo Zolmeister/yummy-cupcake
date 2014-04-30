@@ -13,89 +13,23 @@ MainState.prototype.create = function() {
   }
 
   // Add UI elements
-
   // Main score background bar
-  game.topBar = game.add.sprite(0, 0, 'bar')
-  game.topBar.height = 100
+  game.topBar = UI.topBar(game)
 
   // Main score text
-  game.scoreText = game.add.text(
-    0,
-    5,
-    getCupcakesText(game.score), // 0 Cupcakes
-    { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
-  game.scoreText.anchor.setTo(0.5, 0)
-
-  // center text
-  game.scoreText.x = game.world.centerX
+  game.scoreText = UI.scoreText(game)
 
   // Cupcakes-per-second text
-  game.cpsText = game.add.text(
-    0,
-    60,
-    getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
-    { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
-  game.cpsText.anchor.setTo(0.5, 0)
-
-  // center text
-  game.cpsText.x = game.world.centerX
+  game.cpsText = UI.cpsText(game)
 
   // The big cupcake
-  game.cupcake = game.add.button(0, 0, 'cupcake', cupcakeClick)
-  game.cupcake.anchor.setTo(0.5, 0.5)
-  game.cupcake.x = game.world.centerX
-  game.cupcake.y = game.world.centerY
+  game.cupcake = UI.cupcake(game, cupcakeClick)
 
   // shop button
-  game.shopButton = game.add.group()
-
-  var shopButtonWidth = 360
-  var shopButtonHeight = 60
-  var shopButtonButton = game.add.button(
-    -shopButtonWidth/2, -shopButtonHeight/2,
-    'button-purple', shop)
-  shopButtonButton.width = shopButtonWidth
-  shopButtonButton.height = shopButtonHeight
-
-  game.shopButton.add(shopButtonButton)
-
-  var shopButtonText = game.add.text(
-    0,
-    0,
-    'Buy Upgrades',
-    { font: '30px sansus', fill: '#fff' })
-  shopButtonText.x = -shopButtonText.width / 2
-  shopButtonText.y = -shopButtonText.height / 2
-
-  game.shopButton.add(shopButtonText)
-  game.shopButton.y = 640 - 120 - 5
-  game.shopButton.x = game.world.centerX
-
+  game.shopButton = UI.shopButton(game, shop)
 
   // earn more cupcakes (share) button
-  game.shareButton = game.add.group()
-
-  var shareButtonWidth = 360
-  var shareButtonHeight = 60
-  var shareButtonButton = game.add.button(
-    -shareButtonWidth/2, -shareButtonHeight/2,
-    'button-green', invite)
-  shareButtonButton.width = shareButtonWidth
-  shareButtonButton.height = shareButtonHeight
-
-  game.shareButton.add(shareButtonButton)
-
-  var shareButtonText = game.add.text(
-    0,
-    0,
-    'Earn More Cupcakes',
-    { font: '30px sansus', fill: '#fff' })
-  shareButtonText.x = -shareButtonText.width / 2
-  shareButtonText.y = -shareButtonText.height / 2
-
-  game.shareButton.add(shareButtonText)
-  game.shareButton.y = 640 - 60
-  game.shareButton.x = game.world.centerX
+  game.shareButton = UI.shareButton(game, invite)
 
 }
 
