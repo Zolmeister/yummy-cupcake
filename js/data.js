@@ -30,6 +30,10 @@ Clay.ready(function() {
 					game.cupcakesPerClick = response.data.scorePerClick
 				if (response.data.scorePerSecond)
 					game.cupcakesPerSecond = response.data.scorePerSecond
+        if (response.data.shopItemList)
+          game.shopItemList = response.data.shopItemList
+
+        updateScoreText(game)
 			}
 		})
 	})
