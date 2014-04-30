@@ -9,8 +9,7 @@ ShopState.prototype.preload = function() {
 ShopState.prototype.create = function() {
 
     // Main score background bar
-    game.topBar = game.add.sprite(0, 0, 'bar')
-    game.topBar.height = 100
+    game.topBar = UI.topBar(game)
 
     var bmd = game.add.bitmapData(250, 50)
 
@@ -161,53 +160,27 @@ ShopState.prototype.create = function() {
 
 
     // Main score text
-    game.scoreText = game.add.text(
-      0,
-      5,
-      getCupcakesText(game.score), // 0 Cupcakes
-      { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
-    game.scoreText.anchor.setTo(0.5, 0)
-    game.scoreText.x = game.world.centerX
+    game.scoreText = UI.scoreText(game)
 
-    // Title text
-    game.cpsText = game.add.text(
-        0,
-        60,
-        getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
-        { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
-      game.cpsText.anchor.setTo(0.5, 0)
-
-      // center text
-      game.cpsText.x = game.world.centerX
-
+    // Cupcakes-per-second text
+    game.cpsText = UI.cpsText(game)
 
 
     // back button
-    game.shopButton = game.add.group()
-
-    var shopButtonWidth = game.world.width
-    var shopButtonHeight = 60
-    var shopButtonButton = game.add.button(
-      -shopButtonWidth/2, -shopButtonHeight/2,
-      'button-green', function() {
-        game.state.start('main')
-      })
-    shopButtonButton.width = shopButtonWidth
-    shopButtonButton.height = shopButtonHeight
-
-    game.shopButton.add(shopButtonButton)
-
-    var shopButtonText = game.add.text(
-      0,
-      0,
+    game.backButton = UI.button(
       'Back',
-      { font: '30px sansus', fill: '#fff' })
-    shopButtonText.x = -shopButtonText.width / 2
-    shopButtonText.y = -shopButtonText.height / 2
+      game,
+      game.world.centerX,
+      550,
+      'button-green',
+      function() {
+        game.state.start('main')
+      }
+    )
 
-    game.shopButton.add(shopButtonText)
-    game.shopButton.y = 550
-    game.shopButton.x = game.world.centerX
+    game.backButton._buttonButton.width = game.world.width
+    game.backButton._buttonButton.height = 60
+
 }
 
 ShopState.prototype.update = function() {

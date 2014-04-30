@@ -33,57 +33,45 @@ var UI = (function() {
 
       return cupcake
     },
-    shopButton: function(game, onclick) {
-      var shopButton = game.add.group()
 
-      var shopButtonWidth = 360
-      var shopButtonHeight = 60
-      var shopButtonButton = game.add.button(
-        -shopButtonWidth/2, -shopButtonHeight/2,
-        'button-purple', onclick)
-      shopButtonButton.width = shopButtonWidth
-      shopButtonButton.height = shopButtonHeight
+    // TODO: use opts param
+    button: function(text, game, x, y, img, onclick) {
+      var button = game.add.group()
 
-      shopButton.add(shopButtonButton)
+      var buttonButton = game.add.button(
+        0, 0,
+        img, onclick)
+      buttonButton.anchor.setTo(0.5, 0.5)
 
-      var shopButtonText = game.add.text(
-        0,
-        0,
-        'Buy Upgrades',
+      var buttonText = game.add.text(
+        0, 0,
+        text,
         { font: '30px sansus', fill: '#fff' })
-      shopButtonText.x = -shopButtonText.width / 2
-      shopButtonText.y = -shopButtonText.height / 2
+      buttonText.anchor.setTo(0.5, 0.5)
 
-      shopButton.add(shopButtonText)
-      shopButton.y = 640 - 120 - 5
-      shopButton.x = game.world.centerX
+      button.add(buttonButton)
+      button.add(buttonText)
+      button._buttonButton = buttonButton
+      button._buttonText = buttonText
+      button.x = x
+      button.y = y
 
-      return shopButton
+      return button
+
+    },
+    shopButton: function(game, onclick) {
+      var button = UI.button('Buy Upgrades', game, game.world.centerX, 640 - 120 - 5, 'button-purple', onclick)
+      button._buttonButton.width = 360
+      button._buttonButton.height = 60
+
+      return button
     },
     shareButton: function(game, onclick) {
-      var shareButton = game.add.group()
+      var button = UI.button('Earn More Cupcakes', game, game.world.centerX, 640 - 60, 'button-green', onclick)
+      button._buttonButton.width = 360
+      button._buttonButton.height = 60
 
-      var shareButtonWidth = 360
-      var shareButtonHeight = 60
-      var shareButtonButton = game.add.button(
-        -shareButtonWidth/2, -shareButtonHeight/2,
-        'button-green', onclick)
-      shareButtonButton.width = shareButtonWidth
-      shareButtonButton.height = shareButtonHeight
-
-      shareButton.add(shareButtonButton)
-
-      var shareButtonText = game.add.text(
-        0,
-        0,
-        'Earn More Cupcakes',
-        { font: '30px sansus', fill: '#fff' })
-      shareButtonText.x = -shareButtonText.width / 2
-      shareButtonText.y = -shareButtonText.height / 2
-
-      shareButton.add(shareButtonText)
-      shareButton.y = 640 - 60
-      shareButton.x = game.world.centerX
+      return button
     }
   }
 })()
