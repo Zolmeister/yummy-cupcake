@@ -11,136 +11,71 @@ ShopState.prototype.create = function() {
     // Main score background bar
     game.topBar = UI.topBar(game)
 
-    var bmd = game.add.bitmapData(250, 50)
+    var shopBg = game.add.bitmapData(280, 410)
+    shopBg.context.fillStyle = 'rgba(240, 172, 55, 1)'
+    shopBg.context.fillRect(0,0, 280, 410)
+    var shopBgSprite = game.add.image(40, 105, shopBg)
 
-    bmd.context.fillStyle = 'rgba(255, 232, 247, 1)'
-    bmd.context.fillRect(0,0, 250, 50)
-
-    var bg = game.add.bitmapData(280, 410)
-    bg.context.fillStyle = 'rgba(240, 172, 55, 1)'
-    bg.context.fillRect(0,0, 280, 410)
-    var backgroundSprite = game.add.image(40, 105, bg)
-
-
-
-    //	Add the bmd as a texture to an Image object.
-    //	If we don't do this nothing will render on screen.
-    //game.add.sprite(0, 0, bmd);
-
-    game.buttons = []
-    var buttons = game.buttons
+    game.shopItemButtons = []
+    var buttons = game.shopItemButtons
 
     game.items = game.add.group()
     var items = game.items
-    var nextHidden = false;
+    var nextHidden = false
 
-    for(var i=0; i < game.shopItemList.length; i++) {
+    for(var i = 0; i < game.shopItemList.length; i++) {
       if (nextHidden) break
 
-      ;(function(i){
+      ;(function(i) {
         var item = game.shopItemList[i]
-        var btn = game.add.group()
 
-        var button = game.add.button(
-        0, 0,
-        bmd, function() {
-            var item = game.shopItemList[i]
-            // TODO: disable if button is not actually visible (masked)
-            // buy item
-            if (!game.tracked) {
-              console.log('buying', item.name)
-
-              if (game.score >= getItemCost(item)) {
-                item.owned += 1
-                game.cupcakesPerSecond += item.cps
-
-                cost.setText(getItemCost(item))
-                game.cpsText.setText(getCupcakesPerSecondText(game.cupcakesPerSecond))
-                game.dirty = true
-              }
-            }
-
-            game.tracked = false
-          })
-
-        button.anchor.setTo(0.5, 0)
-
-        var name = game.add.text(
-        -115, 15,
-        item.name,
-          {font: '20px sansus'})
-        name.anchor.setTo(0, 0)
         if (game.score >= getItemCost(item)) {
           item.visible = true
         }
         if (!item.visible && !nextHidden) {
-          name.setText('???')
+          item = _.clone(item)
+          item.name = '???'
           nextHidden = true
         }
 
-        /*var count = game.add.text(
-        0, 0,
-        game.shopItemList[i].owned+'',
-          {font: '20px sansus'})
-        count.anchor.setTo(0, 0)
-        count.x = 40
-        count.y = 12*/
+        var btn = UI.shopItemButton(
+          item,
+          function(btn, pointer) {
+            game.tracking = true
+            game.trackingOrigX = pointer.x
+            game.trackingOrigY = pointer.y
+            game.trackingElX = btn.x
+            game.trackingElY = btn.y
+            game.trackingEl = btn
+            game.trackingStart = true
+          },
+          function(btn, pointer) {
+            game.tracking = false
+            game.trackingEl.x = game.trackingElX
+            game.trackingEl.y = game.trackingElY
+          },
+          game, game.world.centerX,
+          120+i*52, function(button, pointer, elements) {
+            var costText = elements.costText
 
-        var cost = game.add.text(
-        0, 0,
-        getItemCost(game.shopItemList[i])+'',
-          {font: '20px sansus'})
-        cost.anchor.setTo(0, 0)
-        cost.x = 30
-        cost.y = 5
+          // TODO: disable if button is not actually visible (masked)
+          // buy item
+          if (!game.tracked) {
+            console.log('buying', item.name)
 
-        var cupcake = game.add.sprite(15, 5, 'cupcake')
-        cupcake.width = 12
-        cupcake.height = 16
+            if (game.score >= getItemCost(item)) {
+              item.owned += 1
+              game.cupcakesPerSecond += item.cps
 
-        var cps = game.add.text(
-        15, 25,
-        '+'+game.shopItemList[i].cps,
-          {font: '20px sansus'})
+              costText.setText(getItemCost(item))
+              game.cpsText.setText(getCupcakesPerSecondText(game.cupcakesPerSecond))
+              game.dirty = true
+            }
+          }
 
-
-        if (game.shopItemList[i].cost.toString().length > 9) {
-          cost.setStyle({
-            font: '16px sansus'
-          })
-          cps.setStyle({
-            font: '16px sansus'
-          })
-        }
-
-
-        btn.add(button)
-        btn.add(name)
-        //btn.add(count)
-        btn.add(cost)
-        btn.add(cps)
-        btn.add(cupcake)
-
-        btn.x = game.world.centerX
-        btn.y = 120+i*52
-
-        button.input.enableDrag()
-        var origX = btn.x
-        var origY = btn.y
-        button.events.onDragStart.add(function(btn, pointer){
-          game.tracking = true
-          game.trackingOrigX = pointer.x
-          game.trackingOrigY = pointer.y
-          game.trackingElX = btn.x
-          game.trackingElY = btn.y
-          game.trackingEl = btn
-          game.trackingStart = true
+          game.tracked = false
         })
-        button.events.onDragStop.add(function(btn, pointer){
-          game.tracking = false
-          game.trackingEl.x = game.trackingElX
-          game.trackingEl.y = game.trackingElY
-        })
+
         items.add(btn)
 
         buttons.push(btn)
@@ -200,8 +135,8 @@ ShopState.prototype.update = function() {
       if (game.items.y >  0) {
         game.items.y = 0
       }
-      if (game.items.y <  -(game.buttons.length*52 - 370)) {
-        game.items.y = -(game.buttons.length*52 - 370)
+      if (game.items.y <  -(game.shopItemButtons.length*52 - 370)) {
+        game.items.y = -(game.shopItemButtons.length*52 - 370)
       }
 
     }
