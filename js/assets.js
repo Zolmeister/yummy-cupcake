@@ -23,8 +23,11 @@ function SVGstoPNGs(svgs) {
 	  	var height = svg.height
 		  // since phaser doesn't support svg, we have to convert to a png of the right size
 		  var canvas = document.createElement('canvas')
-		  canvas.width = width * window.devicePixelRatio
-		  canvas.height = height * window.devicePixelRatio
+
+      // TODO: these used to be * by window.devicePixelRatio,
+      // but for that to work the output needs to account for the scale
+		  canvas.width = width
+		  canvas.height = height
 		  canvas.style.width = width + 'px'
 		  canvas.style.height = height + 'px'
 		  var ctx = canvas.getContext('2d')
@@ -60,6 +63,7 @@ function getCupcakeSVG(options) {
 
   var width = options.width
   var height = options.height
+  console.log(width, height)
   // Necessary to grab the XML of the svg
   var xhr = new XMLHttpRequest()
   xhr.onload = function() {
@@ -79,8 +83,11 @@ function getCupcakeSVG(options) {
     var svgBlob = new Blob([svgAsString], {type: 'image/svg+xml;charset=utf-8'})
     // since phaser doesn't support svg, we have to convert to a png of the right size
     var canvas = document.createElement('canvas')
-    canvas.width = width * window.devicePixelRatio
-    canvas.height = height * window.devicePixelRatio
+
+    // TODO: these used to be * by window.devicePixelRatio,
+    // but for that to work the output needs to account for the scale
+    canvas.width = width
+    canvas.height = height
     canvas.style.width = width + 'px'
     canvas.style.height = height + 'px'
     var ctx = canvas.getContext('2d')
