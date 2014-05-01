@@ -115,7 +115,7 @@ var UI = (function() {
       btn.y = y
 
       button.input.enableDrag()
-      button.events.onInputDown.add(function(el, pointer) {
+      button.events.onInputUp.add(function(el, pointer) {
         onclick && onclick(el, pointer, {
           costText: cost
         })

@@ -1,20 +1,25 @@
 var saveData = (function() {
 
   // var so we can tell if data has changed (and only update if it has). Stored as string
-  var dataLastSave = null
+  var lastDataSave = ''
+  var lastScoreSave = -1
 
   return function saveData() {
-    var data = { scorePerClick: game.cupcakesPerClick, scorePerSecond: game.cupcakesPerSecond, shopItemList: game.shopItemList }
-    var diffObj = data
-    diffObj.score = game.score // add the cupcake count into things to check diff for
-    var dataString = JSON.stringify(diffObj)
-    if (dataLastSave !== dataString) {
+    var data = { shopItemList: game.shopItemList }
+    var dataString = JSON.stringify(data)
+
+    if (lastDataSave !== dataString) {
       Clay.Player.saveUserData({ key: 'data', data: data })
-      // separate from the rest for the invite stuff to work properly
-      // (can only update on a per-key basis)
+      console.log('Saving data...')
+      lastDataSave = dataString
+    }
+
+    // separate from the rest for the invite stuff to work properly
+    // (can only update on a per-key basis)
+    if (lastScoreSave !== game.score) {
       Clay.Player.saveUserData({ key: 'score', data: game.score })
-      dataLastSave = dataString
-      console.log('Saving data...' + JSON.stringify(data) + ' : ' + game.score)
+      console.log('Saving score', game.score)
+      lastScoreSave = game.score
     }
   }
 })()
@@ -25,20 +30,16 @@ Clay.ready(function() {
 	Clay.Player.onLogin(function() {
 		// grab score
 		Clay.Player.fetchUserData({ key: 'score' }, function(response) {
-			if (response.data)
+			if (response.data) {
 				game.score = response.data
+        updateScoreText(game)
+      }
 		})
 		// grab other data
 		Clay.Player.fetchUserData({ key: 'data' }, function(response) {
-			if (response.data) {
-				if (response.data.scorePerClick)
-					game.cupcakesPerClick = response.data.scorePerClick
-				if (response.data.scorePerSecond)
-					game.cupcakesPerSecond = response.data.scorePerSecond
-        if (response.data.shopItemList)
-          game.shopItemList = response.data.shopItemList
-
-        updateScoreText(game)
+			if (response.data && response.data.shopItemList) {
+        game.shopItemList = response.data.shopItemList
+        updateCPS(game)
 			}
 		})
 	})

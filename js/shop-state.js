@@ -65,10 +65,8 @@ ShopState.prototype.create = function() {
 
             if (game.score >= getItemCost(item)) {
               item.owned += 1
-              game.cupcakesPerSecond += item.cps
-
               costText.setText(getItemCost(item))
-              game.cpsText.setText(getCupcakesPerSecondText(game.cupcakesPerSecond))
+              updateCPS(game)
               game.dirty = true
             }
           }

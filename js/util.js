@@ -23,3 +23,14 @@ function updateScoreText(game) {
     }
   }
 }
+
+function updateCPS(game) {
+  var cps = 0
+  _.forEach(game.shopItemList, function(item) {
+    cps += item.cps * item.owned
+  })
+
+  game.cupcakesPerSecond = cps
+  if (game.cpsText)
+    game.cpsText.setText(getCupcakesPerSecondText(cps))
+}
