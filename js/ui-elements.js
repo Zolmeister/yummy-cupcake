@@ -66,6 +66,14 @@ var UI = (function() {
       itemBg.context.fillStyle = 'rgba(255, 232, 247, 1)'
       itemBg.context.fillRect(0,0, 250, 50)
 
+      var itemOverBg = game.add.bitmapData(250, 50)
+      itemOverBg.context.fillStyle = 'rgba(255, 230, 230, 1)'
+      itemOverBg.context.fillRect(0,0, 250, 50)
+
+      var itemDownBg = game.add.bitmapData(250, 50)
+      itemDownBg.context.fillStyle = 'rgba(244, 220, 220, 1)'
+      itemDownBg.context.fillRect(0,0, 250, 50)
+
       // The button group that elements will be added to
       var btn = game.add.group()
 
@@ -116,9 +124,23 @@ var UI = (function() {
 
       button.input.enableDrag()
       button.events.onInputUp.add(function(el, pointer) {
+        button.loadTexture(itemBg)
         onclick && onclick(el, pointer, {
           costText: cost
         })
+      })
+
+      btn.c_reset = function() {
+        button.loadTexture(itemBg)
+      }
+      button.events.onInputOver.add(function(el, pointer) {
+        button.loadTexture(itemOverBg)
+      })
+      button.events.onInputDown.add(function(el, pointer) {
+        button.loadTexture(itemDownBg)
+      })
+      button.events.onInputOut.add(function(el, pointer) {
+        btn.c_reset()
       })
       button.events.onDragStart.add(onDragStart)
       button.events.onDragStop.add(onDragEnd)

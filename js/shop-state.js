@@ -83,6 +83,11 @@ ShopState.prototype.create = function() {
       })(i)
     }
 
+    items.c_reset = function() {
+      for(var i=0; i < buttons.length; i++) {
+        buttons[i].c_reset()
+      }
+    }
 
     // This is a mask so that the buttons are hidden
     // if they are outside the 'shop' bounding box
@@ -127,6 +132,7 @@ ShopState.prototype.update = function() {
          game.input.activePointer.y < game.trackingOrigY - 5 )) {
       game.trackingStart = false
       game.tracked = true
+      game.items.c_reset()
     } else if (!game.trackingStart) {
       var y = game.input.activePointer.y
 
