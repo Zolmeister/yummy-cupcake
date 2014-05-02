@@ -87,10 +87,10 @@ game.shopItemList = [
 
 game.state.add('setup', {
   preload: function() {
-    game.load.image('button-green', 'assets/button-green.png')
+    game.load.spritesheet('button-green', 'assets/button-green.png', 341, 136)
     game.load.image('bar', game.svgs.bar)
     game.load.image('cupcake', game.svgs.cupcake)
-    game.load.image('button-purple', 'assets/button-purple.png')
+    game.load.spritesheet('button-purple', 'assets/button-purple.png', 341, 136)
   },
   create: function() {
 

@@ -40,7 +40,7 @@ var UI = (function() {
 
       var buttonButton = game.add.button(
         0, 0,
-        img, onclick)
+        img, onclick, game, 0, 0, 1)
       buttonButton.anchor.setTo(0.5, 0.5)
 
       var buttonText = game.add.text(
