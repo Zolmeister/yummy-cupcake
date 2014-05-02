@@ -18,7 +18,7 @@ MainState.prototype.create = function() {
   game.cpsText = UI.cpsText(game)
 
   // The big cupcake
-  game.cupcake = UI.cupcake(game, cupcakeClick)
+  game.cupcake = UI.cupcake(game, cupcakeClick, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
 
   // shop button
   game.shopButton = UI.shopButton(game, shop)

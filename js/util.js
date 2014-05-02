@@ -28,6 +28,20 @@ function updateCPS(game) {
   var cps = 0
   _.forEach(game.shopItemList, function(item) {
     cps += item.cps * item.owned
+    if (item.type === 'upgrade' && item.owned && !game.upgrades[item.name]) {
+      if (item.action === '+1 tap') {
+        game.cupcakesPerClick++
+      }
+
+      game.upgrades[item.name] = true
+
+      // Total hack for the ribbon upgrade
+      if (game.cupcake) {
+        game.cupcake.destroy()
+        game.cupcake = UI.cupcake(game, cupcakeClick, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
+      }
+
+    }
   })
 
   game.cupcakesPerSecond = cps

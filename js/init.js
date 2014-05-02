@@ -10,6 +10,7 @@ game.state.add('main', MainState)
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
+game.upgrades = {}
 
 // shop items
 game.shopItemList = [
@@ -26,6 +27,15 @@ game.shopItemList = [
     cps: 0.5,
     owned: 0,
     visible: false
+  },
+  {
+    name: 'ribbon :)',
+    cost: 300,
+    cps: 0,
+    action: '+1 tap',
+    owned: 0,
+    visible: false,
+    type: 'upgrade'
   },
   {
     name: 'icing factory',
@@ -90,6 +100,7 @@ game.state.add('setup', {
     game.load.spritesheet('button-green', 'assets/button-green.png', 341, 136)
     game.load.image('bar', game.svgs.bar)
     game.load.image('cupcake', game.svgs.cupcake)
+    game.load.image('cupcake-ribbon', game.svgs.cupcakeRibbon)
     game.load.spritesheet('button-purple', 'assets/button-purple.png', 341, 136)
   },
   create: function() {
@@ -129,10 +140,21 @@ WebFont.load({
       return getCupcakeSVG({
         width: 228,
         height: 324,
-        items: ['cherry', 'straw', 'sprinkles']
+        items: ['cherry', 'sprinkles']
       })
     }).then(function(cupcakeUri) {
       game.svgs.cupcake = cupcakeUri
+
+    }).then(function() {
+      return getCupcakeSVG({
+        width: 228,
+        height: 324,
+        items: ['cherry', 'ribbon', 'sprinkles']
+      })
+    }).then(function(cupcakeUri) {
+      game.svgs.cupcakeRibbon = cupcakeUri
+
+    }).then(function() {
       // begin the game
       game.state.start('setup')
     }, function(err) {

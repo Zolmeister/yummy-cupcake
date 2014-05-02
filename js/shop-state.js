@@ -24,12 +24,20 @@ ShopState.prototype.create = function() {
     game.items = game.add.group()
     var items = game.items
     var nextHidden = false
-
+    var index = -1
     for(var i = 0; i < game.shopItemList.length; i++) {
       if (nextHidden) break
 
       ;(function(i) {
         var item = game.shopItemList[i]
+        if (item.type === 'upgrade' && item.owned) {
+          item.visible = false
+          return
+        }
+
+        // this is so that we can skip items which are not visible,
+        // but in the middle of the list
+        index++
 
         if (game.score >= getItemCost(item)) {
           item.visible = true
@@ -57,7 +65,7 @@ ShopState.prototype.create = function() {
             game.trackingEl.y = game.trackingElY
           },
           game, game.world.centerX,
-          120 + i * self.itemHeight, function(button, pointer, elements) {
+          120 + index * self.itemHeight, function(button, pointer, elements) {
             var costText = elements.costText
 
           // TODO: disable if button is not actually visible (masked)
@@ -70,6 +78,14 @@ ShopState.prototype.create = function() {
               item.owned += 1
               costText.setText(getItemCost(item))
               updateCPS(game)
+
+              if (item.type === 'upgrade') {
+                item.visible = false
+                if (item.action === '+1 tap') {
+                  game.cupcakesPerClick++
+                }
+                game.state.start('shop')
+              }
               game.dirty = true
             }
           }

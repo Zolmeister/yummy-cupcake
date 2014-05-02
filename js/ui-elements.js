@@ -27,8 +27,8 @@ var UI = (function() {
 
       return text
     },
-    cupcake: function(game, onclick) {
-      var cupcake = game.add.button(game.world.centerX, game.world.centerY, 'cupcake', onclick)
+    cupcake: function(game, onclick, image) {
+      var cupcake = game.add.button(game.world.centerX, game.world.centerY, image || 'cupcake', onclick)
       cupcake.anchor.setTo(0.5, 0.5)
 
       return cupcake
@@ -98,9 +98,12 @@ var UI = (function() {
       cupcake.width = 12
       cupcake.height = 16
 
-      var cps = game.add.text(
+      var cps = item.cps ? game.add.text(
         15, 25,
         '+'+item.cps,
+        {font: '20px sansus'}) : game.add.text(
+        15, 25,
+        item.action,
         {font: '20px sansus'})
 
 

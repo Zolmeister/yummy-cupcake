@@ -5,7 +5,7 @@ var saveData = (function() {
   var lastScoreSave = -1
 
   return function saveData() {
-    var data = { shopItemList: game.shopItemList }
+    var data = { shopItemList: game.shopItemList}
     var dataString = JSON.stringify(data)
 
     if (lastDataSave !== dataString) {
