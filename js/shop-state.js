@@ -1,12 +1,14 @@
 function ShopState() {}
-
-ShopState.prototype.preload = function() {
-  game.load.image('button-green', 'assets/button-green.png')
-  game.load.image('bar', game.svgs.bar)
-  game.load.image('cupcake', game.svgs.cupcake)
+ShopState.prototype = {
+  itemHeight: 52,
+  shopHeight: 380
 }
 
+ShopState.prototype.preload = function() {}
+
 ShopState.prototype.create = function() {
+
+    var self = this
 
     // Main score background bar
     game.topBar = UI.topBar(game)
@@ -55,7 +57,7 @@ ShopState.prototype.create = function() {
             game.trackingEl.y = game.trackingElY
           },
           game, game.world.centerX,
-          120+i*52, function(button, pointer, elements) {
+          120 + i * self.itemHeight, function(button, pointer, elements) {
             var costText = elements.costText
 
           // TODO: disable if button is not actually visible (masked)
@@ -86,8 +88,8 @@ ShopState.prototype.create = function() {
     // if they are outside the 'shop' bounding box
     var graphics = game.add.graphics(0, 0)
     graphics.moveTo(game.world.centerX - 125, 120)
-    graphics.lineTo(game.world.centerX - 125, 500)
-    graphics.lineTo(game.world.centerX + 125, 500)
+    graphics.lineTo(game.world.centerX - 125, 120 + this.shopHeight)
+    graphics.lineTo(game.world.centerX + 125, 120 + this.shopHeight)
     graphics.lineTo(game.world.centerX + 125, 120)
 
     items.mask = graphics
@@ -118,6 +120,7 @@ ShopState.prototype.create = function() {
 }
 
 ShopState.prototype.update = function() {
+
   if (game.tracking && game.input.activePointer.isDown) {
     if (game.trackingStart &&
         (game.input.activePointer.y > game.trackingOrigY + 5 ||
@@ -135,8 +138,8 @@ ShopState.prototype.update = function() {
         return item.visible
       }).length
 
-      var itemsHeight = (visibleItemCount+1)*52
-      var shopHeight = 380
+      var itemsHeight = (visibleItemCount + 1) * this.itemHeight
+      var shopHeight = this.shopHeight
 
       if (itemsHeight < shopHeight) {
         game.items.y = 0

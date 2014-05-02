@@ -86,42 +86,33 @@ game.shopItemList = [
 ]
 
 game.state.add('setup', {
+  preload: function() {
+    game.load.image('button-green', 'assets/button-green.png')
+    game.load.image('bar', game.svgs.bar)
+    game.load.image('cupcake', game.svgs.cupcake)
+    game.load.image('button-purple', 'assets/button-purple.png')
+  },
   create: function() {
 
-      game.stage.backgroundColor = '#71c5cf'
+    game.stage.backgroundColor = '#71c5cf'
 
-      // Auto scaling
-      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-      game.scale.setScreenSize(true)
+    // Auto scaling
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+    game.scale.setScreenSize(true)
 
-      if (config.debug)
-        game.stage.disableVisibilityChange = true
+    if (config.debug)
+    game.stage.disableVisibilityChange = true
 
-			getSVGImageAssets()
-      .then(SVGstoPNGs)
-      .then(function(svgs) {
-        game.svgs = svgs
-      }).then(function() {
-        return getCupcakeSVG({
-          width: 228,
-          height: 324,
-          items: ['cherry', 'straw', 'sprinkles']
-        })
-      }).then(function(cupcakeUri) {
-        game.svgs.cupcake = cupcakeUri
-	      game.state.start('main')
+    game.state.start('main')
 
-        // core loop that gives players more cupcakes every second
-        ;(function cpsCalculation() {
-          game.score += game.cupcakesPerSecond
-          updateScoreText(game)
-          setTimeout(cpsCalculation, 1000)
-        })()
-			}, function(err) {
-        console.erroro(err)
-      })
+    // core loop that gives players more cupcakes every second
+    ;(function cpsCalculation() {
+      game.score += game.cupcakesPerSecond
+      updateScoreText(game)
+      setTimeout(cpsCalculation, 1000)
+    })()
 
-    }
+  }
 })
 
 // Load fonts
@@ -130,9 +121,23 @@ WebFont.load({
     families: ['sansus']
   },
   active: function() {
-
-    // begin the game
-    game.state.start('setup')
+    getSVGImageAssets()
+      .then(SVGstoPNGs)
+      .then(function(svgs) {
+      game.svgs = svgs
+    }).then(function() {
+      return getCupcakeSVG({
+        width: 228,
+        height: 324,
+        items: ['cherry', 'straw', 'sprinkles']
+      })
+    }).then(function(cupcakeUri) {
+      game.svgs.cupcake = cupcakeUri
+      // begin the game
+      game.state.start('setup')
+    }, function(err) {
+      console.error(err)
+    })
   }
 })
 
