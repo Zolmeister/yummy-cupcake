@@ -64,6 +64,7 @@ ShopState.prototype.create = function() {
             console.log('buying', item.name)
 
             if (game.score >= getItemCost(item)) {
+              game.score -= getItemCost(item)
               item.owned += 1
               costText.setText(getItemCost(item))
               updateCPS(game)
@@ -130,11 +131,23 @@ ShopState.prototype.update = function() {
       game.trackingOrigY = y
       game.items.y+=dy
 
-      if (game.items.y >  0) {
+      var visibleItemCount = _.filter(game.shopItemList, function(item) {
+        return item.visible
+      }).length
+
+      var itemsHeight = (visibleItemCount+1)*52
+      var shopHeight = 380
+
+      if (itemsHeight < shopHeight) {
         game.items.y = 0
-      }
-      if (game.items.y <  -(game.shopItemButtons.length*52 - 370)) {
-        game.items.y = -(game.shopItemButtons.length*52 - 370)
+      } else {
+        if (game.items.y >  0) {
+          game.items.y = 0
+        }
+
+        if (game.items.y <  -(itemsHeight - shopHeight)) {
+          game.items.y = -(itemsHeight - shopHeight)
+        }
       }
 
     }
