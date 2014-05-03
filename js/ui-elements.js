@@ -5,6 +5,7 @@ var UI = (function() {
       // Main score background bar
       var bar = game.add.sprite(0, 0, 'bar')
       bar.height = 100
+      bar.width = 360
 
       return bar
     },

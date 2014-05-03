@@ -1,3 +1,8 @@
+
+//window.console = { log: function( log ) { document.body.innerHTML += log + "<br>" } };
+window.onerror = function( msg, url, linenumber ) { document.body.innerHTML += 'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber } 
+
+
 // note that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var config = {
@@ -97,19 +102,17 @@ game.shopItemList = [
 
 game.state.add('setup', {
   preload: function() {
+    drawLoadBar()
     game.load.spritesheet('button-green', 'assets/button-green.png', 341, 136)
     game.load.image('bar', game.svgs.bar)
     game.load.image('cupcake', game.svgs.cupcake)
     game.load.image('cupcake-ribbon', game.svgs.cupcakeRibbon)
     game.load.spritesheet('button-purple', 'assets/button-purple.png', 341, 136)
+    
   },
   create: function() {
 
     game.stage.backgroundColor = '#71c5cf'
-
-    // Auto scaling
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
-    game.scale.setScreenSize(true)
 
     if (config.debug)
     game.stage.disableVisibilityChange = true
@@ -126,12 +129,28 @@ game.state.add('setup', {
   }
 })
 
+// for loading bar since we're loading some assets through xhr & loading svgs through canvg
+game.state.add('presetup', {
+  preload: function() {
+    // Auto scaling
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+    game.scale.setScreenSize(true)
+    
+    drawLoadBar()
+  }
+})
+game.state.start('presetup')
+
+game.loadProgress = 0 // 0 to game.loadSteps
+game.loadSteps = 6 // webfont + cupcake svg + 1 step per svg we load (just bar.svg currently) + 1 step per png we load (2) in 'setup'
+game.loadPNGs = 2 // how many pngs we're loading into phaser (game.load doesn't seem to give this #)
 // Load fonts
 WebFont.load({
   custom: {
     families: ['sansus']
   },
   active: function() {
+  	game.loadProgress++ // inc loading bar
     getSVGImageAssets()
       .then(SVGstoPNGs)
       .then(function(svgs) {
@@ -152,6 +171,7 @@ WebFont.load({
         items: ['cherry', 'ribbon', 'sprinkles']
       })
     }).then(function(cupcakeUri) {
+  		game.loadProgress++ // inc loading bar
       game.svgs.cupcakeRibbon = cupcakeUri
 
     }).then(function() {
@@ -168,7 +188,7 @@ WebFont.load({
 
 // Set global vars for Clay API (for Clay.ready())
 window.Clay = window.Clay || {}
-Clay.gameKey = "prism"
+Clay.gameKey = "cupcake"
 Clay.readyFunctions = []
 // inviteActions means the API checks onload for any invites from other users,
 // and gives them cupcakes accordingly
@@ -178,12 +198,12 @@ Clay.ready = function( fn ) {
 }
 
 window.addEventListener('load', function() {
-	// Load clay API
+  // Load clay API
   ;( function() {
     var clay = document.createElement("script"); clay.async = true;
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
-    //clay.src = "http://cdn.clay.io/api.js";
-    clay.src = "http://clay.io/api/src/bundle.js";
+    clay.src = "http://cdn.clay.io/api.js";
+    // clay.src = "http://clay.io/api/src/bundle.js";
     var tag = document.getElementsByTagName("script")[0]; tag.parentNode.insertBefore(clay, tag);
   } )();
 
@@ -199,8 +219,14 @@ window.addEventListener('load', function() {
 
   // high score
   Clay.ready(function() {
-    console.log('Clay loaded')
     connect() // prompt them to give us perms and log them in
-    Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: function() { console.log('todo') } }] })
+    var shareThis = function() {
+			Clay.Kik.post({
+				message: 'Come play Yummy Cupcake to build your cupcake empire!',
+				title: 'Yummy Cupcake',
+				data: {}
+			})    	
+    }
+    Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: shareThis }] })
   })
 })
