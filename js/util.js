@@ -35,10 +35,8 @@ function updateCPS(game) {
 
       game.upgrades[item.name] = true
 
-      // Total hack for the ribbon upgrade
       if (game.cupcake) {
-        game.cupcake.destroy()
-        game.cupcake = UI.cupcake(game, cupcakeClick, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
+        game.cupcake.loadTexture(game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
       }
 
     }
