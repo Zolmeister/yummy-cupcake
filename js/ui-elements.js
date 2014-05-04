@@ -1,38 +1,37 @@
 var UI = (function() {
   return {
-    topBar: function(game) {
-
-      // Main score background bar
-      var bar = game.add.sprite(0, 0, 'bar')
-      bar.height = 100
-      bar.width = 360
-
-      return bar
-    },
     scoreText: function(game) {
-      var text = game.add.text(
-        game.world.centerX,
-        5,
-        getCupcakesText(game.score), // 0 Cupcakes
-        { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 })
-      text.anchor.setTo(0.5, 0)
-      return text
+      return UI.element(game, 0, 0, {
+        text: {
+          x: game.world.centerX,
+          y: 5,
+          text: getCupcakesText(game.score),
+          anchor: [0.5, 0],
+          style: { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 }
+        }
+      })._text
     },
     cpsText: function(game) {
-      var text = game.add.text(
-        game.world.centerX,
-        60,
-        getCupcakesPerSecondText(game.cupcakesPerSecond), // 0 per second
-        { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 })
-      text.anchor.setTo(0.5, 0)
-
-      return text
+      return UI.element(game, 0, 0, {
+        text: {
+          text: getCupcakesPerSecondText(game.cupcakesPerSecond),
+          style: { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 },
+          anchor: [0.5, 0],
+          x: game.world.centerX,
+          y: 60
+        }
+      })._text
     },
     cupcake: function(game, onclick, image) {
-      var cupcake = game.add.button(game.world.centerX, game.world.centerY, image || 'cupcake', onclick)
-      cupcake.anchor.setTo(0.5, 0.5)
-
-      return cupcake
+      return UI.element(game, 0, 0, {
+        button: {
+          key: image || 'cupcake',
+          callback: onclick,
+          anchor: [0.5, 0.5],
+          x: game.world.centerX,
+          y: game.world.centerY
+        }
+      })._button
     },
 
     // TODO: nested element support, and multiple of same type support
@@ -98,7 +97,7 @@ var UI = (function() {
 
     },
 
-    button2: function(game, x, y, itemBg, itemDownBg, opts) {
+    button: function(game, x, y, itemBg, itemDownBg, opts) {
       var defaults = {
         button: {
           x: 0,
@@ -127,27 +126,6 @@ var UI = (function() {
       })
 
       return button
-    },
-
-    // TODO: use opts param
-    button: function(text, game, x, y, img, onclick) {
-
-      return UI.element(game, x, y, {
-        button: {
-          x: 0,
-          y: 0,
-          key: img,
-          callback: onclick,
-          anchor: [0.5, 0.5],
-          width: 360,
-          height: 60
-        },
-        text: {
-          text: text,
-          anchor: [0.5, 0.5],
-          style: { font: '30px sansus', fill: '#fff' }
-        }
-      })
     },
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
 
@@ -239,11 +217,29 @@ var UI = (function() {
       itemBg.context.fillRect(0, 0, width, height)
       return itemBg
     },
+    // ghetto / "jank"
+  	// we should create an alert box UI that we can use across all games
+    shareButton: function(game, onclick) {
+      var itemBg = UI.rect(game, 250, 50, '#48C9B0')
+      var itemDownBg = UI.rect(game, 250, 50, '#16A085')
+
+      return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
+        button: {
+          key: itemBg,
+          callback: onclick,
+          x: game.world.centerX,
+          y: 640 - 60
+        },
+        text: {
+          text: '+500 when they join!'
+        }
+      })
+    },
     shopButton: function(game, onclick) {
       var itemBg = UI.rect(game, 250, 50, '#48C9B0')
       var itemDownBg = UI.rect(game, 250, 50, '#16A085')
 
-      var button = UI.button2(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
+      return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
           key: itemBg,
           callback: onclick
@@ -252,14 +248,12 @@ var UI = (function() {
           text: 'Buy Upgrades'
         }
       })
-
-      return button
     },
-    backButton: function(game, onclick, w, h) {
+    backButton: function(game, onclick) {
       var itemBg = UI.rect(game, 250, 50, '#48C9B0')
       var itemDownBg = UI.rect(game, 250, 50, '#16A085')
 
-      var button = UI.button2(game, game.world.centerX, 550, itemBg, itemDownBg, {
+      return UI.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
         button: {
           key: itemBg,
           callback: onclick,
@@ -270,14 +264,12 @@ var UI = (function() {
           text: 'Buy Upgrades'
         }
       })
-
-      return button
     },
     shareButton: function(game, onclick) {
       var itemBg = UI.rect(game, 250, 50, '#3498db')
       var itemDownBg = UI.rect(game, 250, 50, '#2980b9')
 
-      var button = UI.button2(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
+      return UI.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
         button: {
           key: itemBg,
           callback: onclick,
@@ -288,8 +280,6 @@ var UI = (function() {
           text: 'Earn More Cupcakes'
         }
       })
-
-      return button
     }
   }
 })()
