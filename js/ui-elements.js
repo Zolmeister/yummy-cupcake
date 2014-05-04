@@ -130,13 +130,8 @@ var UI = (function() {
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
 
       // button background
-      var itemBg = game.add.bitmapData(250, 50)
-      itemBg.context.fillStyle = '#ecf0f1'
-      itemBg.context.fillRect(0,0, 250, 50)
-
-      var itemDownBg = game.add.bitmapData(250, 50)
-      itemDownBg.context.fillStyle = '#bdc3c7'
-      itemDownBg.context.fillRect(0,0, 250, 50)
+      var itemBg = UI.rect(game, 250, 50, '#ecf0f1', 3)
+      var itemDownBg = UI.rect(game, 250, 50, '#bdc3c7', 3)
 
       // The button group that elements will be added to
       var btn = game.add.group()
@@ -211,10 +206,28 @@ var UI = (function() {
 
       return btn
     },
-    rect: function(game, width, height, color) {
+    rect: function(game, width, height, color, radius) {
+      var radius = radius || 0
+      var x = 0
+      var y = 0
       var itemBg = game.add.bitmapData(width, height)
-      itemBg.context.fillStyle = color
-      itemBg.context.fillRect(0, 0, width, height)
+      var ctx = itemBg.ctx
+      ctx.fillStyle = color
+
+      ctx.beginPath()
+      ctx.moveTo(x + radius, y)
+      ctx.lineTo(x + width - radius, y)
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+      ctx.lineTo(x + width, y + height - radius)
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+      ctx.lineTo(x + radius, y + height)
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+      ctx.lineTo(x, y + radius)
+      ctx.quadraticCurveTo(x, y, x + radius, y)
+      ctx.closePath()
+      ctx.fill()
+
+
       return itemBg
     },
     // ghetto / "jank"
@@ -236,8 +249,8 @@ var UI = (function() {
       })
     },
     shopButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#48C9B0')
-      var itemDownBg = UI.rect(game, 250, 50, '#16A085')
+      var itemBg = UI.rect(game, 250, 50, '#48C9B0', 5)
+      var itemDownBg = UI.rect(game, 250, 50, '#16A085', 5)
 
       return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
@@ -250,8 +263,8 @@ var UI = (function() {
       })
     },
     backButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#48C9B0')
-      var itemDownBg = UI.rect(game, 250, 50, '#16A085')
+      var itemBg = UI.rect(game, 250, 50, '#48C9B0', 5)
+      var itemDownBg = UI.rect(game, 250, 50, '#16A085', 5)
 
       return UI.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
         button: {
@@ -266,8 +279,8 @@ var UI = (function() {
       })
     },
     shareButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#3498db')
-      var itemDownBg = UI.rect(game, 250, 50, '#2980b9')
+      var itemBg = UI.rect(game, 250, 50, '#3498db', 5)
+      var itemDownBg = UI.rect(game, 250, 50, '#2980b9', 5)
 
       return UI.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
         button: {
