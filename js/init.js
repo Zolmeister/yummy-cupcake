@@ -227,6 +227,9 @@ window.addEventListener('load', function() {
 				data: {}
 			})    	
     }
-    Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: shareThis }] })
+    var giveFeedback = function() {
+			cards.kik.openConversation( 'clayteam' ) 	
+    }
+    Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: shareThis }, { title: 'Give Feedback', handler: giveFeedback }] })
   })
 })
