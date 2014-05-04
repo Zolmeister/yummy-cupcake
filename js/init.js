@@ -1,12 +1,15 @@
-
-//window.console = { log: function( log ) { document.body.innerHTML += log + "<br>" } };
-window.onerror = function( msg, url, linenumber ) { document.body.innerHTML += 'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber } 
-
-
 // note that function calls within update are not optimized,
 // and should be in-lined during some compile step
 var config = {
   debug: false
+}
+
+_.defaultsDeep = _.partialRight(_.merge, _.defaults)
+
+if (config.debug) {
+  window.onerror = function( msg, url, linenumber ) {
+    document.body.innerHTML += 'Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber
+  }
 }
 
 var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent = !config.debug)
@@ -103,12 +106,10 @@ game.shopItemList = [
 game.state.add('setup', {
   preload: function() {
     drawLoadBar()
-    game.load.spritesheet('button-green', 'assets/button-green.png', 341, 136)
     game.load.image('bar', game.svgs.bar)
     game.load.image('cupcake', game.svgs.cupcake)
     game.load.image('cupcake-ribbon', game.svgs.cupcakeRibbon)
-    game.load.spritesheet('button-purple', 'assets/button-purple.png', 341, 136)
-    
+
   },
   create: function() {
 
@@ -135,7 +136,7 @@ game.state.add('presetup', {
     // Auto scaling
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
     game.scale.setScreenSize(true)
-    
+
     drawLoadBar()
   }
 })
@@ -225,7 +226,7 @@ window.addEventListener('load', function() {
 				message: 'Come play Yummy Cupcake to build your cupcake empire!',
 				title: 'Yummy Cupcake',
 				data: {}
-			})    	
+			})
     }
     Clay.UI.Menu.init({ items: [{ title: 'Share This', handler: shareThis }] })
   })

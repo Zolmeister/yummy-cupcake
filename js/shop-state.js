@@ -11,7 +11,7 @@ ShopState.prototype.create = function() {
     var self = this
 
     // Main score background bar
-    game.topBar = UI.topBar(game)
+    //game.topBar = UI.topBar(game)
 
     var shopBg = game.add.bitmapData(280, 410)
     shopBg.context.fillStyle = 'rgba(240, 172, 55, 1)'
@@ -124,19 +124,12 @@ ShopState.prototype.create = function() {
 
 
     // back button
-    game.backButton = UI.button(
-      'Back',
+    game.backButton = UI.backButton(
       game,
-      game.world.centerX,
-      550,
-      'button-green',
       function() {
         game.state.start('main')
       }
     )
-
-    game.backButton._buttonButton.width = game.world.width
-    game.backButton._buttonButton.height = 60
 
 }
 
