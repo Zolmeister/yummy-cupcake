@@ -39,7 +39,7 @@ game.shopItemList = [
   {
     name: 'ribbon :)',
     cost: 300,
-    cps: 0,
+    cps: null,
     action: '+1 tap',
     owned: 0,
     visible: false,

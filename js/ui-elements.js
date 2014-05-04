@@ -3,6 +3,7 @@ var UI = (function() {
     scoreText: function(game) {
       return UI.element(game, 0, 0, {
         text: {
+          type: 'text',
           x: game.world.centerX,
           y: 5,
           text: getCupcakesText(game.score),
@@ -14,6 +15,7 @@ var UI = (function() {
     cpsText: function(game) {
       return UI.element(game, 0, 0, {
         text: {
+          type: 'text',
           text: getCupcakesPerSecondText(game.cupcakesPerSecond),
           style: { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 },
           anchor: [0.5, 0],
@@ -25,6 +27,7 @@ var UI = (function() {
     cupcake: function(game, onclick, image) {
       return UI.element(game, 0, 0, {
         button: {
+          type: 'button',
           key: image || 'cupcake',
           callback: onclick,
           anchor: [0.5, 0.5],
@@ -35,7 +38,7 @@ var UI = (function() {
     },
 
     // TODO: nested element support, and multiple of same type support
-    element: function(game, x, y, opts) {
+    element: function(game, x, y, elements) {
 
       var el = game.add.group()
       el.x = x
@@ -61,21 +64,38 @@ var UI = (function() {
           y: 0,
           text: '',
           style: {}
+        },
+        sprite: {
+          __constructor: ['x', 'y', 'key'],
+          key: null,
+          x: 0,
+          y: 0
         }
       }
 
       // TODO: clean this up...
-      var skipKeys = ['anchor']
+      var skipKeys = ['anchor', 'type']
 
-      _.forEach(_.keys(opts), function(key) {
-        var objectOpts = _.defaultsDeep(opts[key], defaults[key])
+      _.forEach(elements, function(element, name) {
+
+        // TODO: cleanup
+        if (element instanceof Phaser.Button ||
+            element instanceof Phaser.Text ||
+            element instanceof Phaser.Sprite) {
+
+          el.add(element)
+          el['_' + name] = element
+          return
+        }
+
+        var key = element.type
+        var objectOpts = _.defaultsDeep(element, defaults[key])
 
         var constructorParams = _.map(objectOpts.__constructor, function(constructorKey) {
           return objectOpts[constructorKey]
         })
 
         var object = game.add[key].apply(game.add, constructorParams)
-
         var nonConstructorKeys = _.omit(_.keys(objectOpts), objectOpts.__constructor.concat('__constructor'))
 
         _.forEach(nonConstructorKeys, function(key) {
@@ -90,7 +110,7 @@ var UI = (function() {
         }
 
         el.add(object)
-        el['_' + key] = object
+        el['_' + name] = object
       })
 
       return el
@@ -100,6 +120,7 @@ var UI = (function() {
     button: function(game, x, y, itemBg, itemDownBg, opts) {
       var defaults = {
         button: {
+          type: 'button',
           x: 0,
           y: 0,
           anchor: [0.5, 0.5],
@@ -107,6 +128,7 @@ var UI = (function() {
           height: 60
         },
         text: {
+          type: 'button',
           text: '',
           anchor: [0.5, 0.5],
           style: { font: '30px sansus', fill: '#fff' }
@@ -133,56 +155,52 @@ var UI = (function() {
       var itemBg = UI.rect(game, 250, 50, '#ecf0f1', 3)
       var itemDownBg = UI.rect(game, 250, 50, '#bdc3c7', 3)
 
-      // The button group that elements will be added to
-      var btn = game.add.group()
+      var button = UI.button(game, x, y, itemBg, itemDownBg, {
+        button: {
+          anchor: [0.5, 0],
+          key: itemBg,
+          height: 50
+        }
+      })._button
 
-      var button = game.add.button(
-        0, 0,
-        itemBg)
-      button.anchor.setTo(0.5, 0)
+      var btn = UI.element(game, x, y, {
+        button: button,
+        name: {
+          type: 'text',
+          x: -115,
+          y: 15,
+          text: item.name,
+          style: {font: '20px sansus'}
+        },
+        cost: {
+          type: 'text',
+          x: 30,
+          y: 5,
+          text: getItemCost(item)+'',
+          style: item.cost.toString().length > 9 ?
+            { font: '16px sansus' } :
+            {font: '20px sansus'}
+        },
+        cupcake: {
+          type: 'sprite',
+          x: 15,
+          y: 5,
+          key: 'cupcake',
+          width: 12,
+          height: 16
+        },
+        cps: {
+          type: 'text',
+          x: 15,
+          y: 25,
+          text: item.action ? item.action : item.cps,
+          style: item.cost.toString().length > 9 ?
+            { font: '16px sansus' } :
+            {font: '20px sansus'}
+        }
+      })
 
-      var name = game.add.text(
-        -115, 15,
-        item.name,
-        {font: '20px sansus'})
-      name.anchor.setTo(0, 0)
-
-      var cost = game.add.text(
-        30, 5,
-        getItemCost(item)+'',
-        {font: '20px sansus'})
-      cost.anchor.setTo(0, 0)
-
-      var cupcake = game.add.sprite(15, 5, 'cupcake')
-      cupcake.width = 12
-      cupcake.height = 16
-
-      var cps = item.cps ? game.add.text(
-        15, 25,
-        '+'+item.cps,
-        {font: '20px sansus'}) : game.add.text(
-        15, 25,
-        item.action,
-        {font: '20px sansus'})
-
-
-      if (item.cost.toString().length > 9) {
-        cost.setStyle({
-          font: '16px sansus'
-        })
-        cps.setStyle({
-          font: '16px sansus'
-        })
-      }
-
-      btn.add(button)
-      btn.add(name)
-      btn.add(cost)
-      btn.add(cps)
-      btn.add(cupcake)
-
-      btn.x = x
-      btn.y = y
+      var cost = btn._cost
 
       button.input.enableDrag()
       button.events.onInputUp.add(function(el, pointer) {
@@ -238,12 +256,14 @@ var UI = (function() {
 
       return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
+          type: 'button',
           key: itemBg,
           callback: onclick,
           x: game.world.centerX,
           y: 640 - 60
         },
         text: {
+          type: 'text',
           text: '+500 when they join!'
         }
       })
@@ -254,10 +274,12 @@ var UI = (function() {
 
       return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
+          type: 'button',
           key: itemBg,
           callback: onclick
         },
         text: {
+          type: 'text',
           text: 'Buy Upgrades'
         }
       })
@@ -268,13 +290,15 @@ var UI = (function() {
 
       return UI.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
         button: {
+          type: 'button',
           key: itemBg,
           callback: onclick,
           width: game.world.width,
           height: 60
         },
         text: {
-          text: 'Buy Upgrades'
+          type: 'text',
+          text: 'Back'
         }
       })
     },
@@ -284,12 +308,14 @@ var UI = (function() {
 
       return UI.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
         button: {
+          type: 'button',
           key: itemBg,
           callback: onclick,
           width: game.world.width,
           height: 60
         },
         text: {
+          type: 'text',
           text: 'Earn More Cupcakes'
         }
       })
