@@ -1,13 +1,13 @@
 @font-face {
   font-family: 'sansus';
   font-weight: bold;
-  src: url('fonts/sansus.otf') format('opentype');
+  src: url('../assets/fonts/sansus.otf') format('opentype');
 }
 
 body {
   margin: 0;
-  /* 
-  css background *should* be more efficient than in phaser 
+  /*
+  css background *should* be more efficient than in phaser
   was thinking I could rotate it, but probably not since it'd have to rotate the entire element
   and the element would have to be width & height of largest of screen width/height
   */
