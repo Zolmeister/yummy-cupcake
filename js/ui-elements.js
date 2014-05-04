@@ -159,7 +159,8 @@ var UI = (function() {
         button: {
           anchor: [0.5, 0],
           key: itemBg,
-          height: 50
+          height: 50,
+          width: 250
         }
       })._button
 

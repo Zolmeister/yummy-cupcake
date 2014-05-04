@@ -8,8 +8,6 @@ MainState.prototype.create = function() {
   }
 
   // Add UI elements
-  // Main score background bar
-  //game.topBar = UI.topBar(game)
 
   // Main score text
   game.scoreText = UI.scoreText(game)

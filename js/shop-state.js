@@ -10,12 +10,8 @@ ShopState.prototype.create = function() {
 
     var self = this
 
-    // Main score background bar
-    //game.topBar = UI.topBar(game)
+    var shopBg = UI.rect(game, 280, 410, '#2ecc71', 5)
 
-    var shopBg = game.add.bitmapData(280, 410)
-    shopBg.context.fillStyle = 'rgba(240, 172, 55, 1)'
-    shopBg.context.fillRect(0,0, 280, 410)
     var shopBgSprite = game.add.image(40, 105, shopBg)
 
     game.shopItemButtons = []
