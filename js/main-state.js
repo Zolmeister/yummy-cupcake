@@ -9,7 +9,7 @@ MainState.prototype.create = function() {
 
   // Add UI elements
   // Main score background bar
-  game.topBar = UI.topBar(game)
+  //game.topBar = UI.topBar(game)
 
   // Main score text
   game.scoreText = UI.scoreText(game)
@@ -18,7 +18,31 @@ MainState.prototype.create = function() {
   game.cpsText = UI.cpsText(game)
 
   // The big cupcake
-  game.cupcake = UI.cupcake(game, cupcakeClick, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
+  game.cupcake = UI.cupcake(game, null, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
+
+  var tween = {}
+
+  game.cupcake.events.onInputDown.add(function(el, pointer) {
+    if (!tween.isRunning) {
+      tween = game.add.tween(game.cupcake.scale)
+        .to({ x: 0.93, y: 0.93 }, 100, Phaser.Easing.Cubic.Out, true, 0, 1, true)
+    }
+
+    incrementScore()
+
+    var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
+    var y = pointer.y // probably don't need variance in the y
+    var plusOne = game.add.text(
+      x, y, '+' + game.cupcakesPerClick,
+      { font: '25px sansus', align: 'center', fill: '#fff' })
+
+    // slight random rotation
+    plusOne.angle = -Math.random() * 10 + 5
+    game.add.tween(plusOne).to(
+      { y: -50 },
+      Math.random() * 1500 + 2000,
+      Phaser.Easing.Cubic.Out, true)
+  })
 
   // shop button
   game.shopButton = UI.shopButton(game, shop)
@@ -30,39 +54,6 @@ MainState.prototype.create = function() {
 
 MainState.prototype.update = function() {
   // nothing here
-}
-
-function cupcakeClick(button, pointer) {
-  incrementScore()
-
-  if (!game.cupcakeDown) {
-    game.cupcakeDown =  game.time.events.loop(100, function() {
-      game.cupcake.scale.x = 1
-      game.cupcake.scale.y = 1
-
-      game.time.events.remove(game.cupcakeDown)
-      game.cupcakeDown = null
-    })
-    game.cupcake.scale.x -= 0.05
-    game.cupcake.scale.y -= 0.05
-  }
-
-  // spawn +1 near the mouse
-
-  // add some variance in the +1 position (but still near tap)
-  var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
-  var y = pointer.y // probably don't need variance in the y
-  var plusOne = game.add.text(
-    x, y, '+' + game.cupcakesPerClick,
-    { font: '25px sansus', align: 'center', fill: '#fff' })
-
-  // slight random rotation
-  plusOne.angle = -Math.random() * 10 + 5
-  game.add.tween(plusOne).to(
-    { y: -50 },
-    Math.random() * 1500 + 2000,
-    Phaser.Easing.Cubic.Out, true)
-
 }
 
 function shop() {
