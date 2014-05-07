@@ -12,7 +12,7 @@ SetupState.prototype.create = function () {
   if (config.debug)
     game.stage.disableVisibilityChange = true
 
-  game.state.start('shop')
+  game.state.start('main')
 
   // core loop that gives players more cupcakes every second
   ;

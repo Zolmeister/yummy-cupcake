@@ -76,7 +76,6 @@
           }).then(function(cupcakeUri) {
             game.loadProgress++ // inc loading bar
             game.svgs.cupcakeRibbon = cupcakeUri
-
           }).then(function() {
             // begin the game
             game.state.start('setup')

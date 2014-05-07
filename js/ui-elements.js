@@ -1,3 +1,4 @@
+// TODO: refactor to not use global game, and this.game instead
 var uiElements = (function() {
   return {
     scoreText: function() {
@@ -16,10 +17,10 @@ var uiElements = (function() {
       return this.element(this.game, 0, 0, {
         text: {
           type: 'text',
-          text: getCupcakesPerSecondText(game.cupcakesPerSecond),
+          text: getCupcakesPerSecondText(this.game.cupcakesPerSecond),
           style: { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 },
           anchor: [0.5, 0],
-          x: game.world.centerX,
+          x: this.game.world.centerX,
           y: 60
         }
       })._text
