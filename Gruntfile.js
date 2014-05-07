@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 		},
 		watch: {
 			scripts: {
-				files: ['js/**/*.js', 'lib/**/*.js', 'css/**/*.css'],
+				files: ['js/**/*.js', 'lib/**/*.js', 'css/**/*.css', 'index.html'],
 				tasks: ['concat_sourcemap', 'copy:main', 'copy:dev', 'usebanner'],
 				options: {
 					spawn: false,

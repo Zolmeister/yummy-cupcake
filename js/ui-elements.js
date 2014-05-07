@@ -1,7 +1,7 @@
-var UI = (function() {
+var uiElements = (function() {
   return {
-    scoreText: function(game) {
-      return UI.element(game, 0, 0, {
+    scoreText: function() {
+      return this.element(this.game, 0, 0, {
         text: {
           type: 'text',
           x: game.world.centerX,
@@ -12,8 +12,8 @@ var UI = (function() {
         }
       })._text
     },
-    cpsText: function(game) {
-      return UI.element(game, 0, 0, {
+    cpsText: function() {
+      return this.element(this.game, 0, 0, {
         text: {
           type: 'text',
           text: getCupcakesPerSecondText(game.cupcakesPerSecond),
@@ -25,7 +25,7 @@ var UI = (function() {
       })._text
     },
     cupcake: function(game, onclick, image) {
-      return UI.element(game, 0, 0, {
+      return this.element(game, 0, 0, {
         button: {
           type: 'button',
           key: image || 'cupcake',
@@ -35,86 +35,6 @@ var UI = (function() {
           y: game.world.centerY
         }
       })._button
-    },
-
-    // TODO: nested element support, and multiple of same type support
-    element: function(game, x, y, elements) {
-
-      var el = game.add.group()
-      el.x = x
-      el.y = y
-
-      var defaults = {
-        button: {
-          __constructor: ['x', 'y', 'key', 'callback', 'callbackContext',
-                          'overFrame', 'outFrame', 'downFrame', 'upFrame'],
-          x: 0,
-          y: 0,
-          key: null,
-          callback: _.noop,
-          callbackContext: null,
-          overFrame: 0,
-          outFrame: 0,
-          downFrame: 0,
-          upFrame: 0
-        },
-        text: {
-          __constructor: ['x', 'y', 'text', 'style'],
-          x: 0,
-          y: 0,
-          text: '',
-          style: {}
-        },
-        sprite: {
-          __constructor: ['x', 'y', 'key'],
-          key: null,
-          x: 0,
-          y: 0
-        }
-      }
-
-      // TODO: clean this up...
-      var skipKeys = ['anchor', 'type']
-
-      _.forEach(elements, function(element, name) {
-
-        // TODO: cleanup
-        if (element instanceof Phaser.Button ||
-            element instanceof Phaser.Text ||
-            element instanceof Phaser.Sprite) {
-
-          el.add(element)
-          el['_' + name] = element
-          return
-        }
-
-        var key = element.type
-        var objectOpts = _.defaultsDeep(element, defaults[key])
-
-        var constructorParams = _.map(objectOpts.__constructor, function(constructorKey) {
-          return objectOpts[constructorKey]
-        })
-
-        var object = game.add[key].apply(game.add, constructorParams)
-        var nonConstructorKeys = _.omit(_.keys(objectOpts), objectOpts.__constructor.concat('__constructor'))
-
-        _.forEach(nonConstructorKeys, function(key) {
-          if (_.contains(skipKeys, key)) {
-            return
-          }
-          object[key] = objectOpts[key]
-        })
-
-        if (objectOpts.anchor) {
-          object.anchor.setTo.apply(object.anchor, objectOpts.anchor)
-        }
-
-        el.add(object)
-        el['_' + name] = object
-      })
-
-      return el
-
     },
 
     button: function(game, x, y, itemBg, itemDownBg, opts) {
@@ -135,7 +55,7 @@ var UI = (function() {
         }
       }
 
-      var button = UI.element(game, x, y, _.defaultsDeep(opts, defaults))
+      var button = this.element(game, x, y, _.defaultsDeep(opts, defaults))
 
       button._button.events.onInputDown.add(function(el, pointer) {
         button._button.loadTexture(itemDownBg)
@@ -152,10 +72,10 @@ var UI = (function() {
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
 
       // button background
-      var itemBg = UI.rect(game, 250, 50, '#ecf0f1', 3)
-      var itemDownBg = UI.rect(game, 250, 50, '#bdc3c7', 3)
+      var itemBg = this.rect(game, 250, 50, '#ecf0f1', 3)
+      var itemDownBg = this.rect(game, 250, 50, '#bdc3c7', 3)
 
-      var button = UI.button(game, x, y, itemBg, itemDownBg, {
+      var button = this.button(game, x, y, itemBg, itemDownBg, {
         button: {
           anchor: [0.5, 0],
           key: itemBg,
@@ -164,7 +84,7 @@ var UI = (function() {
         }
       })._button
 
-      var btn = UI.element(game, x, y, {
+      var btn = this.element(game, x, y, {
         button: button,
         name: {
           type: 'text',
@@ -225,37 +145,13 @@ var UI = (function() {
 
       return btn
     },
-    rect: function(game, width, height, color, radius) {
-      var radius = radius || 0
-      var x = 0
-      var y = 0
-      var itemBg = game.add.bitmapData(width, height)
-      var ctx = itemBg.ctx
-      ctx.fillStyle = color
-
-      ctx.beginPath()
-      ctx.moveTo(x + radius, y)
-      ctx.lineTo(x + width - radius, y)
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
-      ctx.lineTo(x + width, y + height - radius)
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
-      ctx.lineTo(x + radius, y + height)
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
-      ctx.lineTo(x, y + radius)
-      ctx.quadraticCurveTo(x, y, x + radius, y)
-      ctx.closePath()
-      ctx.fill()
-
-
-      return itemBg
-    },
     // ghetto / "jank"
   	// we should create an alert box UI that we can use across all games
     shareButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#48C9B0')
-      var itemDownBg = UI.rect(game, 250, 50, '#16A085')
+      var itemBg = this.rect(game, 250, 50, '#48C9B0')
+      var itemDownBg = this.rect(game, 250, 50, '#16A085')
 
-      return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
@@ -270,10 +166,10 @@ var UI = (function() {
       })
     },
     shopButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#48C9B0', 5)
-      var itemDownBg = UI.rect(game, 250, 50, '#16A085', 5)
+      var itemBg = this.rect(game, 250, 50, '#48C9B0', 5)
+      var itemDownBg = this.rect(game, 250, 50, '#16A085', 5)
 
-      return UI.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
@@ -286,10 +182,10 @@ var UI = (function() {
       })
     },
     backButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#48C9B0', 5)
-      var itemDownBg = UI.rect(game, 250, 50, '#16A085', 5)
+      var itemBg = this.rect(game, 250, 50, '#48C9B0', 5)
+      var itemDownBg = this.rect(game, 250, 50, '#16A085', 5)
 
-      return UI.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
@@ -304,10 +200,10 @@ var UI = (function() {
       })
     },
     shareButton: function(game, onclick) {
-      var itemBg = UI.rect(game, 250, 50, '#3498db', 5)
-      var itemDownBg = UI.rect(game, 250, 50, '#2980b9', 5)
+      var itemBg = this.rect(game, 250, 50, '#3498db', 5)
+      var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
 
-      return UI.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,

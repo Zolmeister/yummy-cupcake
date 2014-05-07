@@ -9,6 +9,8 @@ MainState.prototype.create = function() {
 
   // Add UI elements
 
+  //game.topBar = UI.topBar(game)
+
   // Main score text
   game.scoreText = UI.scoreText(game)
 
