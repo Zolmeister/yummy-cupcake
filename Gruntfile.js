@@ -98,7 +98,7 @@ module.exports = function (grunt) {
 			build: {
 				files: [
 					{src: ['cache.appcache'], dest: 'build/cache.appcache'},
-          {src: ['assets'], dest: 'build/'}
+          {src: ['assets/**'], dest: 'build/'}
 				]
 			}
 		}
