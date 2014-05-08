@@ -6,7 +6,6 @@
 
   <title>Yummy Cupcake</title>
   <meta name="description" content="See how many cupcakes you can bake!">
-
   <link rel="kik-icon" href="assets/kik-icon-cupcake.png">
   <link rel="canonical" href="http://cupcake.clay.io/">
   <link rel="terms" href="http://clay.io/tos">
@@ -26,12 +25,15 @@
 
     var transparent = !config.debug
     var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent)
-     game.state.add('shop', ShopState)
-     game.state.add('main', MainState)
-     game.score = 0
-     game.cupcakesPerSecond = 0
-     game.cupcakesPerClick = 1
-     game.upgrades = {}
+    var UI = new PhaserUI(game)
+    UI.extend(uiElements)
+
+    game.state.add('shop', ShopState)
+    game.state.add('main', MainState)
+    game.score = 0
+    game.cupcakesPerSecond = 0
+    game.cupcakesPerClick = 1
+    game.upgrades = {}
 
      // shop items
     game.shopItemList = config.shopItemList
@@ -74,7 +76,6 @@
           }).then(function(cupcakeUri) {
             game.loadProgress++ // inc loading bar
             game.svgs.cupcakeRibbon = cupcakeUri
-
           }).then(function() {
             // begin the game
             game.state.start('setup')
