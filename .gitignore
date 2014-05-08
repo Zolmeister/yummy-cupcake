@@ -2,3 +2,4 @@ node_modules/
 dist/
 build/
 [Tt]humbs.db
+cache.appcache
