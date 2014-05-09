@@ -1,6 +1,6 @@
  // note that function calls within update are not optimized,
  // and should be in-lined during some compile step
- var config = {
+module.exports = {
    debug: false,
    shopItemList: [
      {

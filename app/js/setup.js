@@ -1,3 +1,15 @@
+/*global game*/
+var drawLoadBar = require('./assets.js').drawLoadBar
+var config = require('./config.js')
+var updateScoreText = require('./util.js').updateScoreText
+var Phaser = require('phaser')
+
+
+module.exports = {
+  SetupState: SetupState,
+  PreSetupState: PreSetupState
+}
+
 function SetupState() {}
 
 SetupState.prototype.preload = function () {
@@ -9,8 +21,9 @@ SetupState.prototype.preload = function () {
 SetupState.prototype.create = function () {
   game.stage.backgroundColor = '#71c5cf'
 
-  if (config.debug)
+  if (config.debug) {
     game.stage.disableVisibilityChange = true
+  }
 
   game.state.start('main')
 

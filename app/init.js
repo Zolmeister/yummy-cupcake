@@ -1,7 +1,24 @@
-/*global window, document, _, Phaser, PhaserUI, */
-//require('./lib/lodash')
-//require('./lib/phaser')
-//require('./lib/phaser-ui')
+/*global window, document*/
+var _ = require('./lib/lodash.js')
+var config = require('./js/config.js')
+var Phaser = require('phaser')
+var PhaserUI = require('./lib/phaser-ui.js')
+var uiElements = require('./js/ui-elements.js')
+var ShopState = require('./js/shop-state.js')
+var MainState = require('./js/main-state.js')
+var SetupState = require('./js/setup.js').SetupState
+var PreSetupState = require('./js/setup.js').PreSetupState
+var WebFont = require('./lib/webfont.min.js')
+var assets = require('./js/assets.js')
+var getSVGImageAssets = assets.getSVGImageAssets
+var SVGstoPNGs = assets.SVGstoPNGs
+var getCupcakeSVG = assets.getCupcakeSVG
+var social = require('./js/social.js')
+var connect = social.connect
+var cards = require('./lib/kik.min.js')
+var util = require('./js/util.js')
+var updateScoreText = util.updateScoreText
+var updateCPS = util.updateCPS
 
 _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 
@@ -14,6 +31,10 @@ _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 var transparent = !config.debug
 var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent)
 var UI = new PhaserUI(game)
+
+window.game = game
+window.UI = UI
+
 UI.extend(uiElements)
 
 game.state.add('shop', ShopState)
@@ -41,7 +62,7 @@ game.shopItemList = config.shopItemList
     families: ['sansus']
   },
   active: function() {
-    game.loadProgress++ // inc loading bar
+    game.loadProgress+=1 // inc loading bar
     getSVGImageAssets()
       .then(SVGstoPNGs)
       .then(function(svgs) {
@@ -62,7 +83,7 @@ game.shopItemList = config.shopItemList
           items: ['cherry', 'ribbon', 'sprinkles']
         })
       }).then(function(cupcakeUri) {
-        game.loadProgress++ // inc loading bar
+        game.loadProgress+=1 // inc loading bar
         game.svgs.cupcakeRibbon = cupcakeUri
       }).then(function() {
         // begin the game
@@ -77,8 +98,8 @@ game.shopItemList = config.shopItemList
 
 
  // Set global vars for Clay API (for Clay.ready())
- window.Clay = window.Clay || {}
-Clay.gameKey = "cupcake"
+var Clay = window.Clay = window.Clay || {}
+Clay.gameKey = 'cupcake'
 Clay.readyFunctions = []
  // inviteActions means the API checks onload for any invites from other users,
  // and gives them cupcakes accordingly
@@ -91,20 +112,19 @@ Clay.ready = function(fn) {
 
 window.addEventListener('load', function() {
   // Load clay API
-  ;
   (function() {
-    var clay = document.createElement("script");
+    var clay = document.createElement('script');
     clay.async = true;
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
-    clay.src = "http://cdn.clay.io/api.js";
+    clay.src = 'http://cdn.clay.io/api.js';
     // clay.src = "http://clay.io/api/src/bundle.js";
-    var tag = document.getElementsByTagName("script")[0];
+    var tag = document.getElementsByTagName('script')[0];
     tag.parentNode.insertBefore(clay, tag);
   })();
 
 
   // Load GA
-  ;
+  /*jshint ignore:start*/
   (function(i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;
     i[r] = i[r] || function() {
@@ -119,6 +139,7 @@ window.addEventListener('load', function() {
 
   ga('create', 'UA-27992080-1', 'clay.io');
   ga('send', 'pageview');
+  /*jshint ignore:end*/
 
   // high score
   Clay.ready(function() {

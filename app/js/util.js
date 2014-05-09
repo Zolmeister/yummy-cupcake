@@ -1,3 +1,13 @@
+var _ = require('../lib/lodash.js')
+
+module.exports = {
+  getCupcakesText: getCupcakesText,
+  getCupcakesPerSecondText: getCupcakesPerSecondText,
+  getItemCost: getItemCost,
+  updateScoreText: updateScoreText,
+  updateCPS: updateCPS
+}
+
 function getCupcakesText(n) {
   return Math.floor(n) + ' Cupcakes'
 }
@@ -30,7 +40,7 @@ function updateCPS(game) {
     cps += item.cps * item.owned
     if (item.type === 'upgrade' && item.owned && !game.upgrades[item.name]) {
       if (item.action === '+1 tap') {
-        game.cupcakesPerClick++
+        game.cupcakesPerClick+=1
       }
 
       game.upgrades[item.name] = true
@@ -43,6 +53,7 @@ function updateCPS(game) {
   })
 
   game.cupcakesPerSecond = cps
-  if (game.cpsText)
+  if (game.cpsText) {
     game.cpsText.setText(getCupcakesPerSecondText(cps))
+  }
 }
