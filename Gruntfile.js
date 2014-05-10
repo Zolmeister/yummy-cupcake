@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 			},
 			scripts: {
 				files: ['app/js/**/*.js', 'app/lib/**/*.js'],
-				tasks: ['shell:browserify']
+				tasks: ['scripts']
 			},
 			css: {
 				files: ['app/css/**/*.css'],
@@ -25,11 +25,11 @@ module.exports = function (grunt) {
 			},
 			vendor: {
 				files: ['app/vendor/**/*.js'],
-				tasks: ['concat_sourcemap']
+				tasks: ['concat_sourcemap:vendor']
 			},
 			index: {
 				files: ['app/index.html'],
-				tasks: ['copy:cache', 'usebanner']
+				tasks: ['appcache']
 			}
 		},
 		shell: {
@@ -124,7 +124,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy')
 	grunt.loadNpmTasks('grunt-shell')
 
-  grunt.registerTask('default', ['copy:cache', 'usebanner', 'shell:browserify', 'concat_sourcemap:vendor', 'watch'])
+	grunt.registerTask('appcache', ['copy:cache', 'usebanner'])
+	grunt.registerTask('scripts', ['shell:browserify'])
+	grunt.registerTask('vendors', ['concat_sourcemap:vendor', 'uglify:vendor'])
+
+  grunt.registerTask('default', ['appcache', 'scripts', 'concat_sourcemap:vendor', 'watch'])
   grunt.registerTask('build', ['concat_sourcemap', 'cssmin', 'uglify', 'inlineEverything', 'compress', 'copy:main', 'usebanner', 'copy:build'])
 
 }
