@@ -2,7 +2,7 @@
 var util = require('./util.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
-var _ = require('../lib/lodash.js')
+var _ = require('lodash')
 
 module.exports = ShopState
 

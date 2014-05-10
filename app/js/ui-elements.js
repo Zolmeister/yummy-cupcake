@@ -4,7 +4,7 @@ var util = require('./util')
 var getCupcakesText = util.getCupcakesText
 var getCupcakesPerSecondText = util.getCupcakesPerSecondText
 var getItemCost = util.getItemCost
-var _ = require('../lib/lodash')
+var _ = require('lodash')
 
 var uiElements = (function() {
   return {

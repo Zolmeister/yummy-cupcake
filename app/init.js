@@ -1,5 +1,5 @@
 /*global window, document, kik*/
-var _ = require('./lib/lodash.js')
+var _ = require('lodash')
 var config = require('./js/config.js')
 var Phaser = require('phaser')
 var PhaserUI = require('./lib/phaser-ui.js')

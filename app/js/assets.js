@@ -1,5 +1,5 @@
 /*global document, game, XMLHttpRequest, XMLSerializer*/
-var Promiz = require('../lib/promiz.micro.js')
+var Promiz = require('promiz')
 var canvg = require('canvg')
 
 module.exports = {

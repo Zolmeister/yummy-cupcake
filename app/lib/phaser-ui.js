@@ -1,4 +1,4 @@
-var _ = require('../lib/lodash.js')
+var _ = require('lodash')
 var Phaser = require('phaser')
 
 module.exports = PhaserUI;
