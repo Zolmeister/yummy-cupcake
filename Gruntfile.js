@@ -1,30 +1,46 @@
 module.exports = function (grunt) {
 
 	grunt.initConfig({
-		concat_sourcemap: {
+		'concat_sourcemap': {
 			options: {
 				sourceRoot: '../'
 			},
-			target: {
+			vendor: {
 				files: {
-					'dist/cupcake.js': ['js/**/*.js'],
-					'dist/lib.js': ['lib/**/*.js']
+					'app/dist/vendor.js': ['app/vendor/**/*.js']
 				}
 			}
 		},
 		watch: {
-			scripts: {
-				files: ['js/**/*.js', 'lib/**/*.js', 'css/**/*.css', 'index.html'],
-				tasks: ['concat_sourcemap', 'copy:main', 'copy:dev', 'usebanner'],
-				options: {
-					spawn: false,
-				},
+			options: {
+				spawn: false
 			},
+			scripts: {
+				files: ['app/js/**/*.js', 'app/lib/**/*.js'],
+				tasks: ['shell:browserify']
+			},
+			css: {
+				files: ['app/css/**/*.css'],
+				tasks: ['cssmin']
+			},
+			vendor: {
+				files: ['app/vendor/**/*.js'],
+				tasks: ['concat_sourcemap']
+			},
+			index: {
+				files: ['app/index.html'],
+				tasks: ['copy:cache', 'usebanner']
+			}
+		},
+		shell: {
+			browserify: {
+				command: 'browserify app/init.js -d -o app/dist/bundle.js'
+			}
 		},
 		cssmin: {
 			combine: {
 				files: {
-					'dist/style.min.css': ['css/style.css']
+					'app/dist/style.css': ['app/css/style.css']
 				}
 			}
 		},
@@ -33,7 +49,7 @@ module.exports = function (grunt) {
 				options: {
 					sourceMap: true,
 					sourceMapIncludeSources: true,
-					sourceMapIn: 'dist/cupcake.js.map', // input sourcemap from a previous compilation
+					sourceMapIn: 'dist/cupcake.js.map' // input sourcemap from a previous compilation
 				},
 				files: {
 					'dist/cupcake.min.js': ['dist/cupcake.js']
@@ -43,7 +59,7 @@ module.exports = function (grunt) {
 				options: {
 					sourceMap: true,
 					sourceMapIncludeSources: true,
-					sourceMapIn: 'dist/lib.js.map', // input sourcemap from a previous compilation
+					sourceMapIn: 'dist/lib.js.map' // input sourcemap from a previous compilation
 				},
 				files: {
 					'dist/lib.min.js': ['dist/lib.js']
@@ -79,22 +95,16 @@ module.exports = function (grunt) {
 					banner: '#<%= Date.now() %>'
 				},
 				files: {
-					src: [ 'cache.appcache' ]
+					src: [ 'app/cache.appcache' ]
 				}
 			}
 		},
 		copy: {
-			main: {
+			cache: {
 				files: [
-					{src: ['cache.appcache.tpl'], dest: 'cache.appcache'}
+					{src: ['app/cache.appcache.tpl'], dest: 'app/cache.appcache'}
 				]
 			},
-      dev: {
-        files: [
-					{src: ['dist/lib.js'], dest: 'dist/lib.min.js'},
-          {src: ['dist/cupcake.js'], dest: 'dist/cupcake.min.js'}
-				]
-      },
 			build: {
 				files: [
 					{src: ['cache.appcache'], dest: 'build/cache.appcache'},
@@ -112,8 +122,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-concat-sourcemap')
 	grunt.loadNpmTasks('grunt-contrib-compress')
 	grunt.loadNpmTasks('grunt-contrib-copy')
+	grunt.loadNpmTasks('grunt-shell')
 
-  grunt.registerTask('default', ['concat_sourcemap', 'copy:main', 'copy:dev', 'usebanner', 'watch'])
+  grunt.registerTask('default', ['copy:cache', 'usebanner', 'shell:browserify', 'concat_sourcemap:vendor', 'watch'])
   grunt.registerTask('build', ['concat_sourcemap', 'cssmin', 'uglify', 'inlineEverything', 'compress', 'copy:main', 'usebanner', 'copy:build'])
 
 }
