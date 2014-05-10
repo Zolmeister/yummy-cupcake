@@ -1,4 +1,4 @@
-/*global window, document*/
+/*global window, document, kik*/
 var _ = require('./lib/lodash.js')
 var config = require('./js/config.js')
 var Phaser = require('phaser')
@@ -8,14 +8,13 @@ var ShopState = require('./js/shop-state.js')
 var MainState = require('./js/main-state.js')
 var SetupState = require('./js/setup.js').SetupState
 var PreSetupState = require('./js/setup.js').PreSetupState
-var WebFont = require('./lib/webfont.min.js')
+var WebFont = require('webfont')
 var assets = require('./js/assets.js')
 var getSVGImageAssets = assets.getSVGImageAssets
 var SVGstoPNGs = assets.SVGstoPNGs
 var getCupcakeSVG = assets.getCupcakeSVG
 var social = require('./js/social.js')
 var connect = social.connect
-var cards = require('./lib/kik.min.js')
 var util = require('./js/util.js')
 var updateScoreText = util.updateScoreText
 var updateCPS = util.updateCPS
@@ -152,7 +151,7 @@ window.addEventListener('load', function() {
       })
     }
     var giveFeedback = function() {
-      cards.kik.openConversation('clayteam')
+      kik.openConversation('clayteam')
     }
     Clay.UI.Menu.init({
       items: [{

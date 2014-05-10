@@ -1,6 +1,6 @@
 /*global document, game, XMLHttpRequest, XMLSerializer*/
 var Promiz = require('../lib/promiz.micro.js')
-var canvg = require('../lib/canvg.js')
+var canvg = require('canvg')
 
 module.exports = {
 	getSVGImageAssets: getSVGImageAssets,
