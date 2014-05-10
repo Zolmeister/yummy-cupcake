@@ -1,8 +1,9 @@
 var gulp = require('gulp')
-var shell = require('gulp-shell')
 var concat = require('gulp-concat-sourcemap')
 var footer = require('gulp-footer')
-var rename = require('gulp-rename');
+var rename = require('gulp-rename')
+var browserify = require('browserify')
+var source = require('vinyl-source-stream')
 
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
@@ -11,10 +12,10 @@ var paths = {
 }
 
 gulp.task('scripts', function () {
-  return gulp.src('app/init.js')
-    .pipe(shell([
-      'browserify app/init.js -d -o app/dist/bundle.js'
-    ]))
+  return browserify('./app/init.js')
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('./app/dist/'));
 })
 
 gulp.task('vendor:concat', function () {
@@ -36,4 +37,4 @@ gulp.task('watch', function () {
   gulp.watch(paths.index, ['appcache'])
 })
 
-gulp.task('default', ['scripts', 'vendor:concat', 'appcache', 'watch'])
+gulp.task('default', ['vendor:concat', 'scripts', 'appcache', 'watch'])
