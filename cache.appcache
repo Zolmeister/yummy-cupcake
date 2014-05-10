@@ -3,6 +3,9 @@ CACHE MANIFEST
 
 CACHE:
 index.html
+dist/bundle.min.js
+dist/vendor.min.js
+dist/bundle.min.css
 
 NETWORK:
 *
