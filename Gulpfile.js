@@ -35,6 +35,7 @@ gulp.task('vendor', function () {
 
 gulp.task('styles', function () {
   return gulp.src(paths.styles)
+    .pipe(rename('bundle.css'))
     .pipe(gulp.dest(paths.dist))
 })
 
@@ -49,26 +50,24 @@ gulp.task('copy:index', function () {
     .pipe(gulp.dest(paths.build))
 })
 
-gulp.task('copy:bundle', function () {
+gulp.task('copy:scripts', function () {
   return gulp.src('./app/dist/bundle.js')
     .pipe(rename('bundle.min.js'))
-    .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest('./build/dist/'))
 })
 
 gulp.task('copy:vendor', function () {
   return gulp.src('./app/dist/vendor.js')
-    .pipe(uglify())
     .pipe(rename('vendor.min.js'))
+    .pipe(uglify())
     .pipe(gulp.dest('./build/dist/'))
 })
 
 gulp.task('copy:css', function () {
   return gulp.src('./app/dist/bundle.css')
     .pipe(rename('bundle.min.css'))
-    .pipe(gulp.dest(paths.build + 'dist/'))
+    .pipe(gulp.dest('./build/dist/'))
 })
 
 gulp.task('copy:assets', function () {
@@ -90,7 +89,7 @@ gulp.task('watch', function () {
   gulp.watch(paths.styles, ['styles'])
 })
 
-gulp.task('copy:all', ['copy:index', 'copy:bundle', 'copy:vendor', 'copy:css', 'copy:assets'])
+gulp.task('copy:all', ['copy:index', 'copy:scripts', 'copy:vendor', 'copy:css', 'copy:assets'])
 
 gulp.task('default', ['vendor', 'scripts', 'styles', 'watch'])
 gulp.task('build', ['clean:build', 'vendor', 'scripts', 'styles', 'appcache', 'copy:all'])

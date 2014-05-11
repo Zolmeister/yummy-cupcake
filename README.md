@@ -8,11 +8,11 @@ Builds look like this
   - cache.appcache
   - dist/
     - bundle.min.js
-    - bundle.min.js.map
+    - bundle.min.js.map (currently missing)
     - vendor.min.js
-    - vendor.min.js.map
+    - vendor.min.js.map (currently missing)
     - bundle.min.css
-    - bundle.min.css.map
+    - bundle.min.css.map (currently missing)
   - assets/
     - image.jpg
     - ...
@@ -22,3 +22,5 @@ Builds look like this
 
 ### TODO
 - add build step to add all `asset` files to `cache.appcache`
+- minify/concat css w/source maps
+- fix missing js maps
