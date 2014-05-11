@@ -16,7 +16,11 @@ var uiElements = (function() {
           y: 5,
           text: getCupcakesText(game.score),
           anchor: [0.5, 0],
-          style: { font: '45px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 8 }
+          style: {
+            font: '45px sansus',
+            fill: '#ffffff',
+            stroke: '#ee508c',
+            strokeThickness: 8 }
         }
       })._text
     },
@@ -25,7 +29,11 @@ var uiElements = (function() {
         text: {
           type: 'text',
           text: getCupcakesPerSecondText(this.game.cupcakesPerSecond),
-          style: { font: '20px sansus', fill: '#ffffff', stroke: '#ee508c', strokeThickness: 5 },
+          style: {
+            font: '20px sansus',
+            fill: '#ffffff',
+            stroke: '#ee508c',
+            strokeThickness: 5 },
           anchor: [0.5, 0],
           x: this.game.world.centerX,
           y: 60
@@ -141,7 +149,7 @@ var uiElements = (function() {
         }
       })
 
-      btn.c_reset = function() {
+      btn._cReset = function() {
         button.loadTexture(itemBg)
       }
 
@@ -150,33 +158,13 @@ var uiElements = (function() {
       })
 
       button.events.onInputOut.add(function(/*el, pointer*/) {
-        btn.c_reset()
+        btn._cReset()
       })
 
       button.events.onDragStart.add(onDragStart)
       button.events.onDragStop.add(onDragEnd)
 
       return btn
-    },
-    // ghetto / "jank"
-  	// we should create an alert box UI that we can use across all games
-    shareButton: function(game, onclick) {
-      var itemBg = this.rect(game, 250, 50, '#48C9B0')
-      var itemDownBg = this.rect(game, 250, 50, '#16A085')
-
-      return this.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
-        button: {
-          type: 'button',
-          key: itemBg,
-          callback: onclick,
-          x: game.world.centerX,
-          y: 640 - 60
-        },
-        text: {
-          type: 'text',
-          text: '+500 when they join!'
-        }
-      })
     },
     shopButton: function(game, onclick) {
       var itemBg = this.rect(game, 250, 50, '#48C9B0', 5)
@@ -212,7 +200,6 @@ var uiElements = (function() {
         }
       })
     },
-    // FIXME Duplicate???
     shareButton: function(game, onclick) {
       var itemBg = this.rect(game, 250, 50, '#3498db', 5)
       var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
