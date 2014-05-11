@@ -1,3 +1,14 @@
+/*global document, game, XMLHttpRequest, XMLSerializer*/
+var Promiz = require('promiz')
+var canvg = require('canvg')
+
+module.exports = {
+	getSVGImageAssets: getSVGImageAssets,
+	SVGstoPNGs: SVGstoPNGs,
+	getCupcakeSVG: getCupcakeSVG,
+	drawLoadBar: drawLoadBar
+}
+
 // Load in SVGs as pngs so phaser can use them
 function getSVGImageAssets() {
 	return new Promiz().resolve([
@@ -15,9 +26,12 @@ function SVGstoPNGs(svgs) {
 	var toLoad = svgs.length
 	var returnObj = {}
 
-	for(var i = 0, j = svgs.length; i < j; i++) {
+	for(var i = 0, j = svgs.length; i < j; i+=1) {
 		// force local scope since img.onload is async
-	  ;(function(svg) {
+	  genItem(svgs[i])
+	 }
+
+	function genItem(svg) {
 	  	var width = svg.width
 	  	var height = svg.height
 		  // since phaser doesn't support svg, we have to convert to a png of the right size
@@ -29,23 +43,22 @@ function SVGstoPNGs(svgs) {
 		  canvas.height = height
 		  canvas.style.width = width + 'px'
 		  canvas.style.height = height + 'px'
-		  
+
 		  var canvasLoaded = function() {
-  			game.loadProgress++ // inc loading bar
-		  	
+  			game.loadProgress+=1 // inc loading bar
+
 		  	returnObj[ svg.key ] = canvas.toDataURL('image/png')
 
-		    loaded++
+		    loaded+=1
 
         // all imgs loaded
-		    if(loaded == toLoad) {
+		    if(loaded === toLoad) {
 		    	deferred.resolve(returnObj)
         }
 		  }
-		  
+
 		  canvg(canvas, svg.src, { renderCallback: canvasLoaded })
-		 })(svgs[i])
-	 }
+	}
 
   return deferred
 }
@@ -65,10 +78,11 @@ function getCupcakeSVG(options) {
     var svgAsXml = xhr.responseXML
     // find the elements we want to remove
     var shownItems = options.items
-    for (var i = 0, j = items.length; i < j; i++) {
+    for (var i = 0, j = items.length; i < j; i+=1) {
       var item = items[i]
-      if(shownItems.indexOf(item) !== -1)
+      if(shownItems.indexOf(item) !== -1) {
         continue // skip hiding any item we specified
+			}
       var $toHide = svgAsXml.getElementById(item)
       $toHide.style.display = 'none'
     }

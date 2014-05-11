@@ -1,3 +1,11 @@
+/*global game, UI*/
+var util = require('./util.js')
+var getItemCost = util.getItemCost
+var updateCPS = util.updateCPS
+var _ = require('lodash')
+
+module.exports = ShopState
+
 function ShopState() {}
 ShopState.prototype = {
   itemHeight: 52,
@@ -12,7 +20,8 @@ ShopState.prototype.create = function() {
 
     var shopBg = UI.rect(game, 280, 410, '#2ecc71', 5)
 
-    var shopBgSprite = game.add.image(40, 105, shopBg)
+    // shop bg sprite
+    game.add.image(40, 105, shopBg)
 
     game.shopItemButtons = []
     var buttons = game.shopItemButtons
@@ -21,11 +30,16 @@ ShopState.prototype.create = function() {
     var items = game.items
     var nextHidden = false
     var index = -1
-    for(var i = 0; i < game.shopItemList.length; i++) {
-      if (nextHidden) break
+    for(var i = 0; i < game.shopItemList.length; i+=1) {
+      if (nextHidden) {
+        break
+      }
 
-      ;(function(i) {
-        var item = game.shopItemList[i]
+      genItem(i)
+    }
+
+    function genItem(i) {
+      var item = game.shopItemList[i]
         if (item.type === 'upgrade' && item.owned) {
           item.visible = false
           return
@@ -33,7 +47,7 @@ ShopState.prototype.create = function() {
 
         // this is so that we can skip items which are not visible,
         // but in the middle of the list
-        index++
+        index+=1
 
         if (game.score >= getItemCost(item)) {
           item.visible = true
@@ -55,7 +69,7 @@ ShopState.prototype.create = function() {
             game.trackingEl = btn
             game.trackingStart = true
           },
-          function(btn, pointer) {
+          function(/*btn, pointer*/) {
             game.tracking = false
             game.trackingEl.x = game.trackingElX
             game.trackingEl.y = game.trackingElY
@@ -78,7 +92,7 @@ ShopState.prototype.create = function() {
               if (item.type === 'upgrade') {
                 item.visible = false
                 if (item.action === '+1 tap') {
-                  game.cupcakesPerClick++
+                  game.cupcakesPerClick+=1
                 }
                 game.state.start('shop')
               }
@@ -92,14 +106,15 @@ ShopState.prototype.create = function() {
         items.add(btn)
 
         buttons.push(btn)
-      })(i)
     }
 
+    /*jshint ignore:start*/
     items.c_reset = function() {
-      for(var i=0; i < buttons.length; i++) {
+      for(var i=0; i < buttons.length; i+=1) {
         buttons[i].c_reset()
       }
     }
+    /*jshint ignore:end*/
 
     // This is a mask so that the buttons are hidden
     // if they are outside the 'shop' bounding box
@@ -137,7 +152,9 @@ ShopState.prototype.update = function() {
          game.input.activePointer.y < game.trackingOrigY - 5 )) {
       game.trackingStart = false
       game.tracked = true
+      /*jshint ignore:start*/
       game.items.c_reset()
+      /*jshint ignore:end*/
     } else if (!game.trackingStart) {
       var y = game.input.activePointer.y
 

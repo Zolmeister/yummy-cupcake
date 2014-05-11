@@ -1,4 +1,11 @@
 // TODO: refactor to not use global game, and this.game instead
+/*global game*/
+var util = require('./util')
+var getCupcakesText = util.getCupcakesText
+var getCupcakesPerSecondText = util.getCupcakesPerSecondText
+var getItemCost = util.getItemCost
+var _ = require('lodash')
+
 var uiElements = (function() {
   return {
     scoreText: function() {
@@ -58,13 +65,13 @@ var uiElements = (function() {
 
       var button = this.element(game, x, y, _.defaultsDeep(opts, defaults))
 
-      button._button.events.onInputDown.add(function(el, pointer) {
+    button._button.events.onInputDown.add(function(/*el, pointer*/) {
         button._button.loadTexture(itemDownBg)
       })
-      button._button.events.onInputOut.add(function(el, pointer) {
+    button._button.events.onInputOut.add(function(/*el, pointer*/) {
         button._button.loadTexture(itemBg)
       })
-      button._button.events.onInputUp.add(function(el, pointer) {
+    button._button.events.onInputUp.add(function(/*el, pointer*/) {
         button._button.loadTexture(itemBg)
       })
 
@@ -127,20 +134,25 @@ var uiElements = (function() {
       button.input.enableDrag()
       button.events.onInputUp.add(function(el, pointer) {
         button.loadTexture(itemBg)
-        onclick && onclick(el, pointer, {
-          costText: cost
-        })
+        if(onclick) {
+          onclick(el, pointer, {
+            costText: cost
+          })
+        }
       })
 
       btn.c_reset = function() {
         button.loadTexture(itemBg)
       }
-      button.events.onInputDown.add(function(el, pointer) {
+
+      button.events.onInputDown.add(function(/*el, pointer*/) {
         button.loadTexture(itemDownBg)
       })
-      button.events.onInputOut.add(function(el, pointer) {
+
+      button.events.onInputOut.add(function(/*el, pointer*/) {
         btn.c_reset()
       })
+
       button.events.onDragStart.add(onDragStart)
       button.events.onDragStop.add(onDragEnd)
 
@@ -200,6 +212,7 @@ var uiElements = (function() {
         }
       })
     },
+    // FIXME Duplicate???
     shareButton: function(game, onclick) {
       var itemBg = this.rect(game, 250, 50, '#3498db', 5)
       var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
@@ -220,3 +233,5 @@ var uiElements = (function() {
     }
   }
 })()
+
+module.exports = uiElements

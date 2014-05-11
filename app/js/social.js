@@ -1,7 +1,14 @@
+/*global Clay, game, UI*/
+module.exports = {
+	connect: connect,
+	invite: invite
+}
+
 function connect() {
 	Clay.Kik.connect({}, function(response) {
-		if(! response || ! response.success)
+		if(! response || ! response.success) {
 			console.log('todo: prompt to connect again')
+		}
 	})
 }
 

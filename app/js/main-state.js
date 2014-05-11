@@ -1,3 +1,12 @@
+/*global game, UI*/
+var config = require('./config.js')
+var Phaser = require('phaser')
+var util = require('./util.js')
+var updateScoreText = util.updateScoreText
+var invite = require('./social.js').invite
+
+module.exports = MainState
+
 function MainState() {}
 
 MainState.prototype.preload = function() {}
