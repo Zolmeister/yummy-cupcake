@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp')
 var concat = require('gulp-concat')
 var footer = require('gulp-footer')
@@ -52,21 +54,21 @@ gulp.task('copy:index', function () {
 
 gulp.task('copy:scripts', function () {
   return gulp.src('./app/dist/bundle.js')
-    .pipe(rename('bundle.min.js'))
+    .pipe(rename('bundle.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./build/dist/'))
 })
 
 gulp.task('copy:vendor', function () {
   return gulp.src('./app/dist/vendor.js')
-    .pipe(rename('vendor.min.js'))
+    .pipe(rename('vendor.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./build/dist/'))
 })
 
 gulp.task('copy:css', function () {
   return gulp.src('./app/dist/bundle.css')
-    .pipe(rename('bundle.min.css'))
+    .pipe(rename('bundle.css'))
     .pipe(gulp.dest('./build/dist/'))
 })
 

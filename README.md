@@ -1,5 +1,19 @@
 ### Goal: Figure out best practices for writing HTML5 games
 
+### Dev
+`gulp`
+
+### Production
+`gulp build`
+
+### Server for testing
+##### Dev
+(serves files out of ./app)
+`node server`
+##### Prod
+(serves files out of ./build)
+`NODE_ENV=production node server`
+
 ### Build process
 Builds look like this
 
@@ -7,12 +21,12 @@ Builds look like this
   - index.html
   - cache.appcache
   - dist/
-    - bundle.min.js
-    - bundle.min.js.map (currently missing)
-    - vendor.min.js
-    - vendor.min.js.map (currently missing)
-    - bundle.min.css
-    - bundle.min.css.map (currently missing)
+    - bundle.js
+    - bundle.js.map (currently missing)
+    - vendor.js
+    - vendor.js.map (currently missing)
+    - bundle.css
+    - bundle.css.map (currently missing)
   - assets/
     - image.jpg
     - ...
