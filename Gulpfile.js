@@ -9,6 +9,7 @@ var browserify = require('browserify')
 var clean = require('gulp-clean')
 var sourcemaps = require('gulp-sourcemaps')
 var source = require('vinyl-source-stream')
+var nodemon = require('gulp-nodemon')
 
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
@@ -84,6 +85,12 @@ gulp.task('clean:build', function () {
         .pipe(clean())
 })
 
+gulp.task('server', function () {
+
+  // Don't actually watch for changes, just run the server
+  return nodemon({script: 'server.js', ext: 'null'})
+})
+
 gulp.task('watch', function () {
   gulp.watch(paths.scripts, ['scripts'])
   gulp.watch(paths.vendor, ['vendor:concat'])
@@ -92,6 +99,6 @@ gulp.task('watch', function () {
 })
 
 gulp.task('copy:all', ['copy:index', 'copy:scripts', 'copy:vendor', 'copy:css', 'copy:assets'])
-
-gulp.task('default', ['vendor', 'scripts', 'styles', 'watch'])
-gulp.task('build', ['clean:build', 'vendor', 'scripts', 'styles', 'appcache', 'copy:all'])
+gulp.task('dev', ['vendor', 'scripts', 'styles'])
+gulp.task('default', ['server', 'dev', 'watch'])
+gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])
