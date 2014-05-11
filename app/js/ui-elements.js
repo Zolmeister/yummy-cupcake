@@ -1,5 +1,6 @@
 // TODO: refactor to not use global game, and this.game instead
 /*global game*/
+'use strict';
 var util = require('./util')
 var getCupcakesText = util.getCupcakesText
 var getCupcakesPerSecondText = util.getCupcakesPerSecondText

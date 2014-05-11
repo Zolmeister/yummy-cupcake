@@ -1,4 +1,6 @@
 /*global Clay, game, UI*/
+'use strict';
+
 module.exports = {
 	connect: connect,
 	invite: invite

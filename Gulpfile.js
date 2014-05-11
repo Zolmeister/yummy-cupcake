@@ -10,6 +10,7 @@ var clean = require('gulp-clean')
 var sourcemaps = require('gulp-sourcemaps')
 var source = require('vinyl-source-stream')
 var nodemon = require('gulp-nodemon')
+var jshint = require('gulp-jshint')
 
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
@@ -26,6 +27,12 @@ gulp.task('scripts', function () {
     .bundle({debug:true})
     .pipe(source('bundle.js'))
     .pipe(gulp.dest(paths.dist))
+})
+
+gulp.task('lint:scripts', function () {
+  return gulp.src(['./app/js/**/*.js', './app/lib/**/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))
 })
 
 gulp.task('vendor', function () {
@@ -92,13 +99,13 @@ gulp.task('server', function () {
 })
 
 gulp.task('watch', function () {
-  gulp.watch(paths.scripts, ['scripts'])
+  gulp.watch(paths.scripts, ['lint:scripts', 'scripts'])
   gulp.watch(paths.vendor, ['vendor:concat'])
   gulp.watch(paths.index, ['appcache'])
   gulp.watch(paths.styles, ['styles'])
 })
 
 gulp.task('copy:all', ['copy:index', 'copy:scripts', 'copy:vendor', 'copy:css', 'copy:assets'])
-gulp.task('dev', ['vendor', 'scripts', 'styles'])
+gulp.task('dev', ['lint:scripts', 'vendor', 'scripts', 'styles'])
 gulp.task('default', ['server', 'dev', 'watch'])
 gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])

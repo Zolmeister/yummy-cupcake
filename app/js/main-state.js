@@ -1,4 +1,5 @@
 /*global game, UI*/
+'use strict';
 var config = require('./config.js')
 var Phaser = require('phaser')
 var util = require('./util.js')

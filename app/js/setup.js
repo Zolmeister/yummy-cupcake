@@ -1,4 +1,5 @@
 /*global game*/
+'use strict';
 var drawLoadBar = require('./assets.js').drawLoadBar
 var config = require('./config.js')
 var updateScoreText = require('./util.js').updateScoreText

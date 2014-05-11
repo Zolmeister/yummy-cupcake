@@ -1,4 +1,5 @@
 /*global game, UI*/
+'use strict';
 var util = require('./util.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
