@@ -1,14 +1,14 @@
 // TODO: refactor to not use global game, and this.game instead
-/*global game*/
 'use strict';
 var util = require('./util')
 var getCupcakesText = util.getCupcakesText
 var getCupcakesPerSecondText = util.getCupcakesPerSecondText
 var getItemCost = util.getItemCost
 var _ = require('lodash')
+var PhaserUI = require('../lib/phaser-ui.js')
 
-var uiElements = (function() {
-  return {
+module.exports = function(game) {
+  return new PhaserUI(game).extend({
     scoreText: function() {
       return this.element(this.game, 0, 0, {
         text: {
@@ -219,7 +219,5 @@ var uiElements = (function() {
         }
       })
     }
-  }
-})()
-
-module.exports = uiElements
+  })
+}

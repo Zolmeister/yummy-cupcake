@@ -1,4 +1,4 @@
-/*global Clay, game, UI*/
+/*global Clay, game*/
 'use strict';
 
 module.exports = {
@@ -24,7 +24,7 @@ function invite() {
     }
   }
   Clay.Kik.invite(options, function() {
-  	game.shareButton = UI.shareButton(game, invite)
+  	game.shareButton = require('./ui')(game).shareButton(game, invite)
   })
 }
 

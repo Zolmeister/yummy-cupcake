@@ -1,4 +1,4 @@
-/*global game, UI*/
+/*global game*/
 'use strict';
 var config = require('./config.js')
 var Phaser = require('phaser')
@@ -13,6 +13,7 @@ function MainState() {}
 MainState.prototype.preload = function() {}
 
 MainState.prototype.create = function() {
+  var UI = require('./ui.js')(game)
   if (config.debug) {
     game.stage.disableVisibilityChange = true
   }

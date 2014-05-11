@@ -27,7 +27,8 @@
     "lodash": "./app/vendor/lodash.js",
     "promiz": "./app/vendor/promiz.micro.js",
     "rgbcolor": "./app/vendor/rgbcolor.js",
-    "StackBlur": "./app/vendor/StackBlur.js"
+    "StackBlur": "./app/vendor/StackBlur.js",
+    "kik": "./app/vendor/kik.min.js"
   },
   "browserify": {
     "transform": [
@@ -41,6 +42,7 @@
     "lodash": "global:_",
     "promiz": "global:Promiz",
     "rgbcolor": "global:rgbcolor",
-    "StackBlur": "global:StackBlur"
+    "StackBlur": "global:StackBlur",
+    "kik": "global:kik"
   }
 }

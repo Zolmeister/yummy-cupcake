@@ -1,4 +1,4 @@
-/*global document, game, XMLHttpRequest, XMLSerializer*/
+/*global game*/
 'use strict';
 var Promiz = require('promiz')
 var canvg = require('canvg')

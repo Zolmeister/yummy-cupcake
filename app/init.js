@@ -1,9 +1,7 @@
-/*global window, document, kik*/
+var kik = require('kik')
 var _ = require('lodash')
 var config = require('./js/config.js')
 var Phaser = require('phaser')
-var PhaserUI = require('./lib/phaser-ui.js')
-var uiElements = require('./js/ui-elements.js')
 var ShopState = require('./js/shop-state.js')
 var MainState = require('./js/main-state.js')
 var SetupState = require('./js/setup.js').SetupState
@@ -29,12 +27,7 @@ _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 
 var transparent = !config.debug
 var game = new Phaser.Game(360, 640, Phaser.CANVAS, 'game', false, transparent)
-var UI = new PhaserUI(game)
-
 window.game = game
-window.UI = UI
-
-UI.extend(uiElements)
 
 game.state.add('shop', ShopState)
 game.state.add('main', MainState)
@@ -46,17 +39,17 @@ game.upgrades = {}
  // shop items
 game.shopItemList = config.shopItemList
 
- game.state.add('setup', SetupState)
+game.state.add('setup', SetupState)
 
- // for loading bar since we're loading some assets through xhr & loading svgs through canvg
- game.state.add('presetup', PreSetupState)
- game.state.start('presetup')
+// for loading bar since we're loading some assets through xhr & loading svgs through canvg
+game.state.add('presetup', PreSetupState)
+game.state.start('presetup')
 
- game.loadProgress = 0 // 0 to game.loadSteps
- game.loadSteps = 6 // webfont + cupcake svg + 1 step per svg we load (just bar.svg currently) + 1 step per png we load (2) in 'setup'
- game.loadPNGs = 2 // how many pngs we're loading into phaser (game.load doesn't seem to give this #)
- // Load fonts
- WebFont.load({
+game.loadProgress = 0 // 0 to game.loadSteps
+game.loadSteps = 6 // webfont + cupcake svg + 1 step per svg we load (just bar.svg currently) + 1 step per png we load (2) in 'setup'
+game.loadPNGs = 2 // how many pngs we're loading into phaser (game.load doesn't seem to give this #)
+// Load fonts
+WebFont.load({
   custom: {
     families: ['sansus']
   },
@@ -169,7 +162,7 @@ window.addEventListener('load', function() {
 
 /* data.js */
 
- var saveData = (function() {
+var saveData = (function() {
 
   // var so we can tell if data has changed (and only update if it has). Stored as string
   var lastDataSave = ''
@@ -203,7 +196,7 @@ window.addEventListener('load', function() {
   }
 })()
 
- Clay.ready(function() {
+Clay.ready(function() {
   setInterval(saveData, 10000) // save score/etc every 10 seconds
   // grab data
   Clay.Player.onLogin(function() {

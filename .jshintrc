@@ -21,5 +21,6 @@
 
 
   "asi": true,
-  "node": true
+  "node": true,
+  "browser": true
 }

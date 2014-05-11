@@ -124,4 +124,6 @@ PhaserUI.prototype.extend = function extend(object) {
   _.forEach(object, function(val, key) {
     self.add(key, val)
   })
+
+  return this
 }
