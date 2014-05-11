@@ -1,4 +1,3 @@
-/*global game*/
 'use strict';
 var Promiz = require('promiz')
 var canvg = require('canvg')
@@ -20,7 +19,7 @@ function getSVGImageAssets() {
 // convert all of our svgs to png urls
 // @param svgs [ { key: 'someKey', src: 'assets/bar.svg', width: someWidth, height: someHeight } ]
 // @param callback - called when complete with param: { someKey: someSrcURL }
-function SVGstoPNGs(svgs) {
+function SVGstoPNGs(svgs, game) {
   var deferred = new Promiz()
 
 	var loaded = 0 // counter so we can call callback when all are loaded
@@ -110,7 +109,7 @@ function getCupcakeSVG(options) {
   return deferred
 }
 
-function drawLoadBar() {
+function drawLoadBar(game) {
   // Ghetto load bar. Better implementation would be something like http://www.photonstorm.com/phaser/advanced-phaser-and-typescript-projects
   // be sure it takes into account our manual loading in of svgs though
   var loadBarHeight = 50

@@ -1,4 +1,3 @@
-/*global game*/
 'use strict';
 var config = require('./config.js')
 var Phaser = require('phaser')
@@ -13,6 +12,8 @@ function MainState() {}
 MainState.prototype.preload = function() {}
 
 MainState.prototype.create = function() {
+  var game = this.game
+
   var UI = require('./ui.js')(game)
   if (config.debug) {
     game.stage.disableVisibilityChange = true
@@ -39,7 +40,9 @@ MainState.prototype.create = function() {
         .to({ x: 0.93, y: 0.93 }, 100, Phaser.Easing.Cubic.Out, true, 0, 1, true)
     }
 
-    incrementScore()
+    // increment score
+    game.score += game.cupcakesPerClick
+    updateScoreText(game)
 
     var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
     var y = pointer.y // probably don't need variance in the y
@@ -56,22 +59,17 @@ MainState.prototype.create = function() {
   })
 
   // shop button
-  game.shopButton = UI.shopButton(game, shop)
+  game.shopButton = UI.shopButton(game, function() {
+    game.state.start('shop')
+  })
 
   // earn more cupcakes (share) button
-  game.shareButton = UI.shareButton(game, invite)
+  game.shareButton = UI.shareButton(game, function(){
+    invite(game)
+  })
 
 }
 
 MainState.prototype.update = function() {
   // nothing here
-}
-
-function shop() {
-  game.state.start('shop')
-}
-
-function incrementScore() {
-	game.score += game.cupcakesPerClick
-  updateScoreText(game)
 }

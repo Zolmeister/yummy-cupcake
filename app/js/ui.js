@@ -1,4 +1,3 @@
-// TODO: refactor to not use global game, and this.game instead
 'use strict';
 var util = require('./util')
 var getCupcakesText = util.getCupcakesText

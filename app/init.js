@@ -36,6 +36,13 @@ game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
 game.upgrades = {}
 
+// core loop that gives players more cupcakes every second
+;(function cpsCalculation() {
+  game.score += game.cupcakesPerSecond
+  updateScoreText(game)
+  setTimeout(cpsCalculation, 1000)
+})()
+
  // shop items
 game.shopItemList = config.shopItemList
 
@@ -56,7 +63,9 @@ WebFont.load({
   active: function() {
     game.loadProgress+=1 // inc loading bar
     getSVGImageAssets()
-      .then(SVGstoPNGs)
+      .then(function(svgs) {
+        return SVGstoPNGs(svgs, game)
+      })
       .then(function(svgs) {
         game.svgs = svgs
       }).then(function() {

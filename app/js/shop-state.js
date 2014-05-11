@@ -1,4 +1,3 @@
-/*global game*/
 'use strict';
 var util = require('./util.js')
 var getItemCost = util.getItemCost
@@ -16,7 +15,7 @@ ShopState.prototype = {
 ShopState.prototype.preload = function() {}
 
 ShopState.prototype.create = function() {
-
+  var game = this.game
   var UI = require('./ui')(game)
   var self = this
 
@@ -147,7 +146,8 @@ ShopState.prototype.create = function() {
 }
 
 ShopState.prototype.update = function() {
-
+  var game = this.game
+  
   if (game.tracking && game.input.activePointer.isDown) {
     if (game.trackingStart &&
         (game.input.activePointer.y > game.trackingOrigY + 5 ||

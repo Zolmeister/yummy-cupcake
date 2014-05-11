@@ -1,4 +1,4 @@
-/*global Clay, game*/
+/*global Clay*/
 'use strict';
 
 module.exports = {
@@ -14,7 +14,7 @@ function connect() {
 	})
 }
 
-function invite() {
+function invite(game) {
   // TODO: Clay.Social.smartInvite()?
   var options = {
     message: 'Come join me in Yummy Cupcake! Make as many cupcakes as you can.',
@@ -24,7 +24,9 @@ function invite() {
     }
   }
   Clay.Kik.invite(options, function() {
-  	game.shareButton = require('./ui')(game).shareButton(game, invite)
+  	game.shareButton = require('./ui')(game).shareButton(game, function() {
+			invite(game)
+		})
   })
 }
 
