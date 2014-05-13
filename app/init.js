@@ -9,7 +9,7 @@ var PreSetupState = require('./js/setup.js').PreSetupState
 var WebFont = require('webfont')
 var assets = require('./js/assets.js')
 var getSVGImageAssets = assets.getSVGImageAssets
-var SVGstoPNGs = assets.SVGstoPNGs
+var cSVGstoPNGs = assets.SVGstoPNGs
 var getCupcakeSVG = assets.getCupcakeSVG
 var social = require('./js/social.js')
 var connect = social.connect
@@ -19,7 +19,7 @@ var updateCPS = util.updateCPS
 
 _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 
- if (config.debug) {
+if (config.debug) {
   window.onerror = function(msg, url, linenumber) {
     document.body.innerHTML += 'Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber
   }
@@ -67,7 +67,7 @@ WebFont.load({
     game.loadProgress+=1 // inc loading bar
     getSVGImageAssets()
       .then(function(svgs) {
-        return SVGstoPNGs(svgs, game)
+        return cSVGstoPNGs(svgs, game)
       })
       .then(function(svgs) {
         game.svgs = svgs

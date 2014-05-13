@@ -14,8 +14,6 @@ ShopState.prototype = {
   shopHeight: 380
 }
 
-ShopState.prototype.preload = function() {}
-
 ShopState.prototype.create = function() {
   var game = this.game
   var UI = require('./ui')(game)

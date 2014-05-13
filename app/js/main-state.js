@@ -9,8 +9,6 @@ module.exports = MainState
 
 function MainState() {}
 
-MainState.prototype.preload = function() {}
-
 MainState.prototype.create = function() {
   var game = this.game
 
@@ -68,8 +66,4 @@ MainState.prototype.create = function() {
     invite(game)
   })
 
-}
-
-MainState.prototype.update = function() {
-  // nothing here
 }

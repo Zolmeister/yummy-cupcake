@@ -12,6 +12,7 @@ var source = require('vinyl-source-stream')
 var nodemon = require('gulp-nodemon')
 var jshint = require('gulp-jshint')
 
+// TODO: cleanup vars
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
   vendor: './app/vendor/*.js',
@@ -30,7 +31,7 @@ gulp.task('scripts', function () {
 })
 
 gulp.task('lint:scripts', function () {
-  return gulp.src(['./app/js/**/*.js', './app/lib/**/*.js'])
+  return gulp.src(paths.scripts)
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 })
