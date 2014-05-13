@@ -31,11 +31,14 @@ window.game = game
 
 game.state.add('shop', ShopState)
 game.state.add('main', MainState)
+
+// TODO figure out what to do with these state variables
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
 game.upgrades = {}
 
+// TODO make this a Phaser TIMER
 // core loop that gives players more cupcakes every second
 ;(function cpsCalculation() {
   game.score += game.cupcakesPerSecond

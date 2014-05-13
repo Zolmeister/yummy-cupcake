@@ -3,6 +3,7 @@ var drawLoadBar = require('./assets.js').drawLoadBar
 var config = require('./config.js')
 var Phaser = require('phaser')
 
+// TODO split these up, or potentially merge them into one state
 
 module.exports = {
   SetupState: SetupState,
