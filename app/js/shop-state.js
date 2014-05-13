@@ -7,12 +7,12 @@ var _ = require('lodash')
 module.exports = ShopState
 
 function ShopState() {}
+
+// TODO: is this really the best way to store these constants?
 ShopState.prototype = {
   itemHeight: 52,
   shopHeight: 380
 }
-
-ShopState.prototype.preload = function() {}
 
 ShopState.prototype.create = function() {
   var game = this.game
@@ -147,7 +147,7 @@ ShopState.prototype.create = function() {
 
 ShopState.prototype.update = function() {
   var game = this.game
-  
+
   if (game.tracking && game.input.activePointer.isDown) {
     if (game.trackingStart &&
         (game.input.activePointer.y > game.trackingOrigY + 5 ||

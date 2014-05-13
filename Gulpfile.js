@@ -18,6 +18,7 @@ var cloudfront = require('gulp-cloudfront')
 var sensitive = require('./sensitive.js') // passwords, keys, etc... use sensitive.js.template as base
 var runSequence = require('run-sequence')
 
+// TODO: cleanup vars
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
   vendor: './app/vendor/*.js',
@@ -36,7 +37,7 @@ gulp.task('scripts', function () {
 })
 
 gulp.task('lint:scripts', function () {
-  return gulp.src(['./app/js/**/*.js', './app/lib/**/*.js'])
+  return gulp.src(paths.scripts)
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 })

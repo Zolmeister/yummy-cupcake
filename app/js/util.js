@@ -1,6 +1,8 @@
 'use strict';
 var _ = require('lodash')
 
+
+// TODO surely this file can be cleaned up, and potentially removed
 module.exports = {
   getCupcakesText: getCupcakesText,
   getCupcakesPerSecondText: getCupcakesPerSecondText,

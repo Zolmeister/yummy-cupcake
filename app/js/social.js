@@ -1,6 +1,7 @@
 /*global Clay*/
 'use strict';
 
+// TODO remove global Clay dependency
 module.exports = {
 	connect: connect,
 	invite: invite
