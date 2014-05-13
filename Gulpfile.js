@@ -11,6 +11,12 @@ var sourcemaps = require('gulp-sourcemaps')
 var source = require('vinyl-source-stream')
 var nodemon = require('gulp-nodemon')
 var jshint = require('gulp-jshint')
+var s3 = require('gulp-s3')
+var revall = require('gulp-rev-all')
+var gzip = require('gulp-gzip')
+var cloudfront = require('gulp-cloudfront')
+var sensitive = require('./sensitive.js') // passwords, keys, etc... use sensitive.js.template as base
+var runSequence = require('run-sequence')
 
 var paths = {
   scripts: ['./app/init.js', './app/js/**/*.js', './app/lib/**/*.js'],
@@ -81,14 +87,28 @@ gulp.task('copy:css', function () {
 })
 
 gulp.task('copy:assets', function () {
-  return gulp.src('./app/assets')
-    .pipe(gulp.dest(paths.build))
+  return gulp.src('./app/assets/**/*.*')
+    .pipe(gulp.dest(paths.build + 'assets/'))
+})
+
+var aws = {
+  'key': sensitive.AWS_KEY,
+  'secret': sensitive.AWS_SECRET,
+  'bucket': sensitive.S3_BUCKET,
+  'region': sensitive.S3_REGION,
+  'distributionId': sensitive.CLOUDFRONT_DISTRIBUTION_ID,
+  'headers': {'Cache-Control': 'max-age=315360000, no-transform, public'}
+}
+gulp.task('publish:cloudfront', function () {
+  return gulp.src('build/**/*.*')
+    .pipe(revall())
+    .pipe(gzip())
+    .pipe(s3(aws, {gzippedOnly: true}))
+    .pipe(cloudfront(aws))
 })
 
 gulp.task('clean:build', function () {
-  return gulp.src(paths.dist, {read: false})
-        .pipe(clean())
-        .pipe(gulp.src(paths.build, {read: false}))
+  return gulp.src([paths.dist, paths.build], {read: false})
         .pipe(clean())
 })
 
@@ -106,6 +126,15 @@ gulp.task('watch', function () {
 })
 
 gulp.task('copy:all', ['copy:index', 'copy:scripts', 'copy:vendor', 'copy:css', 'copy:assets'])
-gulp.task('dev', ['lint:scripts', 'vendor', 'scripts', 'styles'])
+gulp.task('dev', function(cb) {
+  runSequence('lint:scripts', 'vendor', 'scripts', 'styles', cb) // run in series
+                                                          // ^^ necessary to make 'dev' synchronous
+})
 gulp.task('default', ['server', 'dev', 'watch'])
-gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])
+gulp.task('build', function(cb) {
+  runSequence('clean:build', 'dev', 'appcache', 'copy:all', cb) // run in series
+                                                         // ^^ necessary to make 'build' synchronous
+})
+gulp.task('publish', function() {
+  runSequence('build', 'publish:cloudfront') // run in series
+})

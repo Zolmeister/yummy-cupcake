@@ -1,5 +1,6 @@
 node_modules/
 dist/
 build/
+sensitive.js
 [Tt]humbs.db
 cache.appcache

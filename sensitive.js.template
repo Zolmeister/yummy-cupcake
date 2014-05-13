@@ -1,0 +1,11 @@
+'use strict';
+
+var constants = {
+  'AWS_KEY': '',
+  'AWS_SECRET': '',
+  'S3_BUCKET': '',
+  'S3_REGION': '',
+  'CLOUDFRONT_DISTRIBUTION_ID': ''
+}
+
+return constants
