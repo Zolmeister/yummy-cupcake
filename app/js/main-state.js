@@ -48,12 +48,34 @@ MainState.prototype.create = function() {
       x, y, '+' + game.cupcakesPerClick,
       { font: '25px sansus', align: 'center', fill: '#fff' })
 
+    var cupcake = game.add.sprite(200 * Math.random() + x - 100, 200 * Math.random() + y - 100, 'cupcake')
+    cupcake.anchor.setTo(0.5,0.5)
+    cupcake.scale.x = 0.3
+    cupcake.scale.y = 0.3
+    cupcake.alpha = 0.7
+
+    var cupcakeTime = Math.random() * 1500 + 1000
+    game.add.tween(cupcake).to(
+      { y: 200 * Math.random() + y - 100, x: 200 * Math.random() + x - 100, angle: Math.random() * 360 - 180, alpha: 0},
+      cupcakeTime,
+      Phaser.Easing.Cubic.Out, true)
+      .onComplete.add(function () {
+        if (cupcake.remove) {
+          cupcake.remove()
+        }
+      })
+
     // slight random rotation
     plusOne.angle = -Math.random() * 10 + 5
     game.add.tween(plusOne).to(
       { y: -50 },
       Math.random() * 1500 + 2000,
       Phaser.Easing.Cubic.Out, true)
+      .onComplete.add(function () {
+        if (plusOne.remove) {
+          plusOne.remove()
+        }
+      })
   })
 
   // shop button
