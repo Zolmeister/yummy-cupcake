@@ -49,10 +49,10 @@ var aws = {
   'headers': {'Cache-Control': 'max-age=315360000, no-transform, public'}
 }
 
-
+// create revisions (filename-random.extension, gzip, upload to s3, update cloudfront)
 gulp.task('publish:cloudfront', function () {
  return gulp.src('build/**/*.*')
-   .pipe(revall())
+   .pipe(revall({skip: ['vendor.js'], hashLength: 6}))
    .pipe(gzip())
    .pipe(s3(aws, {gzippedOnly: true}))
    .pipe(cloudfront(aws))
@@ -79,8 +79,13 @@ gulp.task('publish', function() {
 gulp.task('default', ['server', 'dev', 'watch'])
 
 // build for production
-gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])
-
+//gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])
+gulp.task('build', function(cb) {
+	
+	// run in series
+  runSequence('clean:build', 'dev', 'appcache', 'copy:all', cb)
+                                                         // ^^ necessary to make 'build' synchronous
+})
 
 
 /*
@@ -164,7 +169,7 @@ gulp.task('copy:index', function () {
 gulp.task('copy:scripts', function () {
   return gulp.src(paths.dist + outFiles.scripts)
     .pipe(rename(outFiles.scripts))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(paths.buildDist))
 })
 

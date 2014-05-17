@@ -178,7 +178,7 @@ module.exports = function(game) {
         },
         text: {
           type: 'text',
-          text: 'Buy Upgrades'
+          text: 'Buy Upgrades!'
         }
       })
     },

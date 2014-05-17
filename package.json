@@ -19,7 +19,7 @@
     "gulp-sourcemaps": "^0.2.1",
     "gulp-uglify": "^0.3.0",
     "vinyl-source-stream": "^0.1.1",
-    "gulp-cloudfront": "0.0.5",
+    "gulp-cloudfront": "git://github.com/austinhallock/gulp-cloudfront.git",
     "gulp-s3": "git://github.com/austinhallock/gulp-s3.git",
     "gulp-rev-all": "git://github.com/austinhallock/gulp-rev-all.git",
     "gulp-gzip": "0.0.8",
