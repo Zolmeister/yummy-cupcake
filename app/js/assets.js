@@ -12,7 +12,7 @@ module.exports = {
 // Load in SVGs as pngs so phaser can use them
 function getSVGImageAssets() {
 	return new Promiz().resolve([
-		{ key: 'bar', src: 'assets/bar.svg', width: 360, height: 73 }
+		{ key: 'bar', src: '/assets/bar.svg', width: 360, height: 73 }
 	])
 }
 
@@ -102,7 +102,7 @@ function getCupcakeSVG(options) {
     }
 		canvg(canvas, svgAsString, { renderCallback: canvasLoaded })
   }
-  xhr.open('GET', 'assets/pink.svg')
+  xhr.open('GET', '/assets/pink.svg')
   xhr.responseType = 'document'
   xhr.send()
 
