@@ -14,6 +14,9 @@
 (serves files out of ./build)
 `NODE_ENV=production node server`
 
+### Flo
+Server also runs [fb-flo](http://facebook.github.io/fb-flo/) for live updating
+
 ### Build process
 Builds look like this
 
