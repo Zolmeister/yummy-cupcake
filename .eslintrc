@@ -11,6 +11,10 @@
     "radix": true,
     "wrwap-iife": true,
 
+    "no-global-strict": false,
+
+    "no-use-before-define": false,
+
     "handle-callback-err": true,
     "no-mixed-requires": true,
     "no-new-require": true,
@@ -18,12 +22,11 @@
     "brace-style": true,
     "consistent-this": [2, "self"],
     "func-names": true,
-    "func-style": [2, "expression"],
+    "func-style": [2, "declaration"],
     "no-nested-ternary": true,
     "no-array-constructor": true,
     "no-lonely-if": true,
     "space-after-keywords": true,
-    "space-in-brackets": [2, "never"],
     "space-unary-word-ops": true,
 
     "semi": [2, "never"],

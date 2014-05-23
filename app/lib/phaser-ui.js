@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 var _ = require('lodash')
 var Phaser = require('phaser')
 
-module.exports = PhaserUI;
+module.exports = PhaserUI
 
 // TODO move the scrolling shop code here
 // TODO make this a prefab? or general class that things can inherit from?

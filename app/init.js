@@ -1,3 +1,4 @@
+'use strict'
 var kik = require('kik')
 var _ = require('lodash')
 var config = require('./js/config.js')
@@ -64,7 +65,7 @@ WebFont.load({
     families: ['sansus']
   },
   active: function() {
-    game.loadProgress+=1 // inc loading bar
+    game.loadProgress += 1 // inc loading bar
     getSVGImageAssets()
       .then(function(svgs) {
         return cSVGstoPNGs(svgs, game)
@@ -87,7 +88,7 @@ WebFont.load({
           items: ['cherry', 'ribbon', 'sprinkles']
         })
       }).then(function(cupcakeUri) {
-        game.loadProgress+=1 // inc loading bar
+        game.loadProgress += 1 // inc loading bar
         game.svgs.cupcakeRibbon = cupcakeUri
       }).then(function() {
         // begin the game
@@ -116,15 +117,15 @@ Clay.ready = function(fn) {
 
 window.addEventListener('load', function() {
   // Load clay API
-  (function() {
-    var clay = document.createElement('script');
-    clay.async = true;
+  ;(function() {
+    var clay = document.createElement('script')
+    clay.async = true
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
-    clay.src = 'http://cdn.clay.io/api.js';
+    clay.src = 'http://cdn.clay.io/api.js'
     // clay.src = "http://clay.io/api/src/bundle.js";
-    var tag = document.getElementsByTagName('script')[0];
-    tag.parentNode.insertBefore(clay, tag);
-  })();
+    var tag = document.getElementsByTagName('script')[0]
+    tag.parentNode.insertBefore(clay, tag)
+  })()
 
 
   // Load GA
@@ -148,14 +149,14 @@ window.addEventListener('load', function() {
   // high score
   Clay.ready(function() {
     connect() // prompt them to give us perms and log them in
-    var shareThis = function() {
+    function shareThis() {
       Clay.Kik.post({
         message: 'Come play Yummy Cupcake to build your cupcake empire!',
         title: 'Yummy Cupcake',
         data: {}
       })
     }
-    var giveFeedback = function() {
+    function giveFeedback() {
       kik.openConversation('clayteam')
     }
     Clay.UI.Menu.init({

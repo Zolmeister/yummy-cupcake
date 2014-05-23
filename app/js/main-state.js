@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 var config = require('./config.js')
 var Phaser = require('phaser')
 var util = require('./util.js')
 var updateScoreText = util.updateScoreText
-var invite=require('./social.js' ).invite
+var invite = require('./social.js' ).invite
 
 module.exports = MainState
 
@@ -35,7 +35,7 @@ MainState.prototype.create = function() {
   game.cupcake.events.onInputDown.add(function(el, pointer) {
     if (!tween.isRunning) {
       tween = game.add.tween(game.cupcake.scale)
-        .to({ x: 0.93, y: 0.93 }, 100, Phaser.Easing.Cubic.Out, true, 0, 1, true)
+        .to({x: 0.93, y: 0.93}, 100, Phaser.Easing.Cubic.Out, true, 0, 1, true)
     }
 
     // increment score
@@ -46,7 +46,7 @@ MainState.prototype.create = function() {
     var y = pointer.y // probably don't need variance in the y
     var plusOne = game.add.text(
       x, y, '+' + game.cupcakesPerClick,
-      { font: '25px sansus', align: 'center', fill: '#fff' })
+      {font: '25px sansus', align: 'center', fill: '#fff'})
 
     var cupcake = game.add.sprite(200 * Math.random() + x - 100, 200 * Math.random() + y - 100, 'cupcake')
     cupcake.anchor.setTo(0.5,0.5)
@@ -56,7 +56,7 @@ MainState.prototype.create = function() {
 
     var cupcakeTime = Math.random() * 1500 + 1000
     game.add.tween(cupcake).to(
-      { y: 200 * Math.random() + y - 100, x: 200 * Math.random() + x - 100, angle: Math.random() * 360 - 180, alpha: 0},
+      {y: 200 * Math.random() + y - 100, x: 200 * Math.random() + x - 100, angle: Math.random() * 360 - 180, alpha: 0},
       cupcakeTime,
       Phaser.Easing.Cubic.Out, true)
       .onComplete.add(function () {
@@ -68,7 +68,7 @@ MainState.prototype.create = function() {
     // slight random rotation
     plusOne.angle = -Math.random() * 10 + 5
     game.add.tween(plusOne).to(
-      { y: -50 },
+      {y: -50},
       Math.random() * 1500 + 2000,
       Phaser.Easing.Cubic.Out, true)
       .onComplete.add(function () {

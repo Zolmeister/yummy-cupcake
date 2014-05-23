@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 var util = require('./util.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
@@ -31,7 +31,7 @@ ShopState.prototype.create = function() {
   var items = game.items
   var nextHidden = false
   var index = -1
-  for(var i = 0; i < game.shopItemList.length; i+=1) {
+  for(var i = 0; i < game.shopItemList.length; i += 1) {
     if (nextHidden) {
       break
     }
@@ -48,7 +48,7 @@ ShopState.prototype.create = function() {
 
       // this is so that we can skip items which are not visible,
       // but in the middle of the list
-      index+=1
+      index += 1
 
       if (game.score >= getItemCost(item)) {
         item.visible = true
@@ -82,7 +82,7 @@ ShopState.prototype.create = function() {
         // TODO: disable if button is not actually visible (masked)
         // buy item
         if (!game.tracked) {
-          console.log('buying', item.name)
+          // console.log('buying', item.name)
 
           if (game.score >= getItemCost(item)) {
             game.score -= getItemCost(item)
@@ -93,7 +93,7 @@ ShopState.prototype.create = function() {
             if (item.type === 'upgrade') {
               item.visible = false
               if (item.action === '+1 tap') {
-                game.cupcakesPerClick+=1
+                game.cupcakesPerClick += 1
               }
               game.state.start('shop')
             }
@@ -109,13 +109,12 @@ ShopState.prototype.create = function() {
       buttons.push(btn)
   }
 
-  /*jshint ignore:start*/
+  /* eslint camelcase: 0 */
   items.c_reset = function() {
-    for(var i=0; i < buttons.length; i+=1) {
+    for(i = 0; i < buttons.length; i += 1) {
       buttons[i].c_reset()
     }
   }
-  /*jshint ignore:end*/
 
   // This is a mask so that the buttons are hidden
   // if they are outside the 'shop' bounding box
@@ -162,7 +161,7 @@ ShopState.prototype.update = function() {
 
       var dy = y - game.trackingOrigY
       game.trackingOrigY = y
-      game.items.y+=dy
+      game.items.y += dy
 
       var visibleItemCount = _.filter(game.shopItemList, function(item) {
         return item.visible

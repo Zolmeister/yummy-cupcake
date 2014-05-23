@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 var drawLoadBar = require('./assets.js').drawLoadBar
 var config = require('./config.js')
 var Phaser = require('phaser')
