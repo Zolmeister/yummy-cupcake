@@ -30,6 +30,7 @@
     "space-unary-word-ops": true,
 
     "semi": [2, "never"],
-    "quotes": "single"
+    "quotes": "single",
+    "no-underscore-dangle": false
   }
 }

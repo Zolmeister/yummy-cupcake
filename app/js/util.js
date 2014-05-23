@@ -43,7 +43,7 @@ function updateCPS(game) {
     cps += item.cps * item.owned
     if (item.type === 'upgrade' && item.owned && !game.upgrades[item.name]) {
       if (item.action === '+1 tap') {
-        game.cupcakesPerClick+=1
+        game.cupcakesPerClick += 1
       }
 
       game.upgrades[item.name] = true
