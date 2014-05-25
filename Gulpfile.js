@@ -10,7 +10,7 @@ var clean = require('gulp-clean')
 var sourcemaps = require('gulp-sourcemaps')
 var source = require('vinyl-source-stream')
 var nodemon = require('gulp-nodemon')
-var jshint = require('gulp-jshint')
+var eslint = require('gulp-eslint')
 var s3 = require('gulp-s3')
 var revall = require('gulp-rev-all')
 var gzip = require('gulp-gzip')
@@ -70,7 +70,7 @@ gulp.task('dev', function(cb) {
 })
 
 gulp.task('publish', function() {
-  
+
   // run in series
   runSequence('build', 'publish:cloudfront')
 })
@@ -81,7 +81,7 @@ gulp.task('default', ['server', 'dev', 'watch'])
 // build for production
 //gulp.task('build', ['clean:build', 'dev', 'appcache', 'copy:all'])
 gulp.task('build', function(cb) {
-	
+
 	// run in series
   runSequence('clean:build', 'dev', 'appcache', 'copy:all', cb)
                                                          // ^^ necessary to make 'build' synchronous
@@ -117,11 +117,11 @@ gulp.task('styles', function () {
     .pipe(gulp.dest(paths.dist))
 })
 
-// run jshint
+// run eslint
 gulp.task('lint:scripts', function () {
   return gulp.src(paths.scripts)
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
+    .pipe(eslint())
+    .pipe(eslint.format())
 })
 
 

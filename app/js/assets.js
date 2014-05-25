@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 var Promiz = require('promiz')
 var canvg = require('canvg')
 
@@ -12,7 +12,7 @@ module.exports = {
 // Load in SVGs as pngs so phaser can use them
 function getSVGImageAssets() {
 	return new Promiz().resolve([
-		{ key: 'bar', src: '/assets/bar.svg', width: 360, height: 73 }
+		{key: 'bar', src: '/assets/bar.svg', width: 360, height: 73}
 	])
 }
 
@@ -26,7 +26,7 @@ function SVGstoPNGs(svgs, game) {
 	var toLoad = svgs.length
 	var returnObj = {}
 
-	for(var i = 0, j = svgs.length; i < j; i+=1) {
+	for(var i = 0, j = svgs.length; i < j; i += 1) {
 		// force local scope since img.onload is async
 	  genItem(svgs[i])
 	 }
@@ -44,12 +44,12 @@ function SVGstoPNGs(svgs, game) {
 		  canvas.style.width = width + 'px'
 		  canvas.style.height = height + 'px'
 
-		  var canvasLoaded = function() {
-  			game.loadProgress+=1 // inc loading bar
+		  function canvasLoaded() {
+  			game.loadProgress += 1 // inc loading bar
 
-		  	returnObj[ svg.key ] = canvas.toDataURL('image/png')
+		  	returnObj[svg.key] = canvas.toDataURL('image/png')
 
-		    loaded+=1
+		    loaded += 1
 
         // all imgs loaded
 		    if(loaded === toLoad) {
@@ -57,7 +57,7 @@ function SVGstoPNGs(svgs, game) {
         }
 		  }
 
-		  canvg(canvas, svg.src, { renderCallback: canvasLoaded })
+		  canvg(canvas, svg.src, {renderCallback: canvasLoaded})
 	}
 
   return deferred
@@ -70,7 +70,7 @@ function getCupcakeSVG(options) {
 
   var width = options.width
   var height = options.height
-  console.log(width, height)
+
   // Necessary to grab the XML of the svg
   var xhr = new XMLHttpRequest()
   xhr.onload = function() {
@@ -78,7 +78,7 @@ function getCupcakeSVG(options) {
     var svgAsXml = xhr.responseXML
     // find the elements we want to remove
     var shownItems = options.items
-    for (var i = 0, j = items.length; i < j; i+=1) {
+    for (var i = 0, j = items.length; i < j; i += 1) {
       var item = items[i]
       if(shownItems.indexOf(item) !== -1) {
         continue // skip hiding any item we specified
@@ -97,10 +97,10 @@ function getCupcakeSVG(options) {
     canvas.height = height
     canvas.style.width = width + 'px'
     canvas.style.height = height + 'px'
-    var canvasLoaded = function() {
+    function canvasLoaded() {
     	deferred.resolve(canvas.toDataURL('images/png'))
     }
-		canvg(canvas, svgAsString, { renderCallback: canvasLoaded })
+		canvg(canvas, svgAsString, {renderCallback: canvasLoaded})
   }
   xhr.open('GET', '/assets/pink.svg')
   xhr.responseType = 'document'
@@ -119,7 +119,7 @@ function drawLoadBar(game) {
   loadBarBG.drawRect(game.world.centerX - loadBarWidth / 2, game.world.centerY - loadBarHeight / 2, loadBarWidth, loadBarHeight)
   loadBarBG.endFill()
   var loadBarFill = game.add.graphics(0, 0)
-  var updateLoadBar = function() {
+  function updateLoadBar() {
     loadBarFill.beginFill(0xFFFFFF, 1)
     var progress = ( game.loadProgress + ( ( game.load.progress / 100 ) * game.loadPNGs ) ) / game.loadSteps
     var width = progress * loadBarWidth

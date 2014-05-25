@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 var util = require('./util')
 var getCupcakesText = util.getCupcakesText
 var getCupcakesPerSecondText = util.getCupcakesPerSecondText
@@ -113,7 +113,7 @@ module.exports = function(game) {
           type: 'text',
           x: 30,
           y: 5,
-          text: getItemCost(item)+'',
+          text: getItemCost(item) + '',
           style: item.cost.toString().length > 9 ?
             { font: '16px sansus' } :
             {font: '20px sansus'}

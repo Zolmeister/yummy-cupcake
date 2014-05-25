@@ -1,5 +1,5 @@
 /*global Clay*/
-'use strict';
+'use strict'
 
 // TODO remove global Clay dependency
 module.exports = {
@@ -10,7 +10,9 @@ module.exports = {
 function connect() {
 	Clay.Kik.connect({}, function(response) {
 		if(! response || ! response.success) {
+			/*eslint-disable no-console*/
 			console.log('todo: prompt to connect again')
+			/*eslint-enable*/
 		}
 	})
 }
@@ -20,8 +22,8 @@ function invite(game) {
   var options = {
     message: 'Come join me in Yummy Cupcake! Make as many cupcakes as you can.',
     onAction: {
-      join: { incrementData: { key: 'score', amount: 500 } },
-      play: { incrementData: { key: 'score', amount: 50 } }
+      join: {incrementData: {key: 'score', amount: 500}},
+      play: {incrementData: {key: 'score', amount: 50}}
     }
   }
   Clay.Kik.invite(options, function() {

@@ -1,3 +1,4 @@
+'use strict'
 var kik = require('kik')
 var _ = require('lodash')
 var config = require('./js/config.js')
@@ -40,11 +41,12 @@ game.upgrades = {}
 
 // TODO make this a Phaser TIMER
 // core loop that gives players more cupcakes every second
-;(function cpsCalculation() {
+function cpsCalculation() {
   game.score += game.cupcakesPerSecond
   updateScoreText(game)
   setTimeout(cpsCalculation, 1000)
-})()
+}
+cpsCalculation()
 
  // shop items
 game.shopItemList = config.shopItemList
@@ -64,7 +66,7 @@ WebFont.load({
     families: ['sansus']
   },
   active: function() {
-    game.loadProgress+=1 // inc loading bar
+    game.loadProgress += 1 // inc loading bar
     getSVGImageAssets()
       .then(function(svgs) {
         return cSVGstoPNGs(svgs, game)
@@ -87,13 +89,16 @@ WebFont.load({
           items: ['cherry', 'ribbon', 'sprinkles']
         })
       }).then(function(cupcakeUri) {
-        game.loadProgress+=1 // inc loading bar
+        game.loadProgress += 1 // inc loading bar
         game.svgs.cupcakeRibbon = cupcakeUri
       }).then(function() {
         // begin the game
         game.state.start('setup')
       }, function(err) {
-        console.error(err)
+
+
+        console.error(err) /*eslint no-console:0 */
+
       })
   }
 })
@@ -116,46 +121,51 @@ Clay.ready = function(fn) {
 
 window.addEventListener('load', function() {
   // Load clay API
-  (function() {
-    var clay = document.createElement('script');
-    clay.async = true;
+  function loadClayApi() {
+    var clay = document.createElement('script')
+    clay.async = true
     //clay.src = ( "https:" == document.location.protocol ? "https://" : "http://" ) + "clay.io/api/api.js";
-    clay.src = 'http://cdn.clay.io/api.js';
+    clay.src = 'http://cdn.clay.io/api.js'
     // clay.src = "http://clay.io/api/src/bundle.js";
-    var tag = document.getElementsByTagName('script')[0];
-    tag.parentNode.insertBefore(clay, tag);
-  })();
+    var tag = document.getElementsByTagName('script')[0]
+    tag.parentNode.insertBefore(clay, tag)
+  }
+  loadClayApi()
 
 
   // Load GA
-  /*jshint ignore:start*/
-  (function(i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function() {
-      (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-    m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
+  function GA(i, s, o, g, r, a, m) {
+    i.GoogleAnalyticsObject = r
+    if (!i[r]) {
+      i[r] = function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }
+    }
+    i[r].l = 1 * new Date()
+    a = s.createElement(o)
+    m = s.getElementsByTagName(o)[0]
+    a.async = 1
+    a.src = g
     m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  }
+  GA(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
 
-  ga('create', 'UA-27992080-1', 'clay.io');
-  ga('send', 'pageview');
-  /*jshint ignore:end*/
+  /*global ga*/
+  ga('create', 'UA-27992080-1', 'clay.io')
+  ga('send', 'pageview')
+
 
   // high score
   Clay.ready(function() {
     connect() // prompt them to give us perms and log them in
-    var shareThis = function() {
+    function shareThis() {
       Clay.Kik.post({
         message: 'Come play Yummy Cupcake to build your cupcake empire!',
         title: 'Yummy Cupcake',
         data: {}
       })
     }
-    var giveFeedback = function() {
+    function giveFeedback() {
       kik.openConversation('clayteam')
     }
     Clay.UI.Menu.init({
