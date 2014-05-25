@@ -169,7 +169,7 @@ gulp.task('copy:index', function () {
 gulp.task('copy:scripts', function () {
   return gulp.src(paths.dist + outFiles.scripts)
     .pipe(rename(outFiles.scripts))
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest(paths.buildDist))
 })
 
