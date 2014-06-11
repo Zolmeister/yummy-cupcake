@@ -2,6 +2,7 @@
 var util = require('./util.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
+var updateScoreText = util.updateScoreText
 var _ = require('lodash')
 
 module.exports = ShopState
@@ -89,6 +90,7 @@ ShopState.prototype.create = function() {
             item.owned += 1
             costText.setText(getItemCost(item))
             updateCPS(game)
+            updateScoreText(game)
 
             if (item.type === 'upgrade') {
               item.visible = false

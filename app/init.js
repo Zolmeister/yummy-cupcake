@@ -229,8 +229,8 @@ Clay.ready(function() {
       if (response.data) {
         game.score = response.data 
       }
-      if (config.startingScore > 0) {
-        game.score = config.startingScore
+      if (config.debug && config.debugState.startingScore > 0) {
+        game.score = config.debugState.startingScore
       }
       updateScoreText(game)
     })
@@ -241,7 +241,7 @@ Clay.ready(function() {
       if (response.data && response.data.shopItemList) {
         game.shopItemList = response.data.shopItemList       
       }
-      if (config.resetShop) {
+      if (config.debug && config.debugState.resetShop) {
         game.shopItemList = config.shopItemList
       }
       updateCPS(game)

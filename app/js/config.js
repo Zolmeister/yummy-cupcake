@@ -4,8 +4,10 @@
  // and should be in-lined during some compile step
 module.exports = {
    debug: false,
-   startingScore: 1000000,
-   resetShop: true,
+   debugState: {
+       startingScore: 1000000,
+       resetShop: true
+   },
    shopItemList: [
      {
        name: 'icing machine',
