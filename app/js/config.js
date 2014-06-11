@@ -4,6 +4,8 @@
  // and should be in-lined during some compile step
 module.exports = {
    debug: false,
+   startingScore: 1000000,
+   resetShop: true,
    shopItemList: [
      {
        name: 'icing machine',
@@ -84,5 +86,6 @@ module.exports = {
        owned: 0,
        visible: false
      }
-    ]
+    ],
+    itemCostScale: 1.15
  }
