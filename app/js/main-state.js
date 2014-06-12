@@ -23,6 +23,8 @@ MainState.prototype.create = function() {
 
   // Main score text
   game.scoreText = UI.scoreText(game)
+  // Update the main score text to force resizing if necessary
+  updateScoreText(game)
 
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)

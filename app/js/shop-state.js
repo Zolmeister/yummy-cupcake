@@ -1,5 +1,6 @@
 'use strict'
 var util = require('./util.js')
+var config = require('./config.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
 var updateScoreText = util.updateScoreText
@@ -9,16 +10,9 @@ module.exports = ShopState
 
 function ShopState() {}
 
-// TODO: is this really the best way to store these constants?
-ShopState.prototype = {
-  itemHeight: 52,
-  shopHeight: 380
-}
-
 ShopState.prototype.create = function() {
   var game = this.game
   var UI = require('./ui')(game)
-  var self = this
 
   var shopBg = UI.rect(game, 280, 410, '#2ecc71', 5)
 
@@ -77,7 +71,7 @@ ShopState.prototype.create = function() {
           game.trackingEl.y = game.trackingElY
         },
         game, game.world.centerX,
-        120 + index * self.itemHeight, function(button, pointer, elements) {
+        120 + index * config.shopUI.itemHeight, function(button, pointer, elements) {
           var costText = elements.costText
 
         // TODO: disable if button is not actually visible (masked)
@@ -122,16 +116,17 @@ ShopState.prototype.create = function() {
   // if they are outside the 'shop' bounding box
   var graphics = game.add.graphics(0, 0)
   graphics.moveTo(game.world.centerX - 125, 120)
-  graphics.lineTo(game.world.centerX - 125, 120 + this.shopHeight)
-  graphics.lineTo(game.world.centerX + 125, 120 + this.shopHeight)
+  graphics.lineTo(game.world.centerX - 125, 120 + config.shopUI.shopHeight)
+  graphics.lineTo(game.world.centerX + 125, 120 + config.shopUI.shopHeight)
   graphics.lineTo(game.world.centerX + 125, 120)
 
   items.mask = graphics
 
-
   // Main score text
   game.scoreText = UI.scoreText(game)
-
+  // Update the main score text to force resizing if necessary
+  updateScoreText(game)
+  
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)
 
@@ -169,8 +164,8 @@ ShopState.prototype.update = function() {
         return item.visible
       }).length
 
-      var itemsHeight = (visibleItemCount + 1) * this.itemHeight
-      var shopHeight = this.shopHeight
+      var itemsHeight = (visibleItemCount + 1) * config.shopUI.itemHeight
+      var shopHeight = config.shopUI.shopHeight
 
       if (itemsHeight < shopHeight) {
         game.items.y = 0

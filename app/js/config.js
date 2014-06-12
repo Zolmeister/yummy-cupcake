@@ -5,8 +5,8 @@
 module.exports = {
    debug: false,
    debugState: {
-       startingScore: 1000000,
-       resetShop: true
+       startingScore: 999999999900000,
+       resetShop: false
    },
    shopItemList: [
      {
@@ -89,5 +89,18 @@ module.exports = {
        visible: false
      }
     ],
-    itemCostScale: 1.15
+    itemCostScale: 1.15,
+    shopUI: {
+        itemHeight: 52,
+        shopHeight: 380
+    },
+    cupcakeText: {
+        descriptiveTexts: {
+            'GAZILLION CUPCAKES!!!': 1000000000000000,
+            'Trillion Cupcakes!!': 1000000000000,
+            'Billion Cupcakes!': 1000000000,
+            'Million Cupcakes!': 1000000
+        },
+        descriptiveDecimalPlaces: 2
+    }
  }
