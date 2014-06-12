@@ -129,7 +129,9 @@ ShopState.prototype.create = function() {
   
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)
-
+  
+  // Cupcakes-per-second calculation
+  game.startCPSCalculation()
 
   // back button
   game.backButton = UI.backButton(

@@ -39,15 +39,6 @@ game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
 game.upgrades = {}
 
-// TODO make this a Phaser TIMER
-// core loop that gives players more cupcakes every second
-function cpsCalculation() {
-  game.score += game.cupcakesPerSecond
-  updateScoreText(game)
-  setTimeout(cpsCalculation, 1000)
-}
-cpsCalculation()
-
  // shop items
 game.shopItemList = config.shopItemList
 
@@ -252,3 +243,27 @@ Clay.ready(function() {
     })
   })
 })
+
+game.cpsCalculation = function() {
+    console.log('Calculating CPS')
+
+    var oldScore = this.score
+    this.score += this.cupcakesPerSecond
+    var newScore = this.score
+
+    var scoreIncrease = Math.floor(newScore) - Math.floor(oldScore) //find the whole number of cupcakes generated
+
+    util.updateScoreText(this)
+
+    if (this.state.current === 'main') {
+      //then create cupcake score effects to show the increase
+      this.state.getCurrentState().createScoreEffects(scoreIncrease)
+    }
+}
+
+game.startCPSCalculation = function() {
+  // start the core loop that gives players more cupcakes every second
+  console.log('Starting the core loop')
+  game.time.events.start()
+  game.time.events.loop(Phaser.Timer.SECOND, game.cpsCalculation, this)
+}

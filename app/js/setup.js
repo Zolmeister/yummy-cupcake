@@ -2,6 +2,7 @@
 var drawLoadBar = require('./assets.js').drawLoadBar
 var config = require('./config.js')
 var Phaser = require('phaser')
+var util = require('./util.js')
 
 // TODO split these up, or potentially merge them into one state
 
@@ -19,6 +20,7 @@ SetupState.prototype.preload = function () {
   game.load.image('cupcake', game.svgs.cupcake)
   game.load.image('cupcake-ribbon', game.svgs.cupcakeRibbon)
 }
+
 SetupState.prototype.create = function () {
   var game = this.game
   game.stage.backgroundColor = '#71c5cf'

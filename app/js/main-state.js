@@ -11,6 +11,7 @@ function MainState() {}
 
 MainState.prototype.create = function() {
   var game = this.game
+  var self = this
 
   var UI = require('./ui.js')(game)
   if (config.debug) {
@@ -29,6 +30,9 @@ MainState.prototype.create = function() {
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)
 
+  // Cupcakes-per-second calculation
+  game.startCPSCalculation()
+
   // The big cupcake
   game.cupcake = UI.cupcake(game, null, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
 
@@ -43,41 +47,7 @@ MainState.prototype.create = function() {
     // increment score
     game.score += game.cupcakesPerClick
     updateScoreText(game)
-
-    var x = pointer.x + ( 0.5 - Math.random() ) * -60 // -30 to +30
-    var y = pointer.y // probably don't need variance in the y
-    var plusOne = game.add.text(
-      x, y, '+' + game.cupcakesPerClick,
-      {font: '25px sansus', align: 'center', fill: '#fff'})
-
-    var cupcake = game.add.sprite(200 * Math.random() + x - 100, 200 * Math.random() + y - 100, 'cupcake')
-    cupcake.anchor.setTo(0.5,0.5)
-    cupcake.scale.x = 0.3
-    cupcake.scale.y = 0.3
-    cupcake.alpha = 0.7
-
-    var cupcakeTime = Math.random() * 1500 + 1000
-    game.add.tween(cupcake).to(
-      {y: 200 * Math.random() + y - 100, x: 200 * Math.random() + x - 100, angle: Math.random() * 360 - 180, alpha: 0},
-      cupcakeTime,
-      Phaser.Easing.Cubic.Out, true)
-      .onComplete.add(function () {
-        if (cupcake.remove) {
-          cupcake.remove()
-        }
-      })
-
-    // slight random rotation
-    plusOne.angle = -Math.random() * 10 + 5
-    game.add.tween(plusOne).to(
-      {y: -50},
-      Math.random() * 1500 + 2000,
-      Phaser.Easing.Cubic.Out, true)
-      .onComplete.add(function () {
-        if (plusOne.remove) {
-          plusOne.remove()
-        }
-      })
+    self.createScoreEffect(pointer, game.cupcakesPerClick)
   })
 
   // shop button
@@ -90,4 +60,83 @@ MainState.prototype.create = function() {
     invite(game)
   })
 
+}
+
+MainState.prototype.createScoreEffect = function(position, cupcakes) {
+    var game = this.game
+
+    var x = position.x
+    var y = position.y
+    var plusOne = game.add.text(
+      x, y, '+' + cupcakes,
+      {font: '25px sansus', align: 'center', fill: '#fff'})
+
+    var cupcake = game.add.sprite(x, y, 'cupcake')
+    cupcake.anchor.setTo(0.5,0.5)
+    cupcake.scale.x = 0.3
+    cupcake.scale.y = 0.3
+    cupcake.alpha = 0.7
+
+    var cupcakeTime = Math.random() * 1500 + 1000
+    var tween = game.add.tween(cupcake)
+    tween.to(
+      {y: 200 * Math.random() + y - 100, x: 200 * Math.random() + x - 100, angle: Math.random() * 360 - 180, alpha: 0},
+      cupcakeTime,
+      Phaser.Easing.Cubic.Out, true)
+      .onComplete.add(function () {
+        if (cupcake.remove) {
+          cupcake.remove()
+        }
+      })
+    tween.start()
+
+    // slight random rotation
+    plusOne.angle = -Math.random() * 10 + 5
+    tween = game.add.tween(plusOne)
+    tween.to(
+      {y: -50},
+      Math.random() * 1500 + 2000,
+      Phaser.Easing.Cubic.Out, true)
+      .onComplete.add(function () {
+        if (plusOne.remove) {
+          plusOne.remove()
+        }
+      })
+    tween.start()
+}
+
+MainState.prototype.createScoreEffects = function(cupcakes) {
+    if (cupcakes < 1) {
+        return
+    }
+
+    var game = this.game
+
+    var maxEffects = 7 //we don't want too many cupcakes flying around the screen, but enough to be satisfying
+
+    var baseNumPerEffect = Math.floor(cupcakes / maxEffects)
+    var remainder = cupcakes % maxEffects
+
+    for (var i = 0; i < Math.min(cupcakes, maxEffects); ++i) {
+        var effectCupcakes = baseNumPerEffect
+        
+        if (i < remainder) {
+            //add one to this effect's number to account for the remainder
+            ++effectCupcakes
+        }
+
+        var position = new Phaser.Point(game.world.centerX, game.world.centerY)
+        
+        //place the cupcake effects outward from the center at random angle, distance
+        var distance = Math.random() * 128
+        var angle = Math.random() * Math.PI * 2
+
+        var offset = new Phaser.Point(Math.cos(angle), Math.sin(angle))
+
+        offset.multiply(distance, distance)
+        
+        position = position.add(offset)
+        
+        this.createScoreEffect(position, effectCupcakes)
+    }
 }
