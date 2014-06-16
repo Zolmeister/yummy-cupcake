@@ -20,7 +20,10 @@ function getCupcakesText(n) {
         var descriptiveMin = config.cupcakeText.descriptiveTexts[key]
         
         if (count >= descriptiveMin) {
-            var modifiedCount = (count / descriptiveMin).toFixed(config.cupcakeText.descriptiveDecimalPlaces)
+            // obtain the number with the desired precision without using toFixed() to avoid rounding
+            var precisionMultiple = Math.pow(10, config.cupcakeText.descriptiveDecimalPlaces)
+            
+            var modifiedCount = Math.floor((count / descriptiveMin) * precisionMultiple) / precisionMultiple
             return modifiedCount + ' ' + descriptiveText
         }
     }
@@ -76,7 +79,6 @@ function updateCPS(game) {
       if (game.cupcake) {
         game.cupcake.loadTexture(game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
       }
-
     }
   })
 

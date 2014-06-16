@@ -5,7 +5,7 @@
 module.exports = {
    debug: true,
    debugState: {
-       startingScore: 0,
+       startingScore: 9999999999, // 999 million
        resetShop: true
    },
    shopItemList: [
@@ -96,11 +96,10 @@ module.exports = {
     },
     cupcakeText: {
         descriptiveTexts: {
-            'GAZILLION CUPCAKES!!!': 1000000000000000,
-            'Trillion Cupcakes!!': 1000000000000,
-            'Billion Cupcakes!': 1000000000,
+            'BILLION CUPCAKES!!': 1000000000, // billions
             'Million Cupcakes!': 1000000
         },
         descriptiveDecimalPlaces: 2
-    }
+    },
+    cupcakeLimit: 10000000000 // 10 billion cupcakes
  }

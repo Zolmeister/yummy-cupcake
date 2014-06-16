@@ -5,6 +5,7 @@ var config = require('./js/config.js')
 var Phaser = require('phaser')
 var ShopState = require('./js/shop-state.js')
 var MainState = require('./js/main-state.js')
+var VictoryState = require('./js/victory-state.js')
 var SetupState = require('./js/setup.js').SetupState
 var PreSetupState = require('./js/setup.js').PreSetupState
 var WebFont = require('webfont')
@@ -32,6 +33,7 @@ window.game = game
 
 game.state.add('shop', ShopState)
 game.state.add('main', MainState)
+game.state.add('victory', VictoryState)
 
 // TODO figure out what to do with these state variables
 game.score = 0
@@ -258,6 +260,11 @@ game.cpsCalculation = function() {
     if (this.state.current === 'main') {
       //then create cupcake score effects to show the increase
       this.state.getCurrentState().createScoreEffects(scoreIncrease)
+
+      if (this.score >= config.cupcakeLimit) {
+          // they beat the game
+          this.state.start('victory')
+      }
     }
 }
 
