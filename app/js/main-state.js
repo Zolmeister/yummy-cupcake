@@ -119,14 +119,14 @@ MainState.prototype.createScoreEffects = function(cupcakes) {
 
     for (var i = 0; i < Math.min(cupcakes, maxEffects); ++i) {
         var effectCupcakes = baseNumPerEffect
-        
+
         if (i < remainder) {
             //add one to this effect's number to account for the remainder
             ++effectCupcakes
         }
 
         var position = new Phaser.Point(game.world.centerX, game.world.centerY)
-        
+
         //place the cupcake effects outward from the center at random angle, distance
         var distance = Math.random() * 128
         var angle = Math.random() * Math.PI * 2
@@ -134,9 +134,9 @@ MainState.prototype.createScoreEffects = function(cupcakes) {
         var offset = new Phaser.Point(Math.cos(angle), Math.sin(angle))
 
         offset.multiply(distance, distance)
-        
-        position = position.add(offset)
-        
+
+        position = position.add(offset.x, offset.y)
+
         this.createScoreEffect(position, effectCupcakes)
     }
 }
