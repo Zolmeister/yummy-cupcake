@@ -15,6 +15,7 @@ function SetupState() {}
 
 SetupState.prototype.preload = function () {
   var game = this.game
+  game.stage.disableVisibilityChange = true
   drawLoadBar(game)
   game.load.image('bar', game.svgs.bar)
   game.load.image('cupcake', game.svgs.cupcake)
