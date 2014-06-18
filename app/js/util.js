@@ -13,34 +13,26 @@ module.exports = {
 
 function getCupcakesText(n) {
     var count = Math.floor(n)
-
-    if (n >= 1000000000000000) {
-        //express in GAZILLIONS of cupcakes
-        var gazillions = (count / 1000000000000000).toFixed(2)
-
-        return gazillions + ' GAZILLION CUPCAKES!!!'
+    
+    //Use a descriptive text if any applies
+    for (var key in config.cupcakeText.descriptiveTexts) {
+        var descriptiveText = key
+        var descriptiveMin = config.cupcakeText.descriptiveTexts[key]
+        
+        if (count >= descriptiveMin) {
+            // obtain the number with the desired precision without using toFixed() to avoid rounding
+            var precisionMultiple = Math.pow(10, config.cupcakeText.descriptiveDecimalPlaces)
+            
+            var modifiedCount = Math.floor((count / descriptiveMin) * precisionMultiple) / precisionMultiple
+            return modifiedCount + ' ' + descriptiveText
+        }
     }
-    if (n >= 1000000000000) {
-        //express in trillions of cupcakes
-        var trillions = (count / 1000000000000).toFixed(2)
 
-        return trillions + ' Trillion Cupcakes!!'
-    }
-    if (n >= 1000000000) {
-        //express in billions of cupcakes
-        var billions = (count / 1000000000).toFixed(2)
-
-        return billions + ' Billion Cupcakes!'
-    }
-    if (n >= 1000000) {
-        //express in millions of cupakes
-        var millions = (count / 1000000).toFixed(2)
-
-        return millions + ' Million Cupcakes'
-    }
+    //only one cupcake
     if (count === 1) {
-        return '1 Cupcake'
+        return count + ' Cupcake'
     }
+
     return count + ' Cupcakes'
 }
 
@@ -54,8 +46,6 @@ function getItemCost(item) {
 
 function updateScoreText(game) {
   if(game.scoreText) {
-    console.log('Updating score text')
-    
     var text = getCupcakesText(game.score)
 
     game.scoreText.setText(text)
@@ -64,7 +54,7 @@ function updateScoreText(game) {
     var length = text.length
 
     if (length >= 16) {
-        console.log('Shrinking score text')
+        //console.log('Shrinking score text')
         game.scoreText.setStyle({
             font: '35px sansus',
             fill: '#fff',
@@ -89,7 +79,6 @@ function updateCPS(game) {
       if (game.cupcake) {
         game.cupcake.loadTexture(game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
       }
-
     }
   })
 

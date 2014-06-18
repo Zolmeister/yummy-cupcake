@@ -5,6 +5,7 @@ var config = require('./js/config.js')
 var Phaser = require('phaser')
 var ShopState = require('./js/shop-state.js')
 var MainState = require('./js/main-state.js')
+var VictoryState = require('./js/victory-state.js')
 var SetupState = require('./js/setup.js').SetupState
 var PreSetupState = require('./js/setup.js').PreSetupState
 var WebFont = require('webfont')
@@ -32,21 +33,13 @@ window.game = game
 
 game.state.add('shop', ShopState)
 game.state.add('main', MainState)
+game.state.add('victory', VictoryState)
 
 // TODO figure out what to do with these state variables
 game.score = 0
 game.cupcakesPerSecond = 0
 game.cupcakesPerClick = 1
 game.upgrades = {}
-
-// TODO make this a Phaser TIMER
-// core loop that gives players more cupcakes every second
-function cpsCalculation() {
-  game.score += game.cupcakesPerSecond
-  updateScoreText(game)
-  setTimeout(cpsCalculation, 1000)
-}
-cpsCalculation()
 
  // shop items
 game.shopItemList = config.shopItemList
@@ -229,8 +222,10 @@ Clay.ready(function() {
       if (response.data) {
         game.score = response.data 
       }
-      if (config.debug && config.debugState.startingScore > 0) {
+      if (config.debug) {
         game.score = config.debugState.startingScore
+
+        console.log('Setting the initial score')
       }
       updateScoreText(game)
     })
@@ -243,8 +238,39 @@ Clay.ready(function() {
       }
       if (config.debug && config.debugState.resetShop) {
         game.shopItemList = config.shopItemList
+
+        console.log('Resetting the shop')
       }
       updateCPS(game)
     })
   })
 })
+
+game.cpsCalculation = function() {
+    console.log('Calculating CPS')
+
+    var oldScore = this.score
+    this.score += this.cupcakesPerSecond
+    var newScore = this.score
+
+    var scoreIncrease = Math.floor(newScore) - Math.floor(oldScore) //find the whole number of cupcakes generated
+
+    util.updateScoreText(this)
+
+    if (this.state.current === 'main') {
+      //then create cupcake score effects to show the increase
+      this.state.getCurrentState().createScoreEffects(scoreIncrease)
+
+      if (this.score >= config.cupcakeLimit) {
+          // they beat the game
+          this.state.start('victory')
+      }
+    }
+}
+
+game.startCPSCalculation = function() {
+  // start the core loop that gives players more cupcakes every second
+  console.log('Starting the core loop')
+  game.time.events.start()
+  game.time.events.loop(Phaser.Timer.SECOND, game.cpsCalculation, this)
+}

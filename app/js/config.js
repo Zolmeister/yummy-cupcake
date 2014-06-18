@@ -3,10 +3,10 @@
  // note that function calls within update are not optimized,
  // and should be in-lined during some compile step
 module.exports = {
-   debug: false,
+   debug: true,
    debugState: {
-       startingScore: 1000000,
-       resetShop: true
+       startingScore: 3000000, // 999 million
+       resetShop: false
    },
    shopItemList: [
      {
@@ -89,5 +89,17 @@ module.exports = {
        visible: false
      }
     ],
-    itemCostScale: 1.15
+    itemCostScale: 1.15,
+    shopUI: {
+        itemHeight: 52,
+        shopHeight: 380
+    },
+    cupcakeText: {
+        descriptiveTexts: {
+            'BILLION CUPCAKES!!': 1000000000, // billions
+            'Million Cupcakes!': 1000000
+        },
+        descriptiveDecimalPlaces: 2
+    },
+    cupcakeLimit: 10000000000 // 10 billion cupcakes
  }

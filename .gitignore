@@ -4,3 +4,6 @@ build/
 sensitive.js
 [Tt]humbs.db
 cache.appcache
+
+*.swp
+*.log

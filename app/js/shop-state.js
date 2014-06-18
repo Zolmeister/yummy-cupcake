@@ -1,5 +1,6 @@
 'use strict'
 var util = require('./util.js')
+var config = require('./config.js')
 var getItemCost = util.getItemCost
 var updateCPS = util.updateCPS
 var updateScoreText = util.updateScoreText
@@ -9,132 +10,28 @@ module.exports = ShopState
 
 function ShopState() {}
 
-// TODO: is this really the best way to store these constants?
-ShopState.prototype = {
-  itemHeight: 52,
-  shopHeight: 380
-}
-
 ShopState.prototype.create = function() {
   var game = this.game
   var UI = require('./ui')(game)
-  var self = this
 
   var shopBg = UI.rect(game, 280, 410, '#2ecc71', 5)
 
   // shop bg sprite
   game.add.image(40, 105, shopBg)
 
-  game.shopItemButtons = []
-  var buttons = game.shopItemButtons
-
-  game.items = game.add.group()
-  var items = game.items
-  var nextHidden = false
-  var index = -1
-  for(var i = 0; i < game.shopItemList.length; i += 1) {
-    if (nextHidden) {
-      break
-    }
-
-    genItem(i)
-  }
-
-  function genItem(i) {
-    var item = game.shopItemList[i]
-      if (item.type === 'upgrade' && item.owned) {
-        item.visible = false
-        return
-      }
-
-      // this is so that we can skip items which are not visible,
-      // but in the middle of the list
-      index += 1
-
-      if (game.score >= getItemCost(item)) {
-        item.visible = true
-      }
-      if (!item.visible && !nextHidden) {
-        item = _.clone(item)
-        item.name = '???'
-        nextHidden = true
-      }
-
-      var btn = UI.shopItemButton(
-        item,
-        function(btn, pointer) {
-          game.tracking = true
-          game.trackingOrigX = pointer.x
-          game.trackingOrigY = pointer.y
-          game.trackingElX = btn.x
-          game.trackingElY = btn.y
-          game.trackingEl = btn
-          game.trackingStart = true
-        },
-        function(/*btn, pointer*/) {
-          game.tracking = false
-          game.trackingEl.x = game.trackingElX
-          game.trackingEl.y = game.trackingElY
-        },
-        game, game.world.centerX,
-        120 + index * self.itemHeight, function(button, pointer, elements) {
-          var costText = elements.costText
-
-        // TODO: disable if button is not actually visible (masked)
-        // buy item
-        if (!game.tracked) {
-          // console.log('buying', item.name)
-
-          if (game.score >= getItemCost(item)) {
-            game.score -= getItemCost(item)
-            item.owned += 1
-            costText.setText(getItemCost(item))
-            updateCPS(game)
-            updateScoreText(game)
-
-            if (item.type === 'upgrade') {
-              item.visible = false
-              if (item.action === '+1 tap') {
-                game.cupcakesPerClick += 1
-              }
-              game.state.start('shop')
-            }
-            game.dirty = true
-          }
-        }
-
-        game.tracked = false
-      })
-
-      items.add(btn)
-
-      buttons.push(btn)
-  }
-
-  /* eslint camelcase: 0 */
-  items.c_reset = function() {
-    for(i = 0; i < buttons.length; i += 1) {
-      buttons[i].c_reset()
-    }
-  }
-
-  // This is a mask so that the buttons are hidden
-  // if they are outside the 'shop' bounding box
-  var graphics = game.add.graphics(0, 0)
-  graphics.moveTo(game.world.centerX - 125, 120)
-  graphics.lineTo(game.world.centerX - 125, 120 + this.shopHeight)
-  graphics.lineTo(game.world.centerX + 125, 120 + this.shopHeight)
-  graphics.lineTo(game.world.centerX + 125, 120)
-
-  items.mask = graphics
-
+  // create buttons
+  this.createItems(game)
 
   // Main score text
   game.scoreText = UI.scoreText(game)
-
+  // Update the main score text to force resizing if necessary
+  updateScoreText(game)
+  
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)
-
+  
+  // Cupcakes-per-second calculation
+  game.startCPSCalculation()
 
   // back button
   game.backButton = UI.backButton(
@@ -169,8 +66,8 @@ ShopState.prototype.update = function() {
         return item.visible
       }).length
 
-      var itemsHeight = (visibleItemCount + 1) * this.itemHeight
-      var shopHeight = this.shopHeight
+      var itemsHeight = (visibleItemCount + 1) * config.shopUI.itemHeight
+      var shopHeight = config.shopUI.shopHeight
 
       if (itemsHeight < shopHeight) {
         game.items.y = 0
@@ -189,4 +86,131 @@ ShopState.prototype.update = function() {
     game.trackingEl.x = game.trackingElX
     game.trackingEl.y = game.trackingElY
   }
+
+  if (game.dirty) {
+    game.state.getCurrentState().refreshItems(game)
+    game.dirty = false
+  }
 }
+
+ShopState.prototype.refreshItems = function(game) {
+    game.items.forEach(function(btn) {
+        if (btn !== null && btn !== undefined) {
+            btn.inputEnabled = false
+            btn.destroy()
+        }
+    }, this, false)
+
+    game.tracked = false
+    game.items.destroy()
+    this.createItems(game)
+}
+
+ShopState.prototype.createItems = function(game) {
+    var UI = require('./ui.js')(game)
+
+    game.shopItemButtons = []
+    var buttons = game.shopItemButtons
+    game.items = game.add.group()
+    var items = game.items
+    var nextHidden = false
+    var index = -1
+    for(var i = 0; i < game.shopItemList.length; i += 1) {
+        if (nextHidden) {
+          break
+        }
+
+        genItem(i, game, UI, index, nextHidden, items, buttons)
+    }
+
+    function genItem(i) {
+        var item = game.shopItemList[i]
+          if (item.type === 'upgrade' && item.owned) {
+            item.visible = false
+            return
+          }
+
+          // this is so that we can skip items which are not visible,
+          // but in the middle of the list
+          index += 1
+
+          if (game.score >= getItemCost(item) || (item.owned > 0)) {
+            item.visible = true
+
+            console.log('Item ' + item.name + ' is visible')
+          }
+          if (!item.visible && !nextHidden) {
+            item = _.clone(item)
+            item.name = '???'
+            nextHidden = true
+          }
+
+          var btn = UI.shopItemButton(
+            item,
+            function(btn, pointer) {
+              game.tracking = true
+              game.trackingOrigX = pointer.x
+              game.trackingOrigY = pointer.y
+              game.trackingElX = btn.x
+              game.trackingElY = btn.y
+              game.trackingEl = btn
+              game.trackingStart = true
+            },
+            function(/*btn, pointer*/) {
+              game.tracking = false
+              game.trackingEl.x = game.trackingElX
+              game.trackingEl.y = game.trackingElY
+            },
+            game, game.world.centerX,
+            120 + index * config.shopUI.itemHeight, function(button, pointer, elements) {
+                var costText = elements.costText
+
+                // TODO: disable if button is not actually visible (masked)
+                // buy item
+                if (!game.tracked) {
+                  // console.log('buying', item.name)
+
+                  if (game.score >= getItemCost(item)) {
+                    game.score -= getItemCost(item)
+                    item.owned += 1
+                    costText.setText(getItemCost(item))
+                    updateCPS(game)
+                    updateScoreText(game)
+
+                    if (item.type === 'upgrade') {
+                      item.visible = false
+                      if (item.action === '+1 tap') {
+                        game.cupcakesPerClick += 1
+                      }
+                    }
+                    game.dirty = true // set flag to refresh the buttons to reflect change in score and also remove upgrades instantly
+                  }
+                }
+
+            game.tracked = false
+          })
+
+          items.add(btn)
+
+          buttons.push(btn)
+    }
+
+    /* eslint camelcase: 0 */
+    items.c_reset = function() {
+        for(i = 0; i < buttons.length; i += 1) {
+          buttons[i]._cReset()
+        }
+    }
+
+    // This is a mask so that the buttons are hidden
+    // if they are outside the 'shop' bounding box
+    var graphics = game.add.graphics(0, 0)
+    graphics.moveTo(game.world.centerX - 125, 120)
+    graphics.lineTo(game.world.centerX - 125, 120 + config.shopUI.shopHeight)
+    graphics.lineTo(game.world.centerX + 125, 120 + config.shopUI.shopHeight)
+    graphics.lineTo(game.world.centerX + 125, 120)
+
+    items.mask = graphics
+}
+
+

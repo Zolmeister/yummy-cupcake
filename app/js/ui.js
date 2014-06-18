@@ -217,6 +217,56 @@ module.exports = function(game) {
           text: 'Earn More Cupcakes'
         }
       })
+    },
+    victoryText: function() {
+      return this.element(this.game, 0, 0, {
+        text: {
+          type: 'text',
+          x: game.world.centerX,
+          y: 55,
+          text: 'You won!',
+          anchor: [0.5, 0],
+          style: {
+            font: '45px sansus',
+            fill: '#ffffff',
+            stroke: '#ee508c',
+            strokeThickness: 8 }
+        }
+      })._text
+    },
+    victorySubtitle: function() {
+      return this.element(this.game, 0, 0, {
+        text: {
+          type: 'text',
+          text: 'Congratulations!',
+          style: {
+            font: '20px sansus',
+            fill: '#ffffff',
+            stroke: '#ee508c',
+            strokeThickness: 5 },
+          anchor: [0.5, 0],
+          x: this.game.world.centerX,
+          y: 110
+        }
+      })._text
+    },
+    startOverButton: function(game, onclick) {
+      var itemBg = this.rect(game, 250, 50, '#3498db', 5)
+      var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
+
+      return this.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
+        button: {
+          type: 'button',
+          key: itemBg,
+          callback: onclick,
+          width: game.world.width,
+          height: 60
+        },
+        text: {
+          type: 'text',
+          text: 'Start Over'
+        }
+      })
     }
   })
 }
