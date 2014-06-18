@@ -227,18 +227,24 @@ Clay.ready(function() {
       key: 'score'
     }, function(response) {
       if (response.data) {
-        game.score = response.data
-        updateScoreText(game)
+        game.score = response.data 
       }
+      if (config.debug && config.debugState.startingScore > 0) {
+        game.score = config.debugState.startingScore
+      }
+      updateScoreText(game)
     })
     // grab other data
     Clay.Player.fetchUserData({
       key: 'data'
     }, function(response) {
       if (response.data && response.data.shopItemList) {
-        game.shopItemList = response.data.shopItemList
-        updateCPS(game)
+        game.shopItemList = response.data.shopItemList       
       }
+      if (config.debug && config.debugState.resetShop) {
+        game.shopItemList = config.shopItemList
+      }
+      updateCPS(game)
     })
   })
 })
