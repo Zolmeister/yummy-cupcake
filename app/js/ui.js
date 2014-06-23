@@ -80,12 +80,19 @@ module.exports = function(game) {
         button._button.loadTexture(itemBg)
       })
     button._button.events.onInputUp.add(function(/*el, pointer*/) {
-        button._button.loadTexture(itemBg)
+        button._button.loadTexture(itemBg)       
       })
 
       return button
     },
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
+        
+      // string .'s together to show how many of the item are owned
+      var ownedStr = ''
+      
+      for (var i = 0; i < item.owned; ++i) {
+         ownedStr += '.'
+      }
 
       // button background
       var itemBg = this.rect(game, 250, 50, '#ecf0f1', 3)
@@ -105,9 +112,19 @@ module.exports = function(game) {
         name: {
           type: 'text',
           x: -115,
-          y: 15,
+          y: 9,
           text: item.name,
-          style: {font: '20px sansus'}
+          style: { 
+              font: '20px sansus',
+              fill: (util.canBuy(item, game) ? '#000000' : '#FF0000')
+          }
+        },
+        owned: {
+            type: 'text',
+            x: -115,
+            y: 19,
+            text: ownedStr,
+            style: { font: '24px sansus' }
         },
         cost: {
           type: 'text',
@@ -116,7 +133,7 @@ module.exports = function(game) {
           text: getItemCost(item) + '',
           style: item.cost.toString().length > 9 ?
             { font: '16px sansus' } :
-            {font: '20px sansus'}
+            { font: '20px sansus' }
         },
         cupcake: {
           type: 'sprite',
@@ -133,7 +150,7 @@ module.exports = function(game) {
           text: item.action ? item.action : item.cps,
           style: item.cost.toString().length > 9 ?
             { font: '16px sansus' } :
-            {font: '20px sansus'}
+            { font: '20px sansus' }
         }
       })
 

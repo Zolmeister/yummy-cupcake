@@ -5,9 +5,10 @@
 module.exports = {
    debug: true,
    debugState: {
-       startingScore: 3000000, // 999 million
-       resetShop: false
+       startingScore: 300, // 999 million
+       resetShop: true
    },
+   maxItems: 15,
    shopItemList: [
      {
        name: 'icing machine',

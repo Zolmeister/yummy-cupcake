@@ -266,6 +266,8 @@ game.cpsCalculation = function() {
           this.state.start('victory')
       }
     }
+    
+    this.dirty = true // refresh the shop buttons
 }
 
 game.startCPSCalculation = function() {

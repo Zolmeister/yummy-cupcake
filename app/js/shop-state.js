@@ -94,16 +94,16 @@ ShopState.prototype.update = function() {
 }
 
 ShopState.prototype.refreshItems = function(game) {
-    game.items.forEach(function(btn) {
-        if (btn !== null && btn !== undefined) {
-            btn.inputEnabled = false
-            btn.destroy()
-        }
-    }, this, false)
+    
 
-    game.tracked = false
+    var oldY = game.items.y
+
+        console.log('destroying items')
     game.items.destroy()
+    console.log('creating new items')
     this.createItems(game)
+
+    game.items.y = oldY // preserve old scroll position
 }
 
 ShopState.prototype.createItems = function(game) {
@@ -170,7 +170,7 @@ ShopState.prototype.createItems = function(game) {
                 if (!game.tracked) {
                   // console.log('buying', item.name)
 
-                  if (game.score >= getItemCost(item)) {
+                  if (util.canBuy(item, game)) {
                     game.score -= getItemCost(item)
                     item.owned += 1
                     costText.setText(getItemCost(item))
@@ -179,10 +179,8 @@ ShopState.prototype.createItems = function(game) {
 
                     if (item.type === 'upgrade') {
                       item.visible = false
-                      if (item.action === '+1 tap') {
-                        game.cupcakesPerClick += 1
-                      }
                     }
+
                     game.dirty = true // set flag to refresh the buttons to reflect change in score and also remove upgrades instantly
                   }
                 }

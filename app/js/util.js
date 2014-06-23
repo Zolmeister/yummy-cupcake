@@ -8,7 +8,8 @@ module.exports = {
   getCupcakesPerSecondText: getCupcakesPerSecondText,
   getItemCost: getItemCost,
   updateScoreText: updateScoreText,
-  updateCPS: updateCPS
+  updateCPS: updateCPS,
+  canBuy: canBuy
 }
 
 function getCupcakesText(n) {
@@ -75,10 +76,6 @@ function updateCPS(game) {
       }
 
       game.upgrades[item.name] = true
-
-      if (game.cupcake) {
-        game.cupcake.loadTexture(game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
-      }
     }
   })
 
@@ -86,4 +83,8 @@ function updateCPS(game) {
   if (game.cpsText) {
     game.cpsText.setText(getCupcakesPerSecondText(cps))
   }
+}
+
+function canBuy(item, game) {
+    return getItemCost(item) <= game.score && item.owned < config.maxItems
 }
