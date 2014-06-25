@@ -54,7 +54,7 @@ function SVGstoPNGs(svgs, game) {
         // all imgs loaded
 		    if(loaded === toLoad) {
 		    	deferred.resolve(returnObj)
-        }
+            }
 		  }
 
 		  canvg(canvas, svg.src, {renderCallback: canvasLoaded})

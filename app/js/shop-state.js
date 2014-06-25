@@ -98,9 +98,7 @@ ShopState.prototype.refreshItems = function(game) {
 
     var oldY = game.items.y
 
-        console.log('destroying items')
     game.items.destroy()
-    console.log('creating new items')
     this.createItems(game)
 
     game.items.y = oldY // preserve old scroll position

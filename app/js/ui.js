@@ -191,7 +191,9 @@ module.exports = function(game) {
         button: {
           type: 'button',
           key: itemBg,
-          callback: onclick
+          callback: onclick,
+          width: game.world.width / 2,
+          height: 60
         },
         text: {
           type: 'text',
@@ -221,19 +223,37 @@ module.exports = function(game) {
       var itemBg = this.rect(game, 250, 50, '#3498db', 5)
       var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
 
-      return this.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX / 2, 640 - 55, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
           callback: onclick,
-          width: game.world.width,
+          width: game.world.width / 2 - 10,
           height: 60
         },
         text: {
           type: 'text',
-          text: 'Earn More Cupcakes'
+          text: 'Invite Friends'
         }
       })
+    },
+    bakeoffButton: function(game, onclick) {
+        var itemBg = this.rect(game, 250, 50, '#3498db', 5)
+        var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
+        
+        return this.button(game, 3 * game.world.centerX / 2, 640 - 55, itemBg, itemDownBg, {
+            button: {
+              type: 'button',
+              key: itemBg,
+              callback: onclick,
+              width: game.world.width / 2 - 10,
+              height: 60
+            },
+            text: {
+              type: 'text',
+              text: 'Bake-Off!'
+            }
+        })
     },
     victoryText: function() {
       return this.element(this.game, 0, 0, {
