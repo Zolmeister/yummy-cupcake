@@ -3,7 +3,7 @@
  // note that function calls within update are not optimized,
  // and should be in-lined during some compile step
 module.exports = {
-   debug: true,
+   debug: false,
    debugState: {
        startingScore: 300, // 999 million
        resetShop: true
