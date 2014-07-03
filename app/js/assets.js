@@ -64,9 +64,9 @@ function SVGstoPNGs(svgs, game) {
 }
 
 // This SVG->png has its own method since it allows for a bit more customization
-function getCupcakeSVG(options) {
+function getCupcakeSVG(options, file) {
   var deferred = new Promiz()
-  var items = ['cherry', 'ribbon', 'straw', 'sprinkles']
+  var items = ['cherry', 'ribbon', 'stars', 'straw', 'sprinkles']
 
   var width = options.width
   var height = options.height
@@ -84,7 +84,9 @@ function getCupcakeSVG(options) {
         continue // skip hiding any item we specified
 			}
       var $toHide = svgAsXml.getElementById(item)
-      $toHide.style.display = 'none'
+      if ($toHide) { // null check because the element may not exist in the given file
+          $toHide.style.display = 'none'
+      }
     }
     // change xml back to string
     var svgAsString = new XMLSerializer().serializeToString(svgAsXml)
@@ -102,7 +104,7 @@ function getCupcakeSVG(options) {
     }
 		canvg(canvas, svgAsString, {renderCallback: canvasLoaded})
   }
-  xhr.open('GET', '/assets/pink.svg')
+  xhr.open('GET', file)
   xhr.responseType = 'document'
   xhr.send()
 

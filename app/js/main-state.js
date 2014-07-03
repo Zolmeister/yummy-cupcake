@@ -34,7 +34,7 @@ MainState.prototype.create = function() {
   game.startCPSCalculation()
 
   // The big cupcake
-  game.cupcake = UI.cupcake(game, null, game.upgrades['ribbon :)'] ? 'cupcake-ribbon' : 'cupcake')
+  game.cupcake = UI.cupcake(game, null)
 
   var tween = {}
 
@@ -75,7 +75,7 @@ MainState.prototype.createScoreEffect = function(position, cupcakes) {
       x, y, '+' + cupcakes,
       {font: '25px sansus', align: 'center', fill: '#fff'})
 
-    var cupcake = game.add.sprite(x, y, 'cupcake')
+    var cupcake = game.add.sprite(x, y, 'cupcake' + game.cupcakeIndex)
     cupcake.anchor.setTo(0.5,0.5)
     cupcake.scale.x = 0.3
     cupcake.scale.y = 0.3

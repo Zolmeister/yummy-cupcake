@@ -1,15 +1,155 @@
 'use strict'
 
+var pink = '/assets/pink.svg'
+var purple = '/assets/purple.svg'
+var yellow = '/assets/yellow.svg'
+var blue = '/assets/blue.svg'
+
  // note that function calls within update are not optimized,
  // and should be in-lined during some compile step
 module.exports = {
-   debug: false,
+   debug: true,
    debugState: {
-       startingScore: 300, // 999 million
+       startingScore: 300000, // 999 million
        resetShop: true
    },
    maxItems: 15,
    shopItemList: [
+     {
+       name: 'pink sprinkles',
+       cost: 300,
+       cps: null,
+       action: 'taps +1',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'pink ribbon',
+       cost: 350,
+       cps: null,
+       action: 'taps +1',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'pink cherry',
+       cost: 450,
+       cps: null,
+       action: 'taps +2',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'purple cupcake',
+       cost: 1000,
+       cps: null,
+       action: 'taps +5',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'purple sprinkles',
+       cost: 500,
+       cps: null,
+       action: 'taps +3',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'purple ribbon',
+       cost: 650,
+       cps: null,
+       action: 'taps +3',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'purple cherry',
+       cost: 1000,
+       cps: null,
+       action: 'taps +4',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'yellow cupcake',
+       cost: 2000,
+       cps: null,
+       action: 'taps +10',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'yellow sprinkles',
+       cost: 1000,
+       cps: null,
+       action: 'taps +4',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'yellow ribbon',
+       cost: 1000,
+       cps: null,
+       action: 'taps +4',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'yellow cherry',
+       cost: 1250,
+       cps: null,
+       action: 'taps +5',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'blue cupcake',
+       cost: 2500,
+       cps: null,
+       action: 'taps +10',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'blue sprinkles',
+       cost: 1500,
+       cps: null,
+       action: 'taps +6',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'blue stars',
+       cost: 1500,
+       cps: null,
+       action: 'taps +6',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
+     {
+       name: 'blue cherry',
+       cost: 2000,
+       cps: null,
+       action: 'taps +10',
+       owned: 0,
+       visible: false,
+       type: 'upgrade'
+     },
      {
        name: 'icing machine',
        cost: 15,
@@ -23,15 +163,6 @@ module.exports = {
        cps: 0.5,
        owned: 0,
        visible: false
-     },
-     {
-       name: 'ribbon :)',
-       cost: 300,
-       cps: null,
-       action: '+1 tap',
-       owned: 0,
-       visible: false,
-       type: 'upgrade'
      },
      {
        name: 'icing factory',
@@ -94,6 +225,80 @@ module.exports = {
     shopUI: {
         itemHeight: 52,
         shopHeight: 380
+    },
+    cupcakeSprites: {
+        width: 228,
+        height: 324,
+
+        
+
+        svgOptions: 
+        [
+            { 
+                file: pink,
+                items: [ ]
+            },
+            {
+                file: pink,
+                items: [ 'sprinkles' ]
+            },
+            {
+                file: pink,
+                items: [ 'sprinkles', 'ribbon' ]
+            },
+            {
+                file: pink,
+                items: [ 'sprinkles', 'ribbon', 'cherry' ]
+            },
+            {
+                file: purple,
+                items: [ ]
+            },
+            {
+                file: purple,
+                items: [ 'sprinkles' ]
+            },
+            {
+                file: purple,
+                items: [ 'sprinkles', 'ribbon' ]
+            },
+            {
+                file: purple,
+                items: [ 'sprinkles', 'ribbon', 'cherry' ]
+            },
+            {
+                file: yellow,
+                items: [ ]
+            },
+            {
+                file: yellow,
+                items: [ 'sprinkles' ]
+            },
+            {
+                file: yellow,
+                items: [ 'sprinkles', 'ribbon' ]
+            },
+            {
+                file: yellow,
+                items: [ 'sprinkles', 'ribbon', 'cherry' ]
+            },
+            {
+                file: blue,
+                items: [ ]
+            },
+            {
+                file: blue,
+                items: [ 'sprinkles' ]
+            },
+            {
+                file: blue,
+                items: [ 'sprinkles', 'stars' ]
+            },
+            {
+                file: blue,
+                items: [ 'sprinkles', 'stars', 'cherry' ]
+            }
+        ]
     },
     cupcakeText: {
         descriptiveTexts: {

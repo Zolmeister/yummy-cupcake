@@ -94,8 +94,6 @@ ShopState.prototype.update = function() {
 }
 
 ShopState.prototype.refreshItems = function(game) {
-    
-
     var oldY = game.items.y
 
     game.items.destroy()
@@ -123,9 +121,18 @@ ShopState.prototype.createItems = function(game) {
 
     function genItem(i) {
         var item = game.shopItemList[i]
-          if (item.type === 'upgrade' && item.owned) {
-            item.visible = false
-            return
+          if (item.type === 'upgrade') {
+            if (item.owned) {
+                item.visible = false
+                return
+            }
+            
+            if (i > 0) {
+                var previousUpgrade = game.shopItemList[i - 1]
+                if (!previousUpgrade.owned) {
+                    return
+                }
+            }
           }
 
           // this is so that we can skip items which are not visible,

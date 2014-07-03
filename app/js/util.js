@@ -71,11 +71,16 @@ function updateCPS(game) {
   _.forEach(game.shopItemList, function(item) {
     cps += item.cps * item.owned
     if (item.type === 'upgrade' && item.owned && !game.upgrades[item.name]) {
-      if (item.action === '+1 tap') {
-        game.cupcakesPerClick += 1
+      if (item.action.indexOf('taps') !== -1) {
+          var taps = parseInt(item.action.substring(item.action.indexOf('+') + 1, item.action.length))
+
+          game.cupcakesPerClick += taps
       }
 
       game.upgrades[item.name] = true
+
+      // upgrade the cupcake sprite
+      game.cupcakeIndex++
     }
   })
 

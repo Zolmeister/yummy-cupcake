@@ -18,8 +18,10 @@ SetupState.prototype.preload = function () {
   game.stage.disableVisibilityChange = true
   drawLoadBar(game)
   game.load.image('bar', game.svgs.bar)
-  game.load.image('cupcake', game.svgs.cupcake)
-  game.load.image('cupcake-ribbon', game.svgs.cupcakeRibbon)
+
+  for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
+    game.load.image('cupcake' + i, game.svgs.cupcakes[i])
+  }
 }
 
 SetupState.prototype.create = function () {

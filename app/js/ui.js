@@ -40,11 +40,16 @@ module.exports = function(game) {
         }
       })._text
     },
-    cupcake: function(game, onclick, image) {
+    cupcake: function(game, onclick) {
+
+        console.log('Cupcake index: ' + game.cupcakeIndex)
+        console.log('Cupcake sprite key:')
+        console.log('cupcake' + game.cupcakeIndex)
+
       return this.element(game, 0, 0, {
         button: {
           type: 'button',
-          key: image || 'cupcake',
+          key: 'cupcake' + game.cupcakeIndex,
           callback: onclick,
           anchor: [0.5, 0.5],
           x: game.world.centerX,
@@ -139,7 +144,7 @@ module.exports = function(game) {
           type: 'sprite',
           x: 15,
           y: 5,
-          key: 'cupcake',
+          key: 'cupcake' + game.cupcakeIndex,
           width: 12,
           height: 16
         },
