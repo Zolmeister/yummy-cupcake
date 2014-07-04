@@ -83,7 +83,7 @@ WebFont.load({
   },
   active: function() {
     game.loadProgress += 1 // inc loading bar
-    getSVGImageAssets()
+    var promise = getSVGImageAssets()
       .then(function(svgs) {
         return cSVGstoPNGs(svgs, game)
       })
@@ -94,10 +94,12 @@ WebFont.load({
         game.svgs.cupcakes = new Array() 
       })
 
-      // this gets really, really messy and repetitive but I found it was impossible to do it in a loop because the loading processes are asynchronous
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[0].items
-          var file = config.cupcakeSprites.svgOptions[0].file
+	  console.log('starting the loading loop')
+	 var c = 0
+	 for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
+		promise = promise.then(function() { /* eslint no-loop-func: 0 */
+          var items = config.cupcakeSprites.svgOptions[c].items
+          var file = config.cupcakeSprites.svgOptions[c].file
 
           return getCupcakeSVG(
               {
@@ -105,237 +107,15 @@ WebFont.load({
                   height: config.cupcakeSprites.height,
                   items: items
               }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[0] = cupcakeUri
+		}).then(function(cupcakeUri) { /* eslint no-loop-func: 0 */
+          game.svgs.cupcakes[c] = cupcakeUri
           game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[1].items
-          var file = config.cupcakeSprites.svgOptions[1].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[1] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[2].items
-          var file = config.cupcakeSprites.svgOptions[2].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[2] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[3].items
-          var file = config.cupcakeSprites.svgOptions[3].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[3] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[4].items
-          var file = config.cupcakeSprites.svgOptions[4].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[4] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[5].items
-          var file = config.cupcakeSprites.svgOptions[5].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[5] = cupcakeUri
-          game.loadProgress += 1
-      }) 
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[6].items
-          var file = config.cupcakeSprites.svgOptions[6].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[6] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[7].items
-          var file = config.cupcakeSprites.svgOptions[7].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[7] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[8].items
-          var file = config.cupcakeSprites.svgOptions[8].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[8] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[9].items
-          var file = config.cupcakeSprites.svgOptions[9].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[9] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[10].items
-          var file = config.cupcakeSprites.svgOptions[10].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[10] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[11].items
-          var file = config.cupcakeSprites.svgOptions[11].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[11] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[12].items
-          var file = config.cupcakeSprites.svgOptions[12].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[12] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[13].items
-          var file = config.cupcakeSprites.svgOptions[13].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[13] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[14].items
-          var file = config.cupcakeSprites.svgOptions[14].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[14] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
-          var items = config.cupcakeSprites.svgOptions[15].items
-          var file = config.cupcakeSprites.svgOptions[15].file
-
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-      })
-      .then(function(cupcakeUri) {
-          game.svgs.cupcakes[15] = cupcakeUri
-          game.loadProgress += 1
-      })
-      .then(function() {
+		  ++c // this has to happen in the function, because loading is asynchronous
+		  console.log('incrementing i')
+		})
+      }
+      
+      promise.then(function() {
         // begin the game
         game.state.start('setup')
       }, function(err) {
@@ -346,9 +126,6 @@ WebFont.load({
       })
   }
 })
-
-  // load cupcake textures
-
 
  // Set global vars for Clay API (for Clay.ready())
 var Clay = window.Clay = window.Clay || {}
