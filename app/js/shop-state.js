@@ -1,4 +1,5 @@
 'use strict'
+var Phaser = require('phaser')
 var util = require('./util.js')
 var config = require('./config.js')
 var getItemCost = util.getItemCost
@@ -20,7 +21,7 @@ ShopState.prototype.create = function() {
   game.add.image(40, 105, shopBg)
 
   // create buttons
-  this.createItems(game)
+  this.createItems(game, 0)
 
   // Main score text
   game.scoreText = UI.scoreText(game)
@@ -94,20 +95,19 @@ ShopState.prototype.update = function() {
 }
 
 ShopState.prototype.refreshItems = function(game) {
-    var oldY = game.items.y
+  var oldY = game.items.y // preserve the old scroll positions
 
-    game.items.destroy()
-    this.createItems(game)
-
-    game.items.y = oldY // preserve old scroll position
+  game.items.destroy()
+  this.createItems(game, oldY)
 }
 
-ShopState.prototype.createItems = function(game) {
+ShopState.prototype.createItems = function(game, itemsY) {
   var UI = require('./ui.js')(game)
 
   game.shopItemButtons = []
   var buttons = game.shopItemButtons
   game.items = game.add.group()
+  game.items.y = itemsY
   var items = game.items
   var nextHidden = false
   var index = -1
@@ -148,6 +148,8 @@ ShopState.prototype.createItems = function(game) {
       nextHidden = true
     }
 
+    var x = game.world.centerX
+    var y = 120 + index * config.shopUI.itemHeight
     var btn = UI.shopItemButton(
       item,
       function(btn, pointer) {
@@ -164,11 +166,10 @@ ShopState.prototype.createItems = function(game) {
         game.trackingEl.x = game.trackingElX
         game.trackingEl.y = game.trackingElY
       },
-      game, game.world.centerX,
-      120 + index * config.shopUI.itemHeight, function(button, pointer, elements) {
+      game, x, y,
+      function(button, pointer, elements) {
         var costText = elements.costText
 
-        // TODO: disable if button is not actually visible (masked)
         // buy item
         if (!game.tracked) {
           // console.log('buying', item.name)
@@ -191,9 +192,9 @@ ShopState.prototype.createItems = function(game) {
         game.tracked = false
       })
 
-      items.add(btn)
+    items.add(btn)
 
-      buttons.push(btn)
+    buttons.push(btn)
   }
 
   /* eslint camelcase: 0 */
@@ -203,13 +204,37 @@ ShopState.prototype.createItems = function(game) {
     }
   }
 
+  // calculate the bounding box of the shop
+  var xMargin = 125
+  var boundsLeft = game.world.centerX - xMargin
+  var boundsRight = game.world.centerX + xMargin
+  var boundsWidth = boundsRight - boundsLeft
+
+  var boundsY = 120
+  var boundingBox = new Phaser.Rectangle(boundsLeft, boundsY, boundsWidth, config.shopUI.shopHeight)
+  var graphics = game.add.graphics(0, 0)
+
   // This is a mask so that the buttons are hidden
   // if they are outside the 'shop' bounding box
-  var graphics = game.add.graphics(0, 0)
-  graphics.moveTo(game.world.centerX - 125, 120)
-  graphics.lineTo(game.world.centerX - 125, 120 + config.shopUI.shopHeight)
-  graphics.lineTo(game.world.centerX + 125, 120 + config.shopUI.shopHeight)
-  graphics.lineTo(game.world.centerX + 125, 120)
+  graphics.moveTo(boundingBox.left, boundingBox.top)
+  graphics.lineTo(boundingBox.left, boundingBox.bottom)
+  graphics.lineTo(boundingBox.right, boundingBox.bottom)
+  graphics.lineTo(boundingBox.right, boundingBox.top)
 
   items.mask = graphics
+
+  // use the bounding box to deactivate buttons that have been hidden
+
+  console.log('game.items.y: ' + game.items.y)
+  console.log('Shop bounding box: ' + boundingBox)
+
+  for (i = 0; i < buttons.length; ++i) {
+    var button = buttons[i]
+    var buttonBounds = new Phaser.Rectangle(button.bounds.x, button.bounds.y, button.bounds.width, button.bounds.height)
+    buttonBounds.y += game.items.y
+    button.button.inputEnabled = Phaser.Rectangle.containsRect(buttonBounds, boundingBox)
+
+    console.log('Button ' + i + ' with bounds ' + buttonBounds + ' input: ' + button.button.inputEnabled)
+  }
+
 }

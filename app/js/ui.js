@@ -1,4 +1,5 @@
 'use strict'
+var Phaser = require('phaser')
 var util = require('./util')
 var getCupcakesText = util.getCupcakesText
 var getCupcakesPerSecondText = util.getCupcakesPerSecondText
@@ -91,6 +92,8 @@ module.exports = function(game) {
       return button
     },
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
+      var itemWidth = 250
+      var itemHeight = 50
         
       // string .'s together to show how many of the item are owned
       var ownedStr = ''
@@ -100,15 +103,15 @@ module.exports = function(game) {
       }
 
       // button background
-      var itemBg = this.rect(game, 250, 50, '#ecf0f1', 3)
-      var itemDownBg = this.rect(game, 250, 50, '#bdc3c7', 3)
+      var itemBg = this.rect(game, itemWidth, itemHeight, '#ecf0f1', 3)
+      var itemDownBg = this.rect(game, itemWidth, itemHeight, '#bdc3c7', 3)
 
       var button = this.button(game, x, y, itemBg, itemDownBg, {
         button: {
           anchor: [0.5, 0],
           key: itemBg,
-          height: 50,
-          width: 250
+          height: itemHeight,
+          width: itemWidth
         }
       })._button
 
@@ -185,6 +188,10 @@ module.exports = function(game) {
 
       button.events.onDragStart.add(onDragStart)
       button.events.onDragStop.add(onDragEnd)
+
+      // give the button some fields so we can disable its input later when masked
+      btn.bounds = new Phaser.Rectangle(x - itemWidth / 2, y, itemWidth, itemHeight)
+      btn.button = button
 
       return btn
     },
