@@ -31,8 +31,8 @@ ShopState.prototype.create = function() {
   // Cupcakes-per-second text
   game.cpsText = UI.cpsText(game)
   
-  // Cupcakes-per-second calculation
-  game.startCPSCalculation()
+  // disable cupcakes-per-second calculation to avoid creating new buttons every second
+  game.stopCPSCalculation()
 
   // back button
   game.backButton = UI.backButton(
@@ -172,8 +172,6 @@ ShopState.prototype.createItems = function(game, itemsY) {
 
         // buy item
         if (!game.tracked) {
-          // console.log('buying', item.name)
-
           if (util.canBuy(item, game)) {
             game.score -= getItemCost(item)
             item.owned += 1
@@ -225,16 +223,11 @@ ShopState.prototype.createItems = function(game, itemsY) {
 
   // use the bounding box to deactivate buttons that have been hidden
 
-  console.log('game.items.y: ' + game.items.y)
-  console.log('Shop bounding box: ' + boundingBox)
-
   for (i = 0; i < buttons.length; ++i) {
     var button = buttons[i]
     var buttonBounds = new Phaser.Rectangle(button.bounds.x, button.bounds.y, button.bounds.width, button.bounds.height)
     buttonBounds.y += game.items.y
     button.button.inputEnabled = Phaser.Rectangle.containsRect(buttonBounds, boundingBox)
-
-    console.log('Button ' + i + ' with bounds ' + buttonBounds + ' input: ' + button.button.inputEnabled)
   }
 
 }

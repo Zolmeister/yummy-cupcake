@@ -10,8 +10,8 @@ var blue = '/assets/blue.svg'
 module.exports = {
    debug: true,
    debugState: {
-       startingScore: 9999999999, // 999 million
-       resetShop: false
+       startingScore: 0,
+       resetShop: true
    },
    maxItems: 15,
    shopItemList: [

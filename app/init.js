@@ -302,3 +302,9 @@ game.startCPSCalculation = function() {
   game.time.events.start()
   game.time.events.loop(Phaser.Timer.SECOND, game.cpsCalculation, this)
 }
+
+game.stopCPSCalculation = function() {
+  // stop the core loop that gives players more cupcakes every second
+  console.log('Stopping the core loop')
+  game.time.events.stop(false) // don't clear events
+}
