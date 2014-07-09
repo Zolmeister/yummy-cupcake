@@ -6,6 +6,7 @@ var getCupcakesPerSecondText = util.getCupcakesPerSecondText
 var getItemCost = util.getItemCost
 var _ = require('lodash')
 var PhaserUI = require('../lib/phaser-ui.js')
+var config = require('./config.js')
 
 module.exports = function(game) {
   return new PhaserUI(game).extend({
@@ -115,6 +116,8 @@ module.exports = function(game) {
         }
       })._button
 
+      var maxOwned = item.owned >= config.maxItems
+
       var btn = this.element(game, x, y, {
         button: button,
         name: {
@@ -128,17 +131,26 @@ module.exports = function(game) {
           }
         },
         owned: {
-            type: 'text',
-            x: -115,
-            y: 19,
-            text: ownedStr,
-            style: { font: '24px sansus' }
+          type: 'text',
+          x: -115,
+          y: 19,
+          text: ownedStr,
+          style: { font: '24px sansus' }
+        },
+        action: {
+          type: 'text',
+          x: 15,
+          y: 25,
+          text: item.action ? item.action : item.cps + ' / sec',
+          style: item.cost.toString().length > 9 ?
+            { font: '16px sansus' } :
+            { font: '20px sansus' }
         },
         cost: {
           type: 'text',
           x: 30,
           y: 5,
-          text: getItemCost(item) + '',
+          text: !maxOwned ? getItemCost(item) : '', // don't display the cost if max owned
           style: item.cost.toString().length > 9 ?
             { font: '16px sansus' } :
             { font: '20px sansus' }
@@ -148,29 +160,16 @@ module.exports = function(game) {
           x: 15,
           y: 5,
           key: 'cupcake' + game.cupcakeIndex,
-          width: 12,
+          width: !maxOwned ? 12 : 0, // don't display the cupcake if max owned
           height: 16
-        },
-        cps: {
-          type: 'text',
-          x: 15,
-          y: 25,
-          text: item.action ? item.action : item.cps,
-          style: item.cost.toString().length > 9 ?
-            { font: '16px sansus' } :
-            { font: '20px sansus' }
         }
-      })
-
-      var cost = btn._cost
+      })  
 
       button.input.enableDrag()
-      button.events.onInputUp.add(function(el, pointer) {
+      button.events.onInputUp.add(function() {
         button.loadTexture(itemBg)
         if(onclick) {
-          onclick(el, pointer, {
-            costText: cost
-          })
+          onclick()
         }
       })
 

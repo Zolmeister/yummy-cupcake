@@ -167,15 +167,13 @@ ShopState.prototype.createItems = function(game, itemsY) {
         game.trackingEl.y = game.trackingElY
       },
       game, x, y,
-      function(button, pointer, elements) {
-        var costText = elements.costText
+      function() {
 
         // buy item
         if (!game.tracked) {
           if (util.canBuy(item, game)) {
             game.score -= getItemCost(item)
             item.owned += 1
-            costText.setText(getItemCost(item))
             updateCPS(game)
             updateScoreText(game)
 
