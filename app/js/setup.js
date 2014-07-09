@@ -2,7 +2,6 @@
 var drawLoadBar = require('./assets.js').drawLoadBar
 var config = require('./config.js')
 var Phaser = require('phaser')
-var util = require('./util.js')
 
 // TODO split these up, or potentially merge them into one state
 

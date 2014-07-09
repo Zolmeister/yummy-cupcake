@@ -94,36 +94,34 @@ WebFont.load({
         game.svgs.cupcakes = new Array() 
       })
 
-	  console.log('starting the loading loop')
-	 var c = 0
-	 for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
-		promise = promise.then(function() { /* eslint no-loop-func: 0 */
-          var items = config.cupcakeSprites.svgOptions[c].items
-          var file = config.cupcakeSprites.svgOptions[c].file
+    var c = 0
+    for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
+      promise = promise.then(function() { /* eslint no-loop-func: 0 */
+        var items = config.cupcakeSprites.svgOptions[c].items
+        var file = config.cupcakeSprites.svgOptions[c].file
 
-          return getCupcakeSVG(
-              {
-                  width: config.cupcakeSprites.width,
-                  height: config.cupcakeSprites.height,
-                  items: items
-              }, file)
-		}).then(function(cupcakeUri) { /* eslint no-loop-func: 0 */
-          game.svgs.cupcakes[c] = cupcakeUri
-          game.loadProgress += 1
-		  ++c // this has to happen in the function, because loading is asynchronous
-		  console.log('incrementing i')
-		})
-      }
-      
-      promise.then(function() {
-        // begin the game
-        game.state.start('setup')
-      }, function(err) {
-
-
-        console.error(err) /*eslint no-console:0 */
-
+        return getCupcakeSVG(
+          {
+            width: config.cupcakeSprites.width,
+            height: config.cupcakeSprites.height,
+            items: items
+          }, file)
+      }).then(function(cupcakeUri) { /* eslint no-loop-func: 0 */
+        game.svgs.cupcakes[c] = cupcakeUri
+        game.loadProgress += 1
+        ++c // this has to happen in the function, because loading is asynchronous
       })
+    }
+      
+    promise.then(function() {
+      // begin the game
+      game.state.start('setup')
+    }, function(err) {
+
+
+      console.error(err) /*eslint no-console:0 */
+
+    })
   }
 })
 
@@ -155,7 +153,7 @@ window.addEventListener('load', function() {
 
 
   // Load GA
-  function GA(i, s, o, g, r, a, m) {
+  function googleAnalytics(i, s, o, g, r, a, m) {
     i.GoogleAnalyticsObject = r
     if (!i[r]) {
       i[r] = function() {
@@ -169,7 +167,7 @@ window.addEventListener('load', function() {
     a.src = g
     m.parentNode.insertBefore(a, m)
   }
-  GA(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
+  googleAnalytics(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
 
   /*global ga*/
   ga('create', 'UA-27992080-1', 'clay.io')

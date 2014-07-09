@@ -11,7 +11,7 @@ module.exports = {
    debug: true,
    debugState: {
        startingScore: 9999999999, // 999 million
-       resetShop: true
+       resetShop: false
    },
    maxItems: 15,
    shopItemList: [

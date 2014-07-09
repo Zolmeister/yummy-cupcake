@@ -3,18 +3,18 @@
 
 // TODO remove global Clay dependency
 module.exports = {
-	connect: connect,
-	invite: invite
+  connect: connect,
+  invite: invite
 }
 
 function connect() {
-	Clay.Kik.connect({}, function(response) {
-		if(! response || ! response.success) {
-			/*eslint-disable no-console*/
-			console.log('todo: prompt to connect again')
-			/*eslint-enable*/
-		}
-	})
+  Clay.Kik.connect({}, function(response) {
+    if(! response || ! response.success) {
+      /*eslint-disable no-console*/
+      console.log('todo: prompt to connect again')
+      /*eslint-enable*/
+    }
+  })
 }
 
 function invite(game) {
@@ -27,9 +27,9 @@ function invite(game) {
     }
   }
   Clay.Kik.invite(options, function() {
-  	game.shareButton = require('./ui')(game).shareButton(game, function() {
-			invite(game)
-		})
+    game.shareButton = require('./ui')(game).shareButton(game, function() {
+      invite(game)
+    })
   })
 }
 
