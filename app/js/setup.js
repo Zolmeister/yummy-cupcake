@@ -15,8 +15,8 @@ function SetupState() {}
 SetupState.prototype.preload = function () {
   var game = this.game
   game.stage.disableVisibilityChange = true
+
   drawLoadBar(game)
-  game.load.image('bar', game.svgs.bar)
 
   for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
     game.load.image('cupcake' + i, game.svgs.cupcakes[i])
@@ -42,5 +42,9 @@ PreSetupState.prototype.preload = function () {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
   game.scale.setScreenSize(true)
 
-  drawLoadBar(game)
+  game.load.image('bar', '../assets/bar.png')
+}
+
+PreSetupState.prototype.create = function () {
+  drawLoadBar(this.game)
 }

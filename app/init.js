@@ -9,15 +9,14 @@ var VictoryState = require('./js/victory-state.js')
 var SetupState = require('./js/setup.js').SetupState
 var PreSetupState = require('./js/setup.js').PreSetupState
 var WebFont = require('webfont')
-var assets = require('./js/assets.js')
-var getSVGImageAssets = assets.getSVGImageAssets
-var cSVGstoPNGs = assets.SVGstoPNGs
-var getCupcakeSVG = assets.getCupcakeSVG
 var social = require('./js/social.js')
 var connect = social.connect
 var util = require('./js/util.js')
 var updateScoreText = util.updateScoreText
 var updateCPS = util.updateCPS
+var Promiz = require('promiz')
+var assets = require('./js/assets.js')
+var getCupcakeSVG = assets.getCupcakeSVG
 
 _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 
@@ -76,19 +75,19 @@ game.loadSteps = 34
 // (1 step per png we load (16) in 'setup')
 
 game.loadPNGs = 16 // how many pngs we're loading into phaser (game.load doesn't seem to give this #)
+
 // Load fonts
 WebFont.load({
   custom: {
     families: ['sansus']
   },
   active: function() {
+    // load SVG assets
     game.loadProgress += 1 // inc loading bar
-    var promise = getSVGImageAssets()
-      .then(function(svgs) {
-        return cSVGstoPNGs(svgs, game)
-      })
-      .then(function(svgs) {
-        game.svgs = svgs
+
+    var promise = new Promiz().resolve({ })
+      .then(function() {
+        game.svgs = { } // temporary fix. Not storing any other SVGs besides cupcakes for now.
          
         // store cupcakes in a list instead of as indiviudal fields. Upgrade by incrementing the sprite index
         game.svgs.cupcakes = new Array() 
@@ -108,6 +107,7 @@ WebFont.load({
           }, file)
       }).then(function(cupcakeUri) { /* eslint no-loop-func: 0 */
         game.svgs.cupcakes[c] = cupcakeUri
+        
         game.loadProgress += 1
         ++c // this has to happen in the function, because loading is asynchronous
       })
@@ -117,7 +117,6 @@ WebFont.load({
       // begin the game
       game.state.start('setup')
     }, function(err) {
-
 
       console.error(err) /*eslint no-console:0 */
 
@@ -250,8 +249,6 @@ Clay.ready(function() {
       }
       if (config.debug) {
         game.score = config.debugState.startingScore
-
-        console.log('Setting the initial score')
       }
       updateScoreText(game)
     })
@@ -264,8 +261,6 @@ Clay.ready(function() {
       }
       if (config.debug && config.debugState.resetShop) {
         game.shopItemList = config.shopItemList
-
-        console.log('Resetting the shop')
       }
       updateCPS(game)
     })
@@ -273,8 +268,6 @@ Clay.ready(function() {
 })
 
 game.cpsCalculation = function() {
-    console.log('Calculating CPS')
-
     var oldScore = this.score
     this.score += this.cupcakesPerSecond
     var newScore = this.score
@@ -298,13 +291,11 @@ game.cpsCalculation = function() {
 
 game.startCPSCalculation = function() {
   // start the core loop that gives players more cupcakes every second
-  console.log('Starting the core loop')
   game.time.events.start()
   game.time.events.loop(Phaser.Timer.SECOND, game.cpsCalculation, this)
 }
 
 game.stopCPSCalculation = function() {
   // stop the core loop that gives players more cupcakes every second
-  console.log('Stopping the core loop')
   game.time.events.stop(false) // don't clear events
 }
