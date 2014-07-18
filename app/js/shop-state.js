@@ -51,12 +51,17 @@ ShopState.prototype.update = function() {
     if (game.trackingStart &&
         (game.input.activePointer.y > game.trackingOrigY + 5 ||
          game.input.activePointer.y < game.trackingOrigY - 5 )) {
+
+      // start tracking the pointer for scrolling the menu
       game.trackingStart = false
       game.tracked = true
       /*jshint ignore:start*/
       game.items.c_reset()
       /*jshint ignore:end*/
+
     } else if (!game.trackingStart) {
+      // scroll the menu
+      
       var y = game.input.activePointer.y
 
       var dy = y - game.trackingOrigY
@@ -82,6 +87,7 @@ ShopState.prototype.update = function() {
         }
       }
 
+      this.disableHiddenButtons() // after scrolling, we'll need to update this
     }
 
     game.trackingEl.x = game.trackingElX
@@ -200,14 +206,7 @@ ShopState.prototype.createItems = function(game, itemsY) {
     }
   }
 
-  // calculate the bounding box of the shop
-  var xMargin = 125
-  var boundsLeft = game.world.centerX - xMargin
-  var boundsRight = game.world.centerX + xMargin
-  var boundsWidth = boundsRight - boundsLeft
-
-  var boundsY = 120
-  var boundingBox = new Phaser.Rectangle(boundsLeft, boundsY, boundsWidth, config.shopUI.shopHeight)
+  var boundingBox = this.boundingBox()
   var graphics = game.add.graphics(0, 0)
 
   // This is a mask so that the buttons are hidden
@@ -219,13 +218,34 @@ ShopState.prototype.createItems = function(game, itemsY) {
 
   items.mask = graphics
 
+  this.disableHiddenButtons()
+}
+
+ShopState.prototype.disableHiddenButtons = function () {
+  var game = this.game
+  var buttons = game.shopItemButtons
+  var boundingBox = this.boundingBox()
+
   // use the bounding box to deactivate buttons that have been hidden
 
-  for (i = 0; i < buttons.length; ++i) {
+  for (var i = 0; i < buttons.length; ++i) {
     var button = buttons[i]
     var buttonBounds = new Phaser.Rectangle(button.bounds.x, button.bounds.y, button.bounds.width, button.bounds.height)
     buttonBounds.y += game.items.y
     button.button.inputEnabled = Phaser.Rectangle.containsRect(buttonBounds, boundingBox)
   }
+}
 
+// calculate the bounding box of the shop
+ShopState.prototype.boundingBox = function () {
+  var game = this.game
+
+  var xMargin = 125
+  var boundsLeft = game.world.centerX - xMargin
+  var boundsRight = game.world.centerX + xMargin
+  var boundsWidth = boundsRight - boundsLeft
+
+  var boundsY = 120
+  
+  return new Phaser.Rectangle(boundsLeft, boundsY, boundsWidth, config.shopUI.shopHeight)
 }
