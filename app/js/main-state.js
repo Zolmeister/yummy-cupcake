@@ -59,11 +59,6 @@ MainState.prototype.create = function() {
   game.shareButton = UI.shareButton(game, function(){
     invite(game)
   })
-
-  game.bakeoffButton = UI.bakeoffButton(game, function() {
-    //TODO start a bake-off!
-  })
-
 }
 
 MainState.prototype.createScoreEffect = function(position, cupcakes) {
