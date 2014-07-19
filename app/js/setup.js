@@ -21,6 +21,8 @@ SetupState.prototype.preload = function () {
   for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
     game.load.image('cupcake' + i, game.svgs.cupcakes[i])
   }
+
+  game.load.audio('point', '../assets/score.wav')
 }
 
 SetupState.prototype.create = function () {

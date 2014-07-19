@@ -8,8 +8,12 @@ var _ = require('lodash')
 var PhaserUI = require('../lib/phaser-ui.js')
 var config = require('./config.js')
 
+var buttonWidth = 250
+var buttonHeight = 50
+
 module.exports = function(game) {
   return new PhaserUI(game).extend({
+
     scoreText: function() {
       return this.element(this.game, 0, 0, {
         text: {
@@ -26,6 +30,7 @@ module.exports = function(game) {
         }
       })._text
     },
+
     cpsText: function() {
       return this.element(this.game, 0, 0, {
         text: {
@@ -42,6 +47,7 @@ module.exports = function(game) {
         }
       })._text
     },
+
     cupcake: function(game, onclick) {
       return this.element(game, 0, 0, {
         button: {
@@ -87,8 +93,9 @@ module.exports = function(game) {
 
       return button
     },
+    
     shopItemButton: function(item, onDragStart, onDragEnd, game, x, y, onclick) {
-      var itemWidth = 250
+      var itemWidth = buttonWidth
       var itemHeight = 50
         
       // string .'s together to show how many of the item are owned
@@ -189,9 +196,10 @@ module.exports = function(game) {
 
       return btn
     },
+
     shopButton: function(game, onclick) {
-      var itemBg = this.rect(game, 250, 50, '#48C9B0', 5)
-      var itemDownBg = this.rect(game, 250, 50, '#16A085', 5)
+      var itemBg = this.rect(game, buttonWidth, buttonHeight, '#48C9B0', 5)
+      var itemDownBg = this.rect(game, buttonWidth, buttonHeight, '#16A085', 5)
 
       return this.button(game, game.world.centerX, 640 - 120 - 5, itemBg, itemDownBg, {
         button: {
@@ -199,7 +207,7 @@ module.exports = function(game) {
           key: itemBg,
           callback: onclick,
           width: game.world.width / 2,
-          height: 60
+          height: buttonHeight
         },
         text: {
           type: 'text',
@@ -207,17 +215,18 @@ module.exports = function(game) {
         }
       })
     },
+    
     backButton: function(game, onclick) {
-      var itemBg = this.rect(game, 250, 50, '#48C9B0', 5)
-      var itemDownBg = this.rect(game, 250, 50, '#16A085', 5)
+      var itemBg = this.rect(game, buttonWidth, buttonHeight, '#48C9B0', 5)
+      var itemDownBg = this.rect(game, buttonWidth, buttonHeight, '#16A085', 5)
 
       return this.button(game, game.world.centerX, 550, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
           callback: onclick,
-          width: game.world.width,
-          height: 60
+          width: buttonWidth,
+          height: buttonHeight
         },
         text: {
           type: 'text',
@@ -225,9 +234,10 @@ module.exports = function(game) {
         }
       })
     },
+
     shareButton: function(game, onclick) {
-      var itemBg = this.rect(game, 250, 50, '#3498db', 5)
-      var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
+      var itemBg = this.rect(game, buttonWidth, buttonHeight, '#3498db', 5)
+      var itemDownBg = this.rect(game, buttonWidth, buttonHeight, '#2980b9', 5)
 
       return this.button(game, game.world.centerX, 640 - 55, itemBg, itemDownBg, {
         button: {
@@ -235,7 +245,7 @@ module.exports = function(game) {
           key: itemBg,
           callback: onclick,
           width: game.world.width / 2 - 10,
-          height: 60
+          height: buttonHeight
         },
         text: {
           type: 'text',
@@ -243,6 +253,7 @@ module.exports = function(game) {
         }
       })
     },
+
     victoryText: function() {
       return this.element(this.game, 0, 0, {
         text: {
@@ -259,6 +270,7 @@ module.exports = function(game) {
         }
       })._text
     },
+
     victorySubtitle: function() {
       return this.element(this.game, 0, 0, {
         text: {
@@ -275,9 +287,10 @@ module.exports = function(game) {
         }
       })._text
     },
+
     startOverButton: function(game, onclick) {
-      var itemBg = this.rect(game, 250, 50, '#3498db', 5)
-      var itemDownBg = this.rect(game, 250, 50, '#2980b9', 5)
+      var itemBg = this.rect(game, buttonWidth, 50, '#3498db', 5)
+      var itemDownBg = this.rect(game, buttonWidth, 50, '#2980b9', 5)
 
       return this.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
         button: {

@@ -9,7 +9,8 @@ module.exports = {
   getItemCost: getItemCost,
   updateScoreText: updateScoreText,
   updateCPS: updateCPS,
-  canBuy: canBuy
+  canBuy: canBuy,
+  estimateTotalGameTime: estimateTotalGameTime
 }
 
 function getCupcakesText(n) {
@@ -63,6 +64,78 @@ function updateScoreText(game) {
             strokeThickness: 5
       })
     }
+  }
+}
+
+// runs a contained simuation of the game, to deterimine approximately how long it might take to reach the "ending"
+function estimateTotalGameTime() {
+  var cupcakes = 0
+  var cupcakesPerSec = 0
+  var cupcakesPerTap = 1
+  var tapsPerSec = 5
+  var maxItems = config.maxItems - 5 // when to stop buying
+  
+  var shopItems = new Array()
+  for (var i = 0; i < config.shopItemList.length; ++i) {
+    shopItems[i] = {
+      cost: config.shopItemList[i].cost,
+      owned: 0    
+      // copy these two properties because we don't want to change them for the actual game
+    }
+  }
+
+  var t = 0
+
+  // simulate a second at a time until the game is won
+  while (cupcakes < config.cupcakeLimit) {
+    sec()
+    ++t
+  }
+
+  console.log('It took the simulation ' + t + ' seconds to beat Yummy Cupcake')
+  console.log('Minutes: ' + (t / 60))
+  console.log('Hours: ' + (t / 3600))
+  console.log('Prisms purchased: ' + shopItems[shopItems.length - 1].owned)
+
+  // simulate one second
+  function sec() {
+    cupcakes += cupcakesPerSec // cupcake generation
+    cupcakes += cupcakesPerTap * tapsPerSec // cupcake tapping
+
+    // buy whatever we can
+    for (var j = 0; j < shopItems.length; ++j) {
+      if (canBuyItem(j)) {
+        buy(j)
+      }
+    }
+  }
+
+  function buy(i) {
+    cupcakes -= shopItems[i].cost // deduct the price
+
+    shopItems[i].owned++ // give the reward
+    shopItems[i].cost = Math.round(config.shopItemList[i].cost * Math.pow(config.itemCostScale, shopItems[i].owned)) // ramp up the price
+
+    if (config.shopItemList[i].type === 'upgrade') {
+      var action = config.shopItemList[i].action
+      var bonus = action.split(' ')[1].substring(1)
+      var cpt = parseInt(bonus)
+
+      cupcakesPerTap += cpt // apply the upgrade
+    }
+    else {
+      cupcakesPerSec += config.shopItemList[i].cps
+    }
+  }
+
+  function canBuyItem(i) {
+    if (config.shopItemList[i].type === 'upgrade') {
+      if (shopItems[i].owned > 0) {
+        return false // can't buy more than one
+      }
+    }
+
+    return shopItems[i].cost <= cupcakes && shopItems[i].owned < maxItems // otherwise, just check like normal
   }
 }
 
