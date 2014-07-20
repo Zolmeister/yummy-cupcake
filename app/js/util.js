@@ -90,6 +90,14 @@ function estimateTotalGameTime() {
   while (cupcakes < config.cupcakeLimit) {
     sec()
     ++t
+
+    // every 10 minutes, give a progress report
+    if (t % 600 === 0) {
+      console.log((t / 60) + ' minutes into the game.')
+      console.log('Cupcakes: ' + cupcakes)
+      console.log('Cupcakes per second: ' + cupcakesPerSec)
+      console.log('Cupcakes per tap: ' + cupcakesPerTap)
+    }
   }
 
   console.log('It took the simulation ' + t + ' seconds to beat Yummy Cupcake')
@@ -142,18 +150,22 @@ function estimateTotalGameTime() {
 function updateCPS(game) {
   var cps = 0
   _.forEach(game.shopItemList, function(item) {
-    cps += item.cps * item.owned
-    if (item.type === 'upgrade' && item.owned && !game.upgrades[item.name]) {
-      if (item.action.indexOf('taps') !== -1) {
-          var taps = parseInt(item.action.substring(item.action.indexOf('+') + 1, item.action.length))
+    if (item.type === 'upgrade') {
+      if (item.owned && !game.upgrades[item.name]) {
+        if (item.action.indexOf('taps') !== -1) {
+            var taps = parseInt(item.action.substring(item.action.indexOf('+') + 1, item.action.length))
 
-          game.cupcakesPerClick += taps
+            game.cupcakesPerClick += taps
+        }
+
+        game.upgrades[item.name] = true
+
+        // upgrade the cupcake sprite
+        game.cupcakeIndex++
       }
-
-      game.upgrades[item.name] = true
-
-      // upgrade the cupcake sprite
-      game.cupcakeIndex++
+    }
+    else {
+      cps += item.cps * item.owned
     }
   })
 

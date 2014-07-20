@@ -268,25 +268,25 @@ Clay.ready(function() {
 })
 
 game.cpsCalculation = function() {
-    var oldScore = this.score
-    this.score += this.cupcakesPerSecond
-    var newScore = this.score
+  var oldScore = this.score
+  this.score += this.cupcakesPerSecond
+  var newScore = this.score
 
-    var scoreIncrease = Math.floor(newScore) - Math.floor(oldScore) //find the whole number of cupcakes generated
+  var scoreIncrease = Math.floor(newScore) - Math.floor(oldScore) //find the whole number of cupcakes generated
 
-    util.updateScoreText(this)
+  util.updateScoreText(this)
 
-    if (this.state.current === 'main') {
-      //then create cupcake score effects to show the increase
-      this.state.getCurrentState().createScoreEffects(scoreIncrease)
+  if (this.state.current === 'main') {
+    //then create cupcake score effects to show the increase
+    this.state.getCurrentState().createScoreEffects(scoreIncrease)
 
-      if (this.score >= config.cupcakeLimit) {
-          // they beat the game
-          this.state.start('victory')
-      }
+    if (this.score >= config.cupcakeLimit) {
+      // they beat the game
+      this.state.start('victory')
     }
-    
-    this.dirty = true // refresh the shop buttons
+  }
+  
+  this.dirty = true // refresh the shop buttons
 }
 
 game.startCPSCalculation = function() {
