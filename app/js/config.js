@@ -187,14 +187,14 @@ function createShopItemList() {
 // use mathematical functions to determine the cost and performance of most items
 function upgradeCost(i) {
   var upgrades = 15
-  var endPrice = 250000 // cost of the last cupcake decoration
+  var endPrice = 25000 // cost of the last cupcake decoration
 
   return Math.round((i / upgrades) * (i / upgrades) * (i / upgrades) * endPrice)
 }
 
 function itemCost(i) {
   var items = 10 // there are 10 items
-  var endPrice = 300000 // cost of the prism
+  var endPrice = 30000 // cost of the prism
 
   return Math.round((i / items) * (i / items) * (i / items) * endPrice)
 }

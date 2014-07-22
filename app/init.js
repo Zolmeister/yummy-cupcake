@@ -265,16 +265,16 @@ Clay.ready(function() {
     Clay.Player.fetchUserData({
       key: 'data'
     }, function(response) {
-      if (response.data && response.data.playerInventory) {
-        game.shopItemList = config.shopItemList
+      game.shopItemList = _.clone(config.shopItemList)
+      if (config.debug && config.debugState.resetShop) {
+        // don't load the inventory
+      }
+      else if (response.data && response.data.playerInventory) {
         var inventory = response.data.playerInventory
         
         for (var i = 0; i < game.shopItemList.length; ++i) {
           game.shopItemList[i].owned = inventory[i] // load inventory
         }
-      }
-      if (config.debug && config.debugState.resetShop) {
-        game.shopItemList = config.shopItemList
       }
       updateCPS(game)
     })
