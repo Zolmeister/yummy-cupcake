@@ -10,7 +10,7 @@ var blue = '/assets/blue.svg'
 module.exports = {
 
   // DEBUG
-  debug: false,
+  debug: true,
   debugState: {
     startingScore: 999999999,
     resetShop: true
@@ -158,7 +158,7 @@ function createShopItemList() {
   for (var j = 0; j < upgrades; ++j) {
     shopItemList[i] = {
       name: upgradeInfo[j].name,
-      cost: upgradeCost(j),
+      cost: upgradeCost(j + 1),
       action: 'taps +' + upgradeInfo[j].taps,
       owned: 0,
       visible: false,
@@ -172,8 +172,8 @@ function createShopItemList() {
   for (var k = 0; k < items; ++k) {
     shopItemList[i] = {
       name: itemNames[k],
-      cost: itemCost(k),
-      cps: itemCPS(k),
+      cost: itemCost(k + 1),
+      cps: itemCPS(k + 1),
       owned: 0,
       visible: false
     }
@@ -189,14 +189,14 @@ function upgradeCost(i) {
   var upgrades = 15
   var endPrice = 250000 // cost of the last cupcake decoration
 
-  return Math.round((i / upgrades) * (i / upgrades) * endPrice)
+  return Math.round((i / upgrades) * (i / upgrades) * (i / upgrades) * endPrice)
 }
 
 function itemCost(i) {
   var items = 10 // there are 10 items
   var endPrice = 300000 // cost of the prism
 
-  return Math.round((i / items) * (i / items) * endPrice)
+  return Math.round((i / items) * (i / items) * (i / items) * endPrice)
 }
 
 function itemCPS(i) {

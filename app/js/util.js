@@ -56,12 +56,12 @@ function updateScoreText(game) {
     var length = text.length
 
     if (length >= 16) {
-        //console.log('Shrinking score text')
-        game.scoreText.setStyle({
-            font: '35px sansus',
-            fill: '#fff',
-            stroke: '#ee508c',
-            strokeThickness: 5
+      //console.log('Shrinking score text')
+      game.scoreText.setStyle({
+        font: '35px sansus',
+        fill: '#fff',
+        stroke: '#ee508c',
+        strokeThickness: 5
       })
     }
   }

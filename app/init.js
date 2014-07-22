@@ -209,8 +209,15 @@ var saveData = (function() {
   var lastScoreSave = -1
 
   return function saveData() {
+    // save only the items the player owns, not their cost or other stats
+    var inventory = new Array()
+
+    for (var i = 0; i < game.shopItemList.length; ++i) {
+      inventory[i] = game.shopItemList[i].owned
+    }
+    
     var data = {
-      shopItemList: game.shopItemList
+      playerInventory: inventory
     }
     var dataString = JSON.stringify(data)
 
@@ -236,8 +243,10 @@ var saveData = (function() {
   }
 })()
 
+// LOAD SAVE DATA
 Clay.ready(function() {
   setInterval(saveData, 10000) // save score/etc every 10 seconds
+  
   // grab data
   Clay.Player.onLogin(function() {
     // grab score
@@ -256,8 +265,13 @@ Clay.ready(function() {
     Clay.Player.fetchUserData({
       key: 'data'
     }, function(response) {
-      if (response.data && response.data.shopItemList) {
-        game.shopItemList = response.data.shopItemList       
+      if (response.data && response.data.playerInventory) {
+        game.shopItemList = config.shopItemList
+        var inventory = response.data.playerInventory
+        
+        for (var i = 0; i < game.shopItemList.length; ++i) {
+          game.shopItemList[i].owned = inventory[i] // load inventory
+        }
       }
       if (config.debug && config.debugState.resetShop) {
         game.shopItemList = config.shopItemList
