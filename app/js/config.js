@@ -10,7 +10,7 @@ var blue = '/assets/blue.svg'
 module.exports = {
 
   // DEBUG
-  debug: false,
+  debug: true,
   debugState: {
     startingScore: 0,
     resetShop: true
@@ -187,19 +187,22 @@ function createShopItemList() {
 // use mathematical functions to determine the cost and performance of most items
 function upgradeCost(i) {
   var upgrades = 15
-  var endPrice = 25000 // cost of the last cupcake decoration
+  var endPrice = 50000 // cost of the last cupcake decoration
 
-  return Math.round((i / upgrades) * (i / upgrades) * (i / upgrades) * endPrice)
+  var t = i / upgrades // from 0 to 1, the progression position of the item
+
+  return Math.round(Math.pow(t, 3) * endPrice)
 }
 
 function itemCost(i) {
   var items = 10 // there are 10 items
   var endPrice = 30000 // cost of the prism
 
-  return Math.round((i / items) * (i / items) * (i / items) * endPrice)
+  var t = i / items
+
+  return Math.round(Math.pow(t, 3) * endPrice)
 }
 
 function itemCPS(i) {
-  // items pay for themselves after 2 minutes
-  return itemCost(i) / 120
+  return itemCost(i) / 120 // after 2 minutes, items pay for themselves
 }
