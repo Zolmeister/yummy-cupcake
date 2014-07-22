@@ -143,7 +143,7 @@ module.exports = function(game) {
           type: 'text',
           x: 15,
           y: 25,
-          text: item.action ? item.action : item.cps.toFixed(0) + ' / sec',
+          text: item.action ? item.action : util.getCupcakesPerSecondText(item.cps),
           style: item.cost.toString().length > 9 ?
             { font: '16px sansus' } :
             { font: '20px sansus' }

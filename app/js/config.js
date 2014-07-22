@@ -10,9 +10,9 @@ var blue = '/assets/blue.svg'
 module.exports = {
 
   // DEBUG
-  debug: true,
+  debug: false,
   debugState: {
-    startingScore: 999999999,
+    startingScore: 0,
     resetShop: true
   },
 
@@ -109,7 +109,7 @@ module.exports = {
   },
 
   // ENDGAME
-  cupcakeLimit: 10000000000 // 10 billion cupcakes
+  cupcakeLimit: 10000000 // 10 million cupcakes
 }
 
 function createShopItemList() {
@@ -201,5 +201,5 @@ function itemCost(i) {
 
 function itemCPS(i) {
   // items pay for themselves after 2 minutes
-  return Math.round(itemCost(i) / 120)
+  return itemCost(i) / 120
 }

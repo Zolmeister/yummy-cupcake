@@ -39,7 +39,7 @@ function getCupcakesText(n) {
 }
 
 function getCupcakesPerSecondText(n) {
-  return n.toFixed(1) + ' per second'
+  return n.toFixed(1) + ' / sec'
 }
 
 function getItemCost(item) {

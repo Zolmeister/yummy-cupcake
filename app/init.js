@@ -276,7 +276,7 @@ Clay.ready(function() {
           game.shopItemList[i].owned = inventory[i] // load inventory
         }
       }
-      updateCPS(game)
+      updateCPS(game) // uses inventory to calculate cps, cpclick
     })
   })
 })
