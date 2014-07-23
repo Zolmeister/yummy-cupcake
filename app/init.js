@@ -268,6 +268,7 @@ Clay.ready(function() {
       game.shopItemList = _.clone(config.shopItemList)
       if (config.debug && config.debugState.resetShop) {
         // don't load the inventory
+        console.log('resetting the shop') // can't have any empty block statement!
       }
       else if (response.data && response.data.playerInventory) {
         var inventory = response.data.playerInventory

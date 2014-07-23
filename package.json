@@ -30,7 +30,7 @@
     "webfont": "./app/vendor/webfont.min.js",
     "canvg": "./app/vendor/canvg.js",
     "lodash": "./app/vendor/lodash.js",
-    "promiz": "./app/vendor/promiz.micro.js",
+    "promiz": "./app/vendor/promiz.js",
     "rgbcolor": "./app/vendor/rgbcolor.js",
     "StackBlur": "./app/vendor/StackBlur.js",
     "kik": "./app/vendor/kik.min.js"
