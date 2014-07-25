@@ -10,7 +10,7 @@ var blue = '/assets/blue.svg'
 module.exports = {
 
   // DEBUG
-  debug: true,
+  debug: false,
   debugState: {
     startingScore: 0,
     resetShop: true
