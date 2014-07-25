@@ -10,7 +10,9 @@ module.exports = {
   updateScoreText: updateScoreText,
   updateCPS: updateCPS,
   canBuy: canBuy,
-  estimateTotalGameTime: estimateTotalGameTime
+  estimateTotalGameTime: estimateTotalGameTime,
+  loadUpgrades: loadUpgrades,
+  buyItem: buyItem
 }
 
 function getCupcakesText(n) {
@@ -147,24 +149,22 @@ function estimateTotalGameTime() {
   }
 }
 
+function loadUpgrades(game) {
+  _.forEach(game.shopItemList, function(item) {
+    if (item.type === 'upgrade') {
+      if (item.owned) {
+        give(item, game)
+      }
+    }
+  })
+
+  game.loadCurrentCupcake() // load the proper sprite
+}
+
 function updateCPS(game) {
   var cps = 0
   _.forEach(game.shopItemList, function(item) {
-    if (item.type === 'upgrade') {
-      if (item.owned && !game.upgrades[item.name]) {
-        if (item.action.indexOf('taps') !== -1) {
-            var taps = parseInt(item.action.substring(item.action.indexOf('+') + 1, item.action.length))
-
-            game.cupcakesPerClick += taps
-        }
-
-        game.upgrades[item.name] = true
-
-        // upgrade the cupcake sprite
-        game.cupcakeIndex++
-      }
-    }
-    else {
+    if (item.type !== 'upgrade') {
       cps += item.cps * item.owned
     }
   })
@@ -176,5 +176,33 @@ function updateCPS(game) {
 }
 
 function canBuy(item, game) {
-    return getItemCost(item) <= game.score && item.owned < config.maxItems
+  return getItemCost(item) <= game.score && item.owned < config.maxItems
+}
+
+function buyItem(item, game) {
+  game.score -= getItemCost(item)
+  updateScoreText(game)
+
+  give(item, game)
+}
+
+// gives the player an item
+function give(item, game) {
+  item.owned += 1
+
+  if (item.type === 'upgrade') {
+    item.visible = false
+
+    // handle tap upgrades
+    if (item.action.indexOf('taps') !== -1) {
+      var taps = parseInt(item.action.substring(item.action.indexOf('+') + 1, item.action.length))
+
+      game.cupcakesPerClick += taps
+    }
+
+    // upgrade the cupcake sprite
+    game.cupcakeIndex++
+  } else {
+    updateCPS(game)
+  }
 }

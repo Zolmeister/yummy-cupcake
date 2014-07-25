@@ -14,9 +14,8 @@ var connect = social.connect
 var util = require('./js/util.js')
 var updateScoreText = util.updateScoreText
 var updateCPS = util.updateCPS
-var Promiz = require('promiz')
+var loadUpgrades = util.loadUpgrades
 var assets = require('./js/assets.js')
-var getCupcakeSVG = assets.getCupcakeSVG
 
 _.defaultsDeep = _.partialRight(_.merge, _.defaults)
 
@@ -41,6 +40,10 @@ game.cupcakesPerClick = 1
 game.upgrades = {}
 game.cupcakeIndex = 0
 
+game.loadCurrentCupcake = function () {
+  return assets.loadCupcakeSprite(game, game.cupcakeIndex)
+}
+
  // shop items
 game.shopItemList = config.shopItemList
 
@@ -51,30 +54,11 @@ game.state.add('presetup', PreSetupState)
 game.state.start('presetup')
 
 game.loadProgress = 0 // 0 to game.loadSteps
-game.loadSteps = 34 
+game.loadSteps = 4
 // LOAD STEPS
 // webfont 
-// (1 per svg)
-// pink cupcake
-//  +sprinkles
-//  +ribbon
-//  +cherry
-// purple cupcake
-//  +sprinkles
-//  +ribbon
-//  +cherry
-// yellow cupcake
-//  +sprinkles
-//  +ribbon
-//  +cherry
-// blue cupcake
-//  +sprinkles
-//  +stars
-//  +cherry
+// initial cupcake (2)
 // bar.svg
-// (1 step per png we load (16) in 'setup')
-
-game.loadPNGs = 16 // how many pngs we're loading into phaser (game.load doesn't seem to give this #)
 
 // Load fonts
 WebFont.load({
@@ -83,36 +67,19 @@ WebFont.load({
   },
   active: function() {
     // load SVG assets
-    game.loadProgress += 1 // inc loading bar
+    game.loadProgress += 1 // inc loading bar for the font
 
-    var promise = new Promiz().resolve({ })
-      .then(function() {
-        game.svgs = { } // temporary fix. Not storing any other SVGs besides cupcakes for now.
-         
-        // store cupcakes in a list instead of as indiviudal fields. Upgrade by incrementing the sprite index
-        game.svgs.cupcakes = new Array() 
-      })
-
-    var c = 0
-    for (var i = 0; i < config.cupcakeSprites.svgOptions.length; ++i) {
-      promise = promise.then(function() { /* eslint no-loop-func: 0 */
-        var items = config.cupcakeSprites.svgOptions[c].items
-        var file = config.cupcakeSprites.svgOptions[c].file
-
-        return getCupcakeSVG(
-          {
-            width: config.cupcakeSprites.width,
-            height: config.cupcakeSprites.height,
-            items: items
-          }, file)
-      }).then(function(cupcakeUri) { /* eslint no-loop-func: 0 */
-        game.svgs.cupcakes[c] = cupcakeUri
-        
-        game.loadProgress += 1
-        ++c // this has to happen in the function, because loading is asynchronous
-      })
+    game.svgs = { 
+      cupcakes: [ ] 
     }
       
+    if (!game.cupcakeIndex) {
+      game.cupcakeIndex = 0
+    }
+
+    // load the first cupcake sprite
+    var promise = assets.loadCupcakeSprite(game, game.cupcakeIndex)
+
     promise.then(function() {
       // begin the game
       game.state.start('setup')
@@ -268,6 +235,7 @@ Clay.ready(function() {
       game.shopItemList = _.clone(config.shopItemList)
       if (config.debug && config.debugState.resetShop) {
         // don't load the inventory
+        console.log('Resetting the shop')
       }
       else if (response.data && response.data.playerInventory) {
         var inventory = response.data.playerInventory
@@ -276,7 +244,8 @@ Clay.ready(function() {
           game.shopItemList[i].owned = inventory[i] // load inventory
         }
       }
-      updateCPS(game) // uses inventory to calculate cps, cpclick
+      updateCPS(game) // uses inventory to calculate cps
+      loadUpgrades(game) // calculate cpclick
     })
   })
 })

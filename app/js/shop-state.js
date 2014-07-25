@@ -1,10 +1,9 @@
 'use strict'
 var Phaser = require('phaser')
 var util = require('./util.js')
-var config = require('./config.js')
-var getItemCost = util.getItemCost
-var updateCPS = util.updateCPS
 var updateScoreText = util.updateScoreText
+var getItemCost = util.getItemCost
+var config = require('./config.js')
 var _ = require('lodash')
 
 module.exports = ShopState
@@ -93,11 +92,6 @@ ShopState.prototype.update = function() {
     game.trackingEl.x = game.trackingElX
     game.trackingEl.y = game.trackingElY
   }
-
-  if (game.dirty) {
-    game.state.getCurrentState().refreshItems(game)
-    game.dirty = false
-  }
 }
 
 ShopState.prototype.refreshItems = function(game) {
@@ -178,16 +172,13 @@ ShopState.prototype.createItems = function(game, itemsY) {
         // buy item
         if (!game.tracked) {
           if (util.canBuy(item, game)) {
-            game.score -= getItemCost(item)
-            item.owned += 1
-            updateCPS(game)
-            updateScoreText(game)
+            util.buyItem(item, game)
 
-            if (item.type === 'upgrade') {
-              item.visible = false
-            }
-
-            game.dirty = true // set flag to refresh the buttons to reflect change in score and also remove upgrades instantly
+            game.loadCurrentCupcake()
+              .then(function() {
+                // refresh the shop menu after the new sprite loads
+                game.state.getCurrentState().refreshItems(game)
+              })
           }
         }
 

@@ -2,11 +2,13 @@
 var Phaser = require('phaser')
 var Promiz = require('promiz')
 var canvg = require('canvg')
+var config = require('./config.js')
 
 module.exports = {
   getCupcakeSVG: getCupcakeSVG,
   drawLoadBar: drawLoadBar,
-  loadProgress: loadProgress
+  loadProgress: loadProgress,
+  loadCupcakeSprite: loadCupcakeSprite
 }
 
 // This SVG->png has its own method since it allows for a bit more customization
@@ -53,6 +55,40 @@ function getCupcakeSVG(options, file) {
   xhr.open('GET', file)
   xhr.responseType = 'document'
   xhr.send()
+
+  return deferred
+}
+
+function loadCupcakeSprite(game, index) {
+  console.log('Loading sprite ' + index)
+
+  var cupcakeSprites = config.cupcakeSprites
+  var svgOptions = cupcakeSprites.svgOptions
+
+  var items = svgOptions[index].items
+  var file = svgOptions[index].file
+
+  var options = {
+    width: cupcakeSprites.width,
+    height: cupcakeSprites.height,
+    items:items
+  }
+
+  var deferred = new Promiz()
+
+  getCupcakeSVG(options, file)
+    .then(function(cupcakeUri) {
+      game.svgs.cupcakes[index] = cupcakeUri
+    })
+    .then(function () {
+      game.load.image('cupcake' + index, game.svgs.cupcakes[index])
+
+      game.load.onFileComplete.add(function() {
+        deferred.resolve({ })
+      })
+
+      game.load.start() // manually start loading
+    })
 
   return deferred
 }
