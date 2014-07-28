@@ -60,8 +60,6 @@ function getCupcakeSVG(options, file) {
 }
 
 function loadCupcakeSprite(game, index) {
-  console.log('Loading sprite ' + index)
-
   var cupcakeSprites = config.cupcakeSprites
   var svgOptions = cupcakeSprites.svgOptions
 

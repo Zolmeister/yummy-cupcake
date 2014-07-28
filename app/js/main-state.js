@@ -11,7 +11,6 @@ function MainState() {}
 
 MainState.prototype.create = function() {
   var game = this.game
-  var self = this
 
   var UI = require('./ui.js')(game)
   if (config.debug) {
@@ -39,6 +38,23 @@ MainState.prototype.create = function() {
   game.startCPSCalculation()
 
   // The big cupcake
+  this.createCupcake(UI)
+
+  // shop button
+  game.shopButton = UI.shopButton(game, function() {
+    game.state.start('shop')
+  })
+
+  // earn more cupcakes (share) button
+  game.shareButton = UI.shareButton(game, function(){
+    invite(game)
+  })
+}
+
+MainState.prototype.createCupcake = function(UI) {
+  var self = this
+  var game = this.game
+
   game.cupcake = UI.cupcake(game, null)
 
   var tween = {}
@@ -55,16 +71,15 @@ MainState.prototype.create = function() {
     self.createScoreEffect(pointer, game.cupcakesPerClick)
     self.playScoreSound()
   })
+}
 
-  // shop button
-  game.shopButton = UI.shopButton(game, function() {
-    game.state.start('shop')
-  })
+// refreshes the big cupcake sprite, in case a new sprite is needed after loading
+MainState.prototype.refreshCupcake = function(UI) {
+  var game = this.game
 
-  // earn more cupcakes (share) button
-  game.shareButton = UI.shareButton(game, function(){
-    invite(game)
-  })
+  game.cupcake.destroy() // delete old sprite
+
+  this.createCupcake(UI) // make a new one
 }
 
 MainState.prototype.createScoreEffect = function(position, cupcakes) {

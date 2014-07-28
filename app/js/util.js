@@ -58,7 +58,6 @@ function updateScoreText(game) {
     var length = text.length
 
     if (length >= 16) {
-      //console.log('Shrinking score text')
       game.scoreText.setStyle({
         font: '35px sansus',
         fill: '#fff',
@@ -159,6 +158,10 @@ function loadUpgrades(game) {
   })
 
   game.loadCurrentCupcake() // load the proper sprite
+    .then(function() {
+      var UI = require('./ui.js')(game)
+      game.state.getCurrentState().refreshCupcake(UI) // and display it
+    })
 }
 
 function updateCPS(game) {
