@@ -18,7 +18,7 @@ SetupState.prototype.preload = function () {
 
   drawLoadBar(game)
 
-  game.load.audio('point', '../assets/score.wav')
+  game.load.audio('point', '/assets/score.wav')
 }
 
 SetupState.prototype.create = function () {
@@ -40,7 +40,7 @@ PreSetupState.prototype.preload = function () {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
   game.scale.setScreenSize(true)
 
-  game.load.image('bar', '../assets/bar.png')
+  game.load.image('bar', '/assets/bar.png')
 }
 
 PreSetupState.prototype.create = function () {
