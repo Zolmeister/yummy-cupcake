@@ -174,11 +174,20 @@ ShopState.prototype.createItems = function(game, itemsY) {
           if (util.canBuy(item, game)) {
             util.buyItem(item, game)
 
-            game.loadCurrentCupcake()
-              .then(function() {
-                // refresh the shop menu after the new sprite loads
-                game.state.getCurrentState().refreshItems(game)
-              })
+            if (item.type === 'upgrade') {
+              // don't let the player return to the main menu until the new sprite is ready
+              game.input.disabled = true
+
+              game.loadCurrentCupcake()
+                .then(function() {
+                  game.input.disabled = false
+                  // take the player to the main screen after the sprite loads
+                  game.state.start('main')
+                })
+            }
+            else {
+              game.state.getCurrentState().refreshItems(game) // reflect changing score
+            }
           }
         }
 
