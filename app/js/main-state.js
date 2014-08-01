@@ -140,7 +140,7 @@ MainState.prototype.createScoreEffects = function(cupcakes) {
   this.playScoreSound()
   var game = this.game
 
-  var maxEffects = 7 //we don't want too many cupcakes flying around the screen, but enough to be satisfying
+  var maxEffects = 5 //we don't want too many cupcakes flying around the screen, but enough to be satisfying
 
   var baseNumPerEffect = Math.floor(cupcakes / maxEffects)
   var remainder = cupcakes % maxEffects

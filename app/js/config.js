@@ -109,7 +109,7 @@ module.exports = {
   },
 
   // ENDGAME
-  cupcakeLimit: 10000000 // 10 million cupcakes
+  cupcakeLimit: 1000000 // 1 million cupcakes
 }
 
 function createShopItemList() {
