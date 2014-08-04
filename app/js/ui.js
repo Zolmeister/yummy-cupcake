@@ -289,16 +289,16 @@ module.exports = function(game) {
     },
 
     startOverButton: function(game, onclick) {
-      var itemBg = this.rect(game, buttonWidth, 50, '#3498db', 5)
-      var itemDownBg = this.rect(game, buttonWidth, 50, '#2980b9', 5)
+      var itemBg = this.rect(game, buttonWidth, buttonHeight, '#3498db', 5)
+      var itemDownBg = this.rect(game, buttonWidth, buttonHeight, '#2980b9', 5)
 
-      return this.button(game, game.world.centerX, 640 - 60, itemBg, itemDownBg, {
+      return this.button(game, game.world.centerX, 640 - buttonHeight, itemBg, itemDownBg, {
         button: {
           type: 'button',
           key: itemBg,
           callback: onclick,
-          width: game.world.width,
-          height: 60
+          width: buttonWidth,
+          height: buttonHeight
         },
         text: {
           type: 'text',

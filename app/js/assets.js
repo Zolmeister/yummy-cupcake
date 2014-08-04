@@ -8,7 +8,8 @@ module.exports = {
   getCupcakeSVG: getCupcakeSVG,
   drawLoadBar: drawLoadBar,
   loadProgress: loadProgress,
-  loadCupcakeSprite: loadCupcakeSprite
+  loadCupcakeSprite: loadCupcakeSprite,
+  loadCupcakeSprites: loadCupcakeSprites
 }
 
 // This SVG->png has its own method since it allows for a bit more customization
@@ -87,6 +88,31 @@ function loadCupcakeSprite(game, index) {
 
       game.load.start() // manually start loading
     })
+
+  return deferred
+}
+
+// loads a set of cupcake sprites and returns a Promiz which triggers when the loading is complete
+function loadCupcakeSprites(game, indices, onFinish) {
+  var deferred = { }
+
+  function loadSprite(i) {
+    console.log('loadSprite(' + i + ')')
+    deferred = loadCupcakeSprite(game, indices[i])
+
+    if (i < indices.length - 1) {
+      deferred.then(function() {
+        console.log('load the next sprite')
+        loadSprite(i + 1)
+      })
+    }
+    else {
+      // call the next callback
+      deferred.then(onFinish)
+    }
+  }
+
+  loadSprite(0) // start the recursive sprite loading
 
   return deferred
 }

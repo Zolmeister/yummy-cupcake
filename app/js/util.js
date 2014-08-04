@@ -70,6 +70,10 @@ function updateScoreText(game) {
 
 // runs a contained simuation of the game, to deterimine approximately how long it might take to reach the "ending"
 function estimateTotalGameTime() {
+  if (!config.debugState.estimateGameTime) {
+    return
+  }
+
   var cupcakes = 0
   var cupcakesPerSec = 0
   var cupcakesPerTap = 1

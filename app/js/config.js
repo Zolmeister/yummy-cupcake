@@ -12,8 +12,9 @@ module.exports = {
   // DEBUG
   debug: false,
   debugState: {
-    startingScore: 0,
-    resetShop: true
+    startingScore: 999999,
+    resetShop: true,
+    estimateGameTime: false
   },
 
   // SHOP

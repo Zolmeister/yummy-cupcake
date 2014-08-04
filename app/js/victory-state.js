@@ -1,50 +1,67 @@
 'use strict'
+
+var config = require('./config.js')
+var assets = require('./assets.js')
 module.exports = VictoryState
 
 function VictoryState() {}
 
 VictoryState.prototype.create = function() {
-    var game = this.game
-    
-    var UI = require('./ui.js')(game)
+  var self = this
+  var game = this.game
 
-    this.victoryText = UI.victoryText(game)
-    this.victorySubtitle = UI.victorySubtitle(game)
+  var UI = require('./ui.js')(game)
 
-  // make an array for celebratory cupcake sprites
-  this.cupcakes = new Array()
+  var sprites = [ 15, 11, 7, 3 ] // all 4 fully-upgraded sprites
+  var rows = [ 1, 2, 1 ] // number of cupcakes per row
+  var rowY = [ 240, 310, 360 ] // where the rows will be placed vertically
+  var rowScale = [ 0.5, 0.6, 0.7 ] // how the rows will be scaled
+  var rowSpaceX = [ 0, 150, 0 ] // how the cupcakes will be horizontally spaced (around the center)
 
+  function createUI() {
+
+    self.victoryText = UI.victoryText(game)
+    self.victorySubtitle = UI.victorySubtitle(game)
+
+    // make an array for celebratory cupcake sprites
+    self.cupcakes = new Array()
     // create the cupcake sprites in the order of layering
 
-  var yRow3 = 240
-  var yRow2 = yRow3 + 70
-  var yRow1 = yRow2 + 50
+    var c = 0 // count cupcakes
+    for (var row = 0; row < rows.length; ++row) {
+      var y = rowY[row]
+      
+      var x = game.world.centerX - rowSpaceX[row] / rows[row]
+      var xInc = rowSpaceX[row]
 
-    this.cupcakes[0] = game.add.sprite(game.world.centerX, yRow3, 'cupcake15') // blue
-    this.cupcakes[1] = game.add.sprite(game.world.centerX - 75, yRow2, 'cupcake11') // yellow
-    this.cupcakes[2] = game.add.sprite(game.world.centerX + 75, yRow2, 'cupcake7') // purple
-    this.cupcakes[3] = game.add.sprite(game.world.centerX, yRow1, 'cupcake3') // pink
+      for (var col = 0; col < rows[row]; ++col) {
+        self.cupcakes[c] = game.add.sprite(x, y, 'cupcake' + sprites[c])
 
-  // anchor all cupcake sprites by their center
-  for (var i = 0; i < 4; ++i) {
-    this.cupcakes[i].anchor.set(0.5, 0.5)
+        // anchor all cupcake sprites by their center
+        self.cupcakes[c].anchor.set(0.5, 0.5) 
+
+        // scale the cupcake sprites to create a sense of depth
+        self.cupcakes[c].scale.x = rowScale[row]
+        self.cupcakes[c].scale.y = rowScale[row]
+
+        x += xInc
+        ++c // next sprite
+      }
+    }
+
+    self.startOverButton = UI.startOverButton(game, function() {
+    // totally reset the game  
+      game.score = 0
+      game.cupcakeIndex = 0
+      game.cupcakesPerClick = 1
+      game.cps = 0
+      game.shopItemList = config.shopItemList
+
+      // return to the main screen
+      game.state.start('main')
+    })
   }
 
-  // scale the cupcake sprites to create sense of depth
-  var scaleRow1 = 0.7
-  var scaleRow2 = 0.6
-  var scaleRow3 = 0.5
-  this.cupcakes[0].scale.x = scaleRow3
-  this.cupcakes[0].scale.y = scaleRow3
-  this.cupcakes[1].scale.x = scaleRow2
-  this.cupcakes[1].scale.y = scaleRow2
-  this.cupcakes[2].scale.x = scaleRow2
-  this.cupcakes[2].scale.y = scaleRow2
-  this.cupcakes[3].scale.x = scaleRow1
-  this.cupcakes[3].scale.y = scaleRow1
-
-    this.startOverButton = UI.startOverButton(game, function() {
-        game.score = 0
-        game.state.start('main')
-    })
+  // load all the sprites, then call createUI()
+  assets.loadCupcakeSprites(game, sprites, createUI)
 }

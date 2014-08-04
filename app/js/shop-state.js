@@ -161,7 +161,7 @@ ShopState.prototype.createItems = function(game, itemsY) {
         game.trackingEl = btn
         game.trackingStart = true
       },
-      function(/*btn, pointer*/) {
+      function() {
         game.tracking = false
         game.trackingEl.x = game.trackingElX
         game.trackingEl.y = game.trackingElY
